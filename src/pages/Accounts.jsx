@@ -3,15 +3,52 @@ import GlassCard from "../components/GlassCard";
 import RiskGauge from "../components/RiskGauge";
 import GeminiPanel from "../components/GeminiPanel";
 import { fetchAccounts } from "../api/api";
+import { useBlockchain } from "../context/BlockchainContext";
+import { freezeAccountOnChain } from "../utils/blockchain";
+import { DEMO_CONFIG, truncateAddress } from "../config/demo.config";
+import { ExternalLink, ShieldAlert, Lock } from "lucide-react";
 
 const riskColor = (level) => ({ Critical: "#ff4444", High: "#ff8800", Medium: "#ffcc00" }[level] || "#00ff88");
 const statusColor = (s) => ({ Compromised: "#ff4444", Flagged: "#ffcc00", Frozen: "#aaaaaa" }[s] || "#00ff88");
 
 export default function Accounts() {
+    const { signer, walletConnected, connect } = useBlockchain();
     const [accounts, setAccounts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedAcc, setSelectedAcc] = useState(null);
     const [triggerAI, setTriggerAI] = useState(0);
+    const [isFreezing, setIsFreezing] = useState(false);
+    const [lastTx, setLastTx] = useState(null);
+
+    // Get demo wallet if this is a demo account
+    const demoWallet = selectedAcc ? DEMO_CONFIG.MULE_WALLET_MAP[selectedAcc.account_id] : null;
+
+    const handleOnChainFreeze = async () => {
+        if (!walletConnected) {
+            try {
+                await connect();
+            } catch (e) {
+                alert("Connect failed: " + e.message);
+                return;
+            }
+        }
+        if (!demoWallet) return;
+
+        setIsFreezing(true);
+        try {
+            const result = await freezeAccountOnChain(
+                demoWallet,
+                `Automated freeze by CyberFusion Pro: Risk Score ${selectedAcc.final_score}`,
+                signer
+            );
+            setLastTx(result);
+            alert("SUCCESS: Account frozen on-chain via Sepolia contract.");
+        } catch (e) {
+            alert("Freeze failed: " + e.message);
+        } finally {
+            setIsFreezing(false);
+        }
+    };
 
     useEffect(() => {
         fetchAccounts({ limit: 50 })
@@ -44,7 +81,7 @@ export default function Accounts() {
                     {accounts.map(acc => (
                         <GlassCard key={acc.account_id} hover={true}
                             style={{ padding: 16, cursor: 'pointer', border: selectedAcc?.account_id === acc.account_id ? `1px solid ${riskColor(acc.risk_level)}` : '1px solid rgba(0,255,0,0.15)', background: selectedAcc?.account_id === acc.account_id ? 'rgba(0,255,0,0.05)' : '' }}
-                            onClick={() => { setSelectedAcc(acc); setTriggerAI(0); }}>
+                            onClick={() => { setSelectedAcc(acc); setTriggerAI(0); setLastTx(null); }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                                 <div>
                                     <div style={{ fontSize: 16, fontWeight: 'bold', color: '#ffffff', fontFamily: "'JetBrains Mono',monospace" }}>{acc.account_id}</div>
@@ -101,6 +138,16 @@ export default function Accounts() {
                                 ))}
                             </div>
 
+                            {demoWallet && (
+                                <div style={{ padding: '12px 16px', borderRadius: 8, background: 'rgba(0,255,136,0.05)', border: '1px solid rgba(0,255,136,0.2)', marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div>
+                                        <div style={{ fontSize: 10, color: '#00ff88', fontWeight: 800, textTransform: 'uppercase', marginBottom: 2 }}>Blockchain Demo Linked</div>
+                                        <div style={{ fontSize: 13, color: '#fff', fontFamily: "'JetBrains Mono', monospace" }}>{truncateAddress(demoWallet)}</div>
+                                    </div>
+                                    <div style={{ padding: '4px 8px', borderRadius: 4, background: '#00ff8822', color: '#00ff88', fontSize: 10, fontWeight: 800 }}>SEPOLIA</div>
+                                </div>
+                            )}
+
                             <button onClick={() => setTriggerAI(Date.now())}
                                 style={{ width: '100%', padding: '14px', background: 'linear-gradient(135deg,rgba(255,255,255,0.2),rgba(136,255,136,0.2))', border: '1px solid #ffffff', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, cursor: 'pointer', marginBottom: 20 }}>
                                 <span>✨</span> ASK GEMINI TO ANALYZE
@@ -113,14 +160,37 @@ export default function Accounts() {
                             />
 
                             <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
-                                <button style={{ flex: 1, padding: '12px', background: '#ff444422', color: '#ff4444', border: '1px solid #ff444466', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer', fontSize: 12 }}>FREEZE</button>
+                                {demoWallet ? (
+                                    <button
+                                        onClick={handleOnChainFreeze}
+                                        disabled={isFreezing}
+                                        style={{ flex: 2, padding: '12px', background: '#ff3366', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 0 15px rgba(255,51,102,0.3)' }}
+                                    >
+                                        {isFreezing ? (
+                                            <div style={{ width: 16, height: 16, border: '2px solid #fff', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+                                        ) : <><Lock size={14} /> FREEZE ON-CHAIN</>}
+                                    </button>
+                                ) : (
+                                    <button style={{ flex: 1, padding: '12px', background: '#ff444422', color: '#ff4444', border: '1px solid #ff444466', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer', fontSize: 12 }}>FREEZE</button>
+                                )}
                                 <button style={{ flex: 1, padding: '12px', background: 'transparent', color: '#cdffcd', border: '1px solid #cdffcd', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer', fontSize: 12 }}>FLAG SAR</button>
                                 <button style={{ flex: 1, padding: '12px', background: 'transparent', color: '#88ff88', border: '1px solid #88ff88', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer', fontSize: 12 }}>MONITOR</button>
                             </div>
+
+                            {lastTx && (
+                                <div style={{ marginTop: 16, textAlign: 'center' }}>
+                                    <a href={lastTx.etherscanUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, color: '#00ff88', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                                        On-Chain Receipt <ExternalLink size={10} />
+                                    </a>
+                                </div>
+                            )}
                         </GlassCard>
                     </div>
                 )}
             </div>
+            <style>{`
+                @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+            `}</style>
         </div>
     );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Activity, Share2, Users, DollarSign, ShieldAlert, FileText, Shield } from 'lucide-react';
+import { Activity, Share2, Users, DollarSign, ShieldAlert, FileText, Shield, Link as LinkIcon } from 'lucide-react';
 
 export default function Sidebar() {
   const location = useLocation();
@@ -11,7 +11,8 @@ export default function Sidebar() {
     { label: "Mule Accounts", path: "/accounts", icon: <Users size={18} /> },
     { label: "Transactions", path: "/transactions", icon: <DollarSign size={18} /> },
     { label: "Cyber Risk SOC", path: "/cyber-risk", icon: <ShieldAlert size={18} /> },
-    { label: "AI Reports", path: "/reports", icon: <FileText size={18} /> }
+    { label: "AI Reports", path: "/reports", icon: <FileText size={18} /> },
+    { label: "⛓ Live Demo", path: "/blockchain", icon: <LinkIcon size={18} />, special: true }
   ];
 
   return (
@@ -61,9 +62,17 @@ export default function Sidebar() {
                 fontWeight: 700,
                 letterSpacing: '0.05em',
                 transition: 'all 0.2s',
-                position: 'relative'
+                position: 'relative',
+                animation: item.special && !isActive ? 'nav-pulse 2s infinite' : 'none'
               }}
             >
+              <style>{`
+                @keyframes nav-pulse {
+                  0% { border-color: transparent; }
+                  50% { border-color: #00ff8888; box-shadow: 0 0 10px #00ff8822; }
+                  100% { border-color: transparent; }
+                }
+              `}</style>
               {item.highlight && !isActive && <span style={{ position: 'absolute', right: 12, background: 'var(--special)', color: '#fff', fontSize: 9, padding: '2px 6px', borderRadius: 4, fontWeight: 'bold' }}>CORE</span>}
               <span style={{ opacity: isActive ? 1 : 0.6 }}>{item.icon}</span>
               {item.label}

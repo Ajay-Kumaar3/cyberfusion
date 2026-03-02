@@ -5,6 +5,7 @@ import GlassCard from "../components/GlassCard";
 import { fetchDashboardSummary } from "../api/api";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
 import { askGemini } from "../utils/gemini";
+import { useBlockchain } from "../context/BlockchainContext";
 
 const radarData = [
   { subject: 'Phishing', A: 85 },
@@ -16,6 +17,7 @@ const radarData = [
 ];
 
 export default function Dashboard() {
+  const { blockedCount } = useBlockchain();
   const [timeLeft, setTimeLeft] = useState(47 * 60 + 23); // 47:23
   const [briefing, setBriefing] = useState("Analyzing threat landscape...");
   const [briefingDisplay, setBriefingDisplay] = useState("");
@@ -72,15 +74,16 @@ export default function Dashboard() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, zIndex: 1, position: 'relative' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
-        <StatCard title="HIGH RISK ACCOUNTS" targetValue={summary?.high_risk_accounts ?? 0} color="var(--danger)" />
-        <StatCard title="ACTIVE ALERTS" targetValue={summary?.active_alerts ?? 0} color="var(--warning)" />
-        <StatCard title="TXNS UNDER REVIEW" targetValue={summary?.transactions_flagged ?? 0} color="var(--info)" />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16 }}>
+        <StatCard title="HIGH RISK" targetValue={summary?.high_risk_accounts ?? 0} color="var(--danger)" />
+        <StatCard title="ALERTS" targetValue={summary?.active_alerts ?? 0} color="var(--warning)" />
+        <StatCard title="TXNS REVIEW" targetValue={summary?.transactions_flagged ?? 0} color="var(--info)" />
+        <StatCard title="ON-CHAIN BLOCKED" targetValue={blockedCount} color="#ff3366" />
         <GlassCard style={{ padding: 20, border: '1px solid rgba(0,255,0,0.3)', background: 'linear-gradient(135deg,rgba(0,255,0,0.1),rgba(0,255,0,0.02))' }}>
           <div style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600, letterSpacing: '0.05em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', animation: 'blink 1s infinite' }} /> RECOVERY WINDOW
           </div>
-          <div style={{ fontSize: 36, fontWeight: 800, color: 'var(--accent)', fontFamily: "'JetBrains Mono', monospace", filter: 'drop-shadow(0 0 10px rgba(0,255,0,0.4))' }}>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--accent)', fontFamily: "'JetBrains Mono', monospace", filter: 'drop-shadow(0 0 10px rgba(0,255,0,0.4))' }}>
             {fmt(timeLeft)}
           </div>
         </GlassCard>
