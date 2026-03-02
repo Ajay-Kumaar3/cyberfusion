@@ -9,7 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "d3": "^7.9.0",
     "ethers": "^6.16.0",
-    "framer-motion": "^12.34.3",
+    "framer-motion": "^12.34.4",
     "lucide-react": "^0.576.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -30,6 +30,7 @@
       "react-app/jest"
     ]
   },
+  "proxy": "http://localhost:8000",
   "browserslist": {
     "production": [
       ">0.2%",

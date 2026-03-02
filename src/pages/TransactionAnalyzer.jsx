@@ -12,23 +12,23 @@ const transactions = [
 ];
 
 const STATUS = {
-  Blocked: { color: "#ffffff", bg: "#ffffff14", icon: "🚫" },
-  Flagged: { color: "#ffffff", bg: "#ffffff14", icon: "⚠️" },
-  Cleared: { color: "#00ff00", bg: "#00ff0014", icon: "✅" },
+  Blocked: { color: "var(--danger)", bg: "rgba(244, 63, 94, 0.1)", icon: "🚫" },
+  Flagged: { color: "var(--warning)", bg: "rgba(245, 158, 11, 0.1)", icon: "⚠️" },
+  Cleared: { color: "var(--success)", bg: "rgba(16, 185, 129, 0.1)", icon: "✅" },
 };
-const FLAG_COLORS = ["#ffffff", "#ff8800", "#ffffff", "#ffffff", "#88ff88"];
+const FLAG_COLORS = ["var(--accent)", "var(--warning)", "var(--special)", "var(--info)", "var(--success)"];
 const CAT_ICONS = { Transfer: "🏦", Crypto: "₿", Shopping: "🛍️", Food: "🍔", Subscription: "📺", Other: "💳" };
-const CAT_COLORS = { Transfer: "#88ff88", Crypto: "#ffffff", Shopping: "#ffffff", Food: "#ff8800", Subscription: "#00ff00", Other: "#8499b8" };
+const CAT_COLORS = { Transfer: "var(--accent)", Crypto: "var(--accent-secondary)", Shopping: "var(--info)", Food: "var(--warning)", Subscription: "var(--success)", Other: "#94a3b8" };
 
 function ScoreBar({ score, color, label }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-      <span style={{ fontSize: 9, color: "#008800", width: 55, fontWeight: 600, letterSpacing: "0.04em" }}>{label}</span>
-      <div style={{ flex: 1, height: 4, background: "#1e2d47", borderRadius: 4, overflow: "hidden" }}>
+      <span style={{ fontSize: 9, color: "var(--text-muted)", width: 55, fontWeight: 700, letterSpacing: "0.04em" }}>{label}</span>
+      <div style={{ flex: 1, height: 4, background: "rgba(255,255,255,0.05)", borderRadius: 4, overflow: "hidden" }}>
         <div style={{
           height: "100%", width: `${score}%`, borderRadius: 4,
           background: `linear-gradient(90deg, ${color}, ${color}88)`,
-          boxShadow: `0 0 6px ${color}66`,
+          boxShadow: `0 0 6px ${color}44`,
         }} />
       </div>
       <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fontWeight: 700, color, minWidth: 20 }}>{score}</span>
@@ -80,17 +80,17 @@ export default function TransactionAnalyzer() {
       {/* Summary Banner */}
       <div style={styles.summaryBanner}>
         {[
-          { icon: "🚫", val: blocked.length, label: "Blocked", sub: `₹${blockedAmt.toLocaleString()} saved`, color: "#ffffff" },
-          { icon: "⚠️", val: transactions.filter(t => t.status === "Flagged").length, label: "Flagged", sub: "Under review", color: "#ffffff" },
-          { icon: "✅", val: transactions.filter(t => t.status === "Cleared").length, label: "Cleared", sub: "Normal activity", color: "#00ff00" },
-          { icon: "🛡️", val: `₹${blockedAmt.toLocaleString()}`, label: "Protected", sub: "Fraud prevented", color: "#ffffff" },
+          { icon: "🚫", val: blocked.length, label: "Blocked", sub: `₹${blockedAmt.toLocaleString()} saved`, color: "var(--danger)" },
+          { icon: "⚠️", val: transactions.filter(t => t.status === "Flagged").length, label: "Flagged", sub: "Under review", color: "var(--warning)" },
+          { icon: "✅", val: transactions.filter(t => t.status === "Cleared").length, label: "Cleared", sub: "Normal activity", color: "var(--success)" },
+          { icon: "🛡️", val: `₹${blockedAmt.toLocaleString()}`, label: "Protected", sub: "Fraud prevented", color: "var(--accent)" },
         ].map((s, i) => (
-          <div key={i} className="hover-card" style={{ ...styles.summaryCard, borderColor: s.color + "33" }}>
+          <div key={i} className="hover-card" style={{ ...styles.summaryCard, borderColor: 'rgba(255,255,255,0.06)' }}>
             <div style={{ ...styles.summaryOrb, background: s.color }} />
-            <div style={{ fontSize: 22, marginBottom: 8 }}>{s.icon}</div>
-            <div style={{ fontSize: typeof s.val === 'string' ? 16 : 30, fontWeight: 900, color: s.color, fontFamily: "'JetBrains Mono', monospace", lineHeight: 1, marginBottom: 4 }}>{s.val}</div>
-            <div style={{ fontSize: 11, color: "#008800", fontWeight: 600, marginBottom: 2 }}>{s.label}</div>
-            <div style={{ fontSize: 10, color: s.color + "aa" }}>{s.sub}</div>
+            <div style={{ fontSize: 24, marginBottom: 8 }}>{s.icon}</div>
+            <div style={{ fontSize: typeof s.val === 'string' ? 16 : 30, fontWeight: 900, color: '#fff', fontFamily: "'JetBrains Mono', monospace", lineHeight: 1, marginBottom: 4 }}>{s.val}</div>
+            <div style={{ fontSize: 11, color: s.color, fontWeight: 700, marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{s.label}</div>
+            <div style={{ fontSize: 10, color: "var(--text-muted)" }}>{s.sub}</div>
           </div>
         ))}
       </div>
@@ -99,13 +99,13 @@ export default function TransactionAnalyzer() {
       <div style={styles.tabBar}>
         <div style={styles.tabs}>
           {filters.map(f => {
-            const cfg = f !== "All" ? STATUS[f] : null;
+            const cfg = f !== "All" ? STATUS[f] : { color: "var(--accent)" };
             return (
               <button key={f} onClick={() => setFilter(f)} style={{
                 ...styles.tab,
-                color: filter === f ? (cfg?.color ?? "#88ff88") : "#008800",
-                background: filter === f ? (cfg?.color ?? "#88ff88") + "14" : "transparent",
-                borderBottom: filter === f ? `2px solid ${cfg?.color ?? "#88ff88"}` : "2px solid transparent",
+                color: filter === f ? cfg.color : "var(--text-muted)",
+                background: filter === f ? "rgba(255,255,255,0.03)" : "transparent",
+                borderBottom: filter === f ? `2px solid ${cfg.color}` : "2px solid transparent",
               }}>{f}</button>
             );
           })}
@@ -126,8 +126,8 @@ export default function TransactionAnalyzer() {
               onClick={() => setSelected(isOpen ? null : txn)}
               style={{
                 ...styles.card,
-                borderColor: isOpen ? cfg.color + "55" : "#1e2d47",
-                boxShadow: isOpen ? `0 8px 32px ${cfg.color}18, 0 0 0 1px ${cfg.color}22` : "none",
+                borderColor: isOpen ? cfg.color : "rgba(255,255,255,0.05)",
+                boxShadow: isOpen ? `0 12px 40px -12px ${cfg.color}44` : "none",
                 animationDelay: `${i * 50}ms`,
                 cursor: "pointer",
               }}
@@ -173,8 +173,8 @@ export default function TransactionAnalyzer() {
 
                 {/* Risk Scores */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 10 }}>
-                  <ScoreBar score={txn.transactionScore} color="#ffffff" label="TXN RISK" />
-                  <ScoreBar score={txn.cyberScore} color="#88ff88" label="CYBER" />
+                  <ScoreBar score={txn.transactionScore} color="var(--accent)" label="GLOBAL RISK" />
+                  <ScoreBar score={txn.cyberScore} color="var(--accent-secondary)" label="BEHAVIOR" />
                 </div>
 
                 {/* Flags */}
@@ -221,33 +221,33 @@ export default function TransactionAnalyzer() {
 
 const styles = {
   page: { padding: "28px 32px", minHeight: "100%", animation: "fadeIn 0.4s ease" },
-  breadcrumb: { fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: "#3a5070", letterSpacing: "0.15em", marginBottom: 8 },
+  breadcrumb: { fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: "var(--text-muted)", letterSpacing: "0.15em", marginBottom: 8 },
   header: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 },
   heading: { fontSize: 32, fontWeight: 800, color: "#ffffff", letterSpacing: "-0.5px", marginBottom: 6 },
-  sub: { color: "#008800", fontSize: 13 },
+  sub: { color: "var(--accent-secondary)", fontSize: 13, fontWeight: 500 },
   controls: { display: "flex", gap: 10, alignItems: "center" },
   searchWrap: { position: "relative", display: "flex", alignItems: "center" },
-  searchIcon: { position: "absolute", left: 12, fontSize: 18, color: "#008800", pointerEvents: "none" },
-  input: { background: "#0a0f1a", border: "1px solid #1e2d47", borderRadius: 10, padding: "10px 14px 10px 36px", color: "#ffffff", fontSize: 12, outline: "none", width: 220, fontFamily: "Inter, sans-serif" },
-  select: { background: "#0a0f1a", border: "1px solid #1e2d47", borderRadius: 10, padding: "10px 14px", color: "#ffffff", fontSize: 12, outline: "none", cursor: "pointer", fontFamily: "Inter, sans-serif" },
+  searchIcon: { position: "absolute", left: 12, fontSize: 18, color: "var(--accent)", pointerEvents: "none" },
+  input: { background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "10px 14px 10px 36px", color: "#ffffff", fontSize: 12, outline: "none", width: 220, fontFamily: "Inter, sans-serif" },
+  select: { background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "10px 14px", color: "#ffffff", fontSize: 12, outline: "none", cursor: "pointer", fontFamily: "Inter, sans-serif" },
   summaryBanner: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 24 },
-  summaryCard: { position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #0a0f1a, #0f1623)", border: "1px solid", borderRadius: 14, padding: "18px 20px" },
-  summaryOrb: { position: "absolute", top: -30, right: -20, width: 70, height: 70, borderRadius: "50%", filter: "blur(30px)", opacity: 0.15 },
-  tabBar: { display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #1e2d47", marginBottom: 20 },
+  summaryCard: { position: "relative", overflow: "hidden", background: "rgba(24, 7, 7, 0.4)", border: "1px solid", borderRadius: 16, padding: "18px 20px" },
+  summaryOrb: { position: "absolute", top: -30, right: -20, width: 70, height: 70, borderRadius: "50%", filter: "blur(40px)", opacity: 0.1 },
+  tabBar: { display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(255,255,255,0.05)", marginBottom: 20 },
   tabs: { display: "flex", gap: 2 },
-  tab: { padding: "10px 18px", border: "none", cursor: "pointer", fontSize: 12, fontWeight: 600, borderRadius: "6px 6px 0 0", transition: "all 0.2s", fontFamily: "Inter, sans-serif" },
-  resultCount: { fontSize: 10, color: "#3a5070", fontFamily: "'JetBrains Mono', monospace", paddingBottom: 10 },
+  tab: { padding: "12px 20px", border: "none", cursor: "pointer", fontSize: 12, fontWeight: 700, borderRadius: "8px 8px 0 0", transition: "all 0.2s", fontFamily: "'Space Grotesk', sans-serif" },
+  resultCount: { fontSize: 10, color: "var(--text-muted)", fontFamily: "'JetBrains Mono', monospace", paddingBottom: 10 },
   grid: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 },
-  card: { position: "relative", background: "linear-gradient(135deg, #0a0f1a, #0f1623)", border: "1px solid", borderRadius: 14, overflow: "hidden", transition: "all 0.25s ease", animation: "fadeInUp 0.4s ease both" },
+  card: { position: "relative", background: "rgba(24, 7, 7, 0.3)", border: "1px solid", borderRadius: 16, overflow: "hidden", transition: "all 0.25s ease", animation: "fadeInUp 0.4s ease both" },
   topBar: { height: 3, transition: "width 0.8s ease" },
-  cardInner: { padding: "14px 16px" },
+  cardInner: { padding: "16px" },
   cardHead: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 },
-  catBadge: { width: 36, height: 36, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 },
-  statusBadge: { fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 20 },
-  amountRow: { display: "flex", alignItems: "center", gap: 10, marginBottom: 4 },
-  receiver: { fontSize: 12, color: "#008800", marginBottom: 4 },
-  expanded: { marginTop: 14, borderTop: "1px solid #1e2d47", paddingTop: 14, animation: "fadeInUp 0.3s ease" },
-  expandTitle: { color: "#88ff88", fontSize: 12, fontWeight: 700, marginBottom: 12 },
-  detailGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 },
-  detailItem: { background: "#060b12", borderRadius: 8, padding: "10px 12px" },
+  catBadge: { width: 36, height: 36, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 },
+  statusBadge: { fontSize: 10, fontWeight: 800, padding: "4px 10px", borderRadius: 20, textTransform: 'uppercase' },
+  amountRow: { display: "flex", alignItems: "center", gap: 10, marginBottom: 6 },
+  receiver: { fontSize: 12, color: "var(--accent-secondary)", marginBottom: 6, fontWeight: 500 },
+  expanded: { marginTop: 14, borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 14, animation: "fadeInUp 0.3s ease" },
+  expandTitle: { color: "var(--accent)", fontSize: 11, fontWeight: 800, marginBottom: 12, textTransform: 'uppercase' },
+  detailGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 },
+  detailItem: { background: "rgba(255,255,255,0.02)", borderRadius: 10, padding: "10px 12px", border: '1px solid rgba(255,255,255,0.03)' },
 };
