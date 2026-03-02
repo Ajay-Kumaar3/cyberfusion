@@ -4,7 +4,7 @@ import GeminiPanel from "../components/GeminiPanel";
 import { FileText, Download, Target, AlertTriangle } from "lucide-react";
 import { fetchAlerts, fetchDashboardSummary } from "../api/api";
 
-const sevColor = s => ({ CRITICAL: "#00ff00", HIGH: "#ccff00", MEDIUM: "#88ff88" }[s] || "#889488");
+const sevColor = s => ({ CRITICAL: "#00FF41", HIGH: "#A8EF00", MEDIUM: "#00FF41" }[s] || "#889488");
 
 export default function Reports() {
     const [triggerReport, setTriggerReport] = useState(0);
@@ -31,9 +31,9 @@ export default function Reports() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                     <h1 style={{ fontSize: 24, margin: 0, color: '#ffffff' }}>AI INTELLIGENCE REPORTS</h1>
-                    <div style={{ color: '#008800', fontSize: 13, marginTop: 4 }}>
+                    <div style={{ color: '#7A8E7A', fontSize: 13, marginTop: 4 }}>
                         Automated analysis & regulatory filing generation
-                        {summary && <span style={{ marginLeft: 16, color: '#88ff88' }}>{summary.active_alerts} active alerts · {summary.high_risk_accounts} high-risk accounts</span>}
+                        {summary && <span style={{ marginLeft: 16, color: '#00FF41' }}>{summary.active_alerts} active alerts · {summary.high_risk_accounts} high-risk accounts</span>}
                     </div>
                 </div>
             </div>
@@ -44,9 +44,9 @@ export default function Reports() {
                         <h3 style={{ fontSize: 16, color: '#ffffff', marginBottom: 20 }}>GENERATE NEW REPORT</h3>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                             <div>
-                                <label style={{ fontSize: 11, color: '#008800', fontWeight: 600, marginBottom: 8, display: 'block' }}>REPORT TYPE</label>
+                                <label style={{ fontSize: 11, color: '#7A8E7A', fontWeight: 600, marginBottom: 8, display: 'block' }}>REPORT TYPE</label>
                                 <select value={reportType} onChange={e => setReportType(e.target.value)}
-                                    style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', color: '#ffffff', borderRadius: 8, fontSize: 14, outline: 'none' }}>
+                                    style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(0, 255, 65, 0.15)', color: '#ffffff', borderRadius: 8, fontSize: 14, outline: 'none' }}>
                                     <option>Mule Ring Analysis</option>
                                     <option>Attack Attribution</option>
                                     <option>Recovery Assessment</option>
@@ -55,7 +55,7 @@ export default function Reports() {
                             </div>
 
                             <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8, padding: 12 }}>
-                                <div style={{ fontSize: 10, color: '#008800', fontWeight: 600, marginBottom: 8 }}>LIVE DATA CONTEXT (FROM NEON DB)</div>
+                                <div style={{ fontSize: 10, color: '#7A8E7A', fontWeight: 600, marginBottom: 8 }}>LIVE DATA CONTEXT (FROM NEON DB)</div>
                                 {loading ? <div style={{ fontSize: 11, color: '#555' }}>Loading alerts...</div> :
                                     pastAlerts.slice(0, 3).map((a, i) => (
                                         <div key={i} style={{ fontSize: 11, color: '#00aa00', fontFamily: "'JetBrains Mono',monospace", marginBottom: 4 }}>
@@ -85,9 +85,9 @@ export default function Reports() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16, overflowY: 'auto', paddingRight: 8 }}>
                     <h3 style={{ fontSize: 16, color: '#ffffff', marginBottom: 4 }}>
                         RECENT FLAGGED ALERTS
-                        <span style={{ fontSize: 11, color: '#008800', fontWeight: 400, marginLeft: 12 }}>from Neon DB</span>
+                        <span style={{ fontSize: 11, color: '#7A8E7A', fontWeight: 400, marginLeft: 12 }}>from Neon DB</span>
                     </h3>
-                    {loading && <div style={{ color: '#008800', fontSize: 13, padding: 20 }}>Loading from database...</div>}
+                    {loading && <div style={{ color: '#7A8E7A', fontSize: 13, padding: 20 }}>Loading from database...</div>}
                     {pastAlerts.map(a => (
                         <GlassCard key={a.alert_id} hover={true} style={{ padding: 20, cursor: 'pointer', borderLeft: `3px solid ${sevColor(a.severity)}` }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
@@ -97,7 +97,7 @@ export default function Reports() {
                                     </div>
                                     <div>
                                         <h4 style={{ margin: 0, fontSize: 14, color: '#ffffff', fontFamily: "'JetBrains Mono',monospace" }}>{a.account_id}</h4>
-                                        <span style={{ fontSize: 11, color: '#008800', fontFamily: "'JetBrains Mono',monospace" }}>
+                                        <span style={{ fontSize: 11, color: '#7A8E7A', fontFamily: "'JetBrains Mono',monospace" }}>
                                             ALERT-{a.alert_id} · {a.created_at ? new Date(a.created_at).toLocaleDateString('en-IN') : "—"}
                                         </span>
                                     </div>
@@ -106,10 +106,10 @@ export default function Reports() {
                             </div>
                             <div style={{ fontSize: 12, color: '#00aa00', marginBottom: 12, lineHeight: 1.5 }}>{a.description}</div>
                             <div style={{ display: 'flex', gap: 24, fontSize: 12, color: '#00aa00', marginBottom: 12 }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Target size={14} color="#88ff88" /><span>Risk Score: {a.final_score}/100</span></div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} color="#ccff00" /><span style={{ color: a.status === 'Open' ? '#ccff00' : a.status === 'Resolved' ? '#00ff88' : '#ffffff' }}>{a.status}</span></div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Target size={14} color="#00FF41" /><span>Risk Score: {a.final_score}/100</span></div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} color="#A8EF00" /><span style={{ color: a.status === 'Open' ? '#A8EF00' : a.status === 'Resolved' ? '#00CC33' : '#ffffff' }}>{a.status}</span></div>
                             </div>
-                            <button style={{ width: '100%', padding: '10px', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 6, color: '#88ff88', fontSize: 12, fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, cursor: 'pointer' }}>
+                            <button style={{ width: '100%', padding: '10px', background: 'transparent', border: '1px solid rgba(0, 255, 65, 0.15)', borderRadius: 6, color: '#00FF41', fontSize: 12, fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, cursor: 'pointer' }}>
                                 VIEW FULL REPORT <Download size={14} />
                             </button>
                         </GlassCard>

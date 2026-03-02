@@ -108,16 +108,16 @@ export default function SetupPage() {
                 <button
                     onClick={runChecks}
                     disabled={isRefreshing}
-                    style={{ padding: '10px 16px', borderRadius: 8, background: '#00ff88', border: 'none', color: '#000', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}
+                    style={{ padding: '10px 16px', borderRadius: 8, background: '#00CC33', border: 'none', color: '#000', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}
                 >
                     <RefreshCw size={18} className={isRefreshing ? "spin" : ""} /> RUN ALL CHECKS
                 </button>
             </div>
 
             {!walletConnected && (
-                <div style={{ padding: 24, background: 'rgba(255,255,255,0.05)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.1)', textAlign: 'center' }}>
+                <div style={{ padding: 24, background: 'rgba(255,255,255,0.05)', borderRadius: 12, border: '1px solid rgba(0, 255, 65, 0.15)', textAlign: 'center' }}>
                     <h3 style={{ margin: '0 0 16px', color: '#fff' }}>Connect Wallet to Begin Checks</h3>
-                    <button onClick={connect} style={{ padding: '12px 24px', background: '#00ff88', border: 'none', borderRadius: 8, color: '#000', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, margin: '0 auto' }}>
+                    <button onClick={connect} style={{ padding: '12px 24px', background: '#00CC33', border: 'none', borderRadius: 8, color: '#000', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, margin: '0 auto' }}>
                         <Wallet size={18} /> CONNECT METAMASK
                     </button>
                 </div>
@@ -129,16 +129,16 @@ export default function SetupPage() {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                             <h4 style={{ margin: 0, color: '#fff', fontSize: 14 }}>{check.label}</h4>
                             {check.status === 'success' ? (
-                                <CheckCircle2 color="#00ff88" size={24} />
+                                <CheckCircle2 color="#00CC33" size={24} />
                             ) : check.status === 'fail' ? (
-                                <XCircle color="#00ff00" size={24} />
+                                <XCircle color="#00FF41" size={24} />
                             ) : (
                                 <RefreshCw color="rgba(255,255,255,0.2)" size={24} />
                             )}
                         </div>
                         <p style={{ margin: '0 0 12px', fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{check.desc}</p>
                         {check.status === 'fail' && (
-                            <div style={{ padding: 10, background: 'rgba(0, 255, 0, 0.1)', borderRadius: 6, fontSize: 11, color: '#00ff00', border: '1px solid rgba(0, 255, 0, 0.2)' }}>
+                            <div style={{ padding: 10, background: 'rgba(0, 255, 65, 0.1)', borderRadius: 6, fontSize: 11, color: '#00FF41', border: '1px solid rgba(0, 255, 65, 0.2)' }}>
                                 FIX: {check.id === 'sepolia' ? 'Switch MetaMask to Sepolia Testnet' :
                                     check.id === 'balance' ? 'Get test ETH from a Sepolia faucet' :
                                         check.id === 'contract' ? 'Paste the address in src/config/demo.config.js' :
@@ -151,8 +151,8 @@ export default function SetupPage() {
             </div>
 
             <div style={{ display: 'flex', gap: 16 }}>
-                <GlassCard style={{ flex: 1, padding: 24, border: '1px solid rgba(0, 255, 0, 0.2)' }}>
-                    <h3 style={{ margin: '0 0 12px', fontSize: 14, color: '#00ff00', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <GlassCard style={{ flex: 1, padding: 24, border: '1px solid rgba(0, 255, 65, 0.2)' }}>
+                    <h3 style={{ margin: '0 0 12px', fontSize: 14, color: '#00FF41', display: 'flex', alignItems: 'center', gap: 8 }}>
                         <Trash2 size={16} /> DANGER ZONE
                     </h3>
                     <p style={{ margin: '0 0 20px', fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
@@ -161,7 +161,7 @@ export default function SetupPage() {
                     <button
                         onClick={handleResetDemo}
                         className={isResetting ? "shimmer" : ""}
-                        style={{ width: '100%', padding: '12px', borderRadius: 8, background: 'transparent', border: '1px solid #00ff00', color: '#00ff00', fontWeight: 700, cursor: 'pointer' }}
+                        style={{ width: '100%', padding: '12px', borderRadius: 8, background: 'transparent', border: '1px solid #00FF41', color: '#00FF41', fontWeight: 700, cursor: 'pointer' }}
                     >
                         RESET DEMO STATE
                     </button>
@@ -169,12 +169,12 @@ export default function SetupPage() {
 
                 <GlassCard style={{ flex: 1, padding: 24 }}>
                     <h3 style={{ margin: '0 0 12px', fontSize: 14, color: '#fff', display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <Info size={16} color="#00ff88" /> QUICK LINKS
+                        <Info size={16} color="#00CC33" /> QUICK LINKS
                     </h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 16 }}>
-                        <a href="https://sepolia-faucet.pk910.de/" target="_blank" rel="noopener noreferrer" style={{ color: '#00ff88', fontSize: 13, textDecoration: 'none' }}>→ Sepolia Faucet ↗</a>
-                        <a href="https://remix.ethereum.org" target="_blank" rel="noopener noreferrer" style={{ color: '#00ff88', fontSize: 13, textDecoration: 'none' }}>→ Remix IDE ↗</a>
-                        <a href={DEMO_CONFIG.ETHERSCAN_BASE} target="_blank" rel="noopener noreferrer" style={{ color: '#00ff88', fontSize: 13, textDecoration: 'none' }}>→ Sepolia Etherscan ↗</a>
+                        <a href="https://sepolia-faucet.pk910.de/" target="_blank" rel="noopener noreferrer" style={{ color: '#00CC33', fontSize: 13, textDecoration: 'none' }}>→ Sepolia Faucet ↗</a>
+                        <a href="https://remix.ethereum.org" target="_blank" rel="noopener noreferrer" style={{ color: '#00CC33', fontSize: 13, textDecoration: 'none' }}>→ Remix IDE ↗</a>
+                        <a href={DEMO_CONFIG.ETHERSCAN_BASE} target="_blank" rel="noopener noreferrer" style={{ color: '#00CC33', fontSize: 13, textDecoration: 'none' }}>→ Sepolia Etherscan ↗</a>
                     </div>
                 </GlassCard>
             </div>

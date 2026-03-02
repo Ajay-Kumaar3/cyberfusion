@@ -1,22 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 :root {
-  --bg-base: #020602;
-  --bg-card: rgba(7, 24, 7, 0.6);
-  --accent: #00ff00;
-  /* Neon Green */
-  --accent-secondary: #00ff88;
-  /* Spring Green */
-  --accent-dim: rgba(0, 255, 0, 0.1);
-  --text-main: #f5fff5;
-  --text-muted: #889488;
-  --danger: #00ff00; /* In this theme, everything is green or white */
-  --warning: #ccff00;
-  --success: #00ff00;
-  --info: #00ffff;
-  --special: #00ff00;
-  --border-color: rgba(0, 255, 0, 0.08);
-  --border-hover: rgba(0, 255, 0, 0.4);
+  --bg-base: #030503;
+  --bg-sidebar: #050805;
+  --bg-card: rgba(8, 14, 8, 0.85);
+  /* Dark solid-ish card matching reference */
+  --accent: #00FF41;
+  /* Signature neon green */
+  --accent-secondary: #00CC33;
+  --accent-dim: rgba(0, 255, 65, 0.08);
+  /* Faint green glow */
+  --text-main: #FFFFFF;
+  --text-muted: #7A8E7A;
+  /* Muted green-grey */
+  --danger: #00FF41;
+  --warning: #A8EF00;
+  --success: #00FF41;
+  --info: #00CC33;
+  --special: #00FF41;
+  --border-color: rgba(0, 255, 65, 0.15);
+  /* Distinctive faint green border */
+  --border-hover: rgba(0, 255, 65, 0.3);
 }
 
 *,
@@ -57,7 +61,7 @@ h6 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 255, 0, 0.1);
+  background: rgba(0, 255, 65, 0.1);
   border-radius: 4px;
 }
 
@@ -139,7 +143,7 @@ h6 {
 .blob-1 {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(0, 255, 0, 0.2) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 65, 0.15) 0%, transparent 70%);
   top: -100px;
   left: 300px;
 }
@@ -147,7 +151,7 @@ h6 {
 .blob-2 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(0, 255, 136, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 204, 51, 0.1) 0%, transparent 70%);
   bottom: -150px;
   right: -100px;
 }
@@ -155,7 +159,7 @@ h6 {
 .blob-3 {
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 65, 0.1) 0%, transparent 70%);
   top: 40%;
   left: -100px;
 }
@@ -178,15 +182,14 @@ h6 {
   }
 }
 
-/* Base Glass Card */
+/* Base Card Style, based on AgentChain reference */
 .glass-card {
   background: var(--bg-card);
-  backdrop-filter: blur(20px) saturate(150%);
   border: 1px solid var(--border-color);
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.02);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
 }
 
 .hover-lift {
@@ -196,7 +199,8 @@ h6 {
 .hover-lift:hover {
   transform: translateY(-4px);
   border-color: var(--border-hover);
-  box-shadow: 0 12px 40px rgba(0, 255, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: 0 12px 40px rgba(0, 255, 65, 0.08);
+  /* AgentChain has subtle hover glow */
 }
 
 .skeleton-pulse {

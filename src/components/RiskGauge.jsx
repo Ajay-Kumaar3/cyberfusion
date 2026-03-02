@@ -6,7 +6,7 @@ export default function RiskGauge({ score, size = 120 }) {
     const offset = circ - (score / 100) * circ;
 
     // Neon green to red gradient based on score
-    const color = score > 80 ? '#ffffff' : score > 50 ? '#cdffcd' : '#00ff00';
+    const color = score > 80 ? '#ffffff' : score > 50 ? '#cdffcd' : '#00FF41';
 
     return (
         <div style={{ position: "relative", width: size, height: size, display: "flex", alignItems: "center", justifyContent: "center" }}>

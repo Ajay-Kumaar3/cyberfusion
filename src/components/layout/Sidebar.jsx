@@ -19,9 +19,8 @@ export default function Sidebar() {
     <div style={{
       width: 250,
       height: '100vh',
-      background: 'rgba(10, 2, 2, 0.8)',
-      backdropFilter: 'blur(30px)',
-      borderRight: '1px solid var(--border-color)',
+      background: 'var(--bg-sidebar)',
+      borderRight: '1px solid rgba(0, 255, 65, 0.05)',
       display: 'flex',
       flexDirection: 'column',
       padding: '24px 0',
@@ -29,7 +28,7 @@ export default function Sidebar() {
       zIndex: 10
     }}>
       <div style={{ padding: '0 24px', marginBottom: 40, display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', padding: '6px', borderRadius: 10, color: '#fff', boxShadow: '0 4px 12px rgba(0, 255, 0, 0.3)' }}>
+        <div style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', padding: '6px', borderRadius: 10, color: '#fff', boxShadow: '0 4px 12px rgba(0, 255, 65, 0.3)' }}>
           <Shield size={24} />
         </div>
         <div>
@@ -53,8 +52,8 @@ export default function Sidebar() {
                 gap: 12,
                 padding: '12px 16px',
                 color: isActive ? '#fff' : 'var(--text-muted)',
-                background: isActive ? 'rgba(0, 255, 0, 0.12)' : 'transparent',
-                border: isActive ? '1px solid rgba(0, 255, 0, 0.3)' : '1px solid transparent',
+                background: isActive ? 'rgba(0, 255, 65, 0.12)' : 'transparent',
+                border: isActive ? '1px solid rgba(0, 255, 65, 0.3)' : '1px solid transparent',
                 borderRadius: '12px',
                 textDecoration: 'none',
                 fontFamily: "'Space Grotesk', sans-serif",
@@ -69,7 +68,7 @@ export default function Sidebar() {
               <style>{`
                 @keyframes nav-pulse {
                   0% { border-color: transparent; }
-                  50% { border-color: #00ff8888; box-shadow: 0 0 10px #00ff8822; }
+                  50% { border-color: #00CC3388; box-shadow: 0 0 10px #00CC3322; }
                   100% { border-color: transparent; }
                 }
               `}</style>
@@ -84,7 +83,7 @@ export default function Sidebar() {
 
       <div style={{ padding: '0 24px', paddingTop: 24 }}>
         <button style={{
-          width: '100%', padding: '14px', background: 'rgba(0, 255, 0, 0.08)', color: 'var(--accent)', border: '1px solid rgba(0, 255, 0, 0.3)', borderRadius: 12, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", fontSize: 11, display: 'flex', justifyContent: 'center', gap: 8, alignItems: 'center', cursor: 'pointer', transition: 'all 0.2s', letterSpacing: '0.05em'
+          width: '100%', padding: '14px', background: 'rgba(0, 255, 65, 0.08)', color: 'var(--accent)', border: '1px solid rgba(0, 255, 65, 0.3)', borderRadius: 12, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", fontSize: 11, display: 'flex', justifyContent: 'center', gap: 8, alignItems: 'center', cursor: 'pointer', transition: 'all 0.2s', letterSpacing: '0.05em'
         }} className="hover-lift">
           <Shield size={14} /> SECURITY PROTOCOLS
         </button>

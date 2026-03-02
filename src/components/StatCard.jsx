@@ -33,7 +33,7 @@ export default function StatCard({ title, targetValue, color, suffix = "", prefi
                 position: 'absolute', top: -20, right: -20, width: 60, height: 60,
                 background: color, filter: 'blur(30px)', opacity: 0.15, pointerEvents: 'none'
             }} />
-            <div style={{ fontSize: 12, color: '#008800', fontWeight: 600, marginBottom: 8 }}>{title}</div>
+            <div style={{ fontSize: 12, color: '#7A8E7A', fontWeight: 600, marginBottom: 8 }}>{title}</div>
             <div style={{ fontSize: 32, fontWeight: 800, color, fontFamily: "'JetBrains Mono', monospace" }}>
                 {prefix}{displayVal}{suffix}
             </div>

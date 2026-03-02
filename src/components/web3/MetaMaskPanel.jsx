@@ -48,12 +48,12 @@ export default function MetaMaskPanel({ onFraudAlert }) {
         style={{
           position: "fixed", bottom: 28, right: 28, zIndex: 9999,
           width: 56, height: 56, borderRadius: "50%",
-          background: account ? "rgba(0, 255, 0, 0.15)" : "rgba(255,255,255,0.06)",
-          border: `1px solid ${account ? "rgba(0, 255, 0, 0.45)" : "rgba(255,255,255,0.15)"}`,
+          background: account ? "rgba(0, 255, 65, 0.15)" : "rgba(255,255,255,0.06)",
+          border: `1px solid ${account ? "rgba(0, 255, 65, 0.45)" : "rgba(255,255,255,0.15)"}`,
           color: account ? "var(--accent)" : "#fff",
           display: "flex", alignItems: "center", justifyContent: "center",
           cursor: "pointer",
-          boxShadow: account ? "0 0 20px rgba(0, 255, 0, 0.25)" : "0 4px 20px rgba(0,0,0,0.5)",
+          boxShadow: account ? "0 0 20px rgba(0, 255, 65, 0.25)" : "0 4px 20px rgba(0,0,0,0.5)",
           backdropFilter: "blur(12px)",
           transition: "all 0.2s",
         }}
@@ -68,9 +68,9 @@ export default function MetaMaskPanel({ onFraudAlert }) {
           width: 360,
           background: "rgba(10, 2, 2, 0.96)",
           backdropFilter: "blur(28px)",
-          border: "1px solid rgba(0, 255, 0, 0.25)",
+          border: "1px solid rgba(0, 255, 65, 0.25)",
           borderRadius: 16,
-          boxShadow: "0 24px 60px rgba(0,0,0,0.8), 0 0 40px rgba(0, 255, 0, 0.04)",
+          boxShadow: "0 24px 60px rgba(0,0,0,0.8), 0 0 40px rgba(0, 255, 65, 0.04)",
           overflow: "hidden",
           animation: "fadeInUp 0.22s ease",
         }}>
@@ -78,8 +78,8 @@ export default function MetaMaskPanel({ onFraudAlert }) {
           {/* Header */}
           <div style={{
             display: "flex", justifyContent: "space-between", alignItems: "center",
-            padding: "14px 18px", borderBottom: "1px solid rgba(0, 255, 0, 0.1)",
-            background: "rgba(0, 255, 0, 0.03)",
+            padding: "14px 18px", borderBottom: "1px solid rgba(0, 255, 65, 0.1)",
+            background: "rgba(0, 255, 65, 0.03)",
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Shield size={15} color="var(--accent)" />
@@ -112,7 +112,7 @@ export default function MetaMaskPanel({ onFraudAlert }) {
                 <div style={{
                   display: "flex", justifyContent: "space-between", alignItems: "center",
                   padding: "8px 12px", borderRadius: 8, marginBottom: 16,
-                  background: "rgba(0, 255, 0, 0.05)", border: "1px solid rgba(0, 255, 0, 0.14)",
+                  background: "rgba(0, 255, 65, 0.05)", border: "1px solid rgba(0, 255, 65, 0.14)",
                 }}>
                   <div>
                     <div style={{ fontSize: 9, color: "var(--accent)", letterSpacing: "0.12em", marginBottom: 2, fontWeight: 700 }}>WALLET CONNECTED</div>
@@ -139,8 +139,8 @@ export default function MetaMaskPanel({ onFraudAlert }) {
                 {status === "pending" && <StatusRow color="#fbbf24" icon="⏳" text="Waiting for MetaMask approval…" />}
                 {status === "mining"  && <StatusRow color="#38bdf8" icon="⛏" text={`Mining… ${txHash ? short(txHash) : ""}`} />}
                 {status === "done"    && txHash && (
-                  <div style={{ ...statusBox("#00ff00"), marginBottom: 10 }}>
-                    <CheckCircle size={13} color="#00ff00" />
+                  <div style={{ ...statusBox("#00FF41"), marginBottom: 10 }}>
+                    <CheckCircle size={13} color="#00FF41" />
                     <span style={{ fontSize: 12, color: "var(--accent)" }}>Confirmed!</span>
                     <a href={`https://sepolia.etherscan.io/tx/${txHash}`} target="_blank" rel="noopener noreferrer"
                       style={{ marginLeft: "auto", color: "var(--accent)", display: "flex", alignItems: "center", gap: 3, fontSize: 11 }}>
@@ -186,7 +186,7 @@ export default function MetaMaskPanel({ onFraudAlert }) {
 
                 {/* CyberFusion note */}
                 <div style={{ marginTop: 14, fontSize: 10, color: "#335533", textAlign: "center", lineHeight: 1.6 }}>
-                  Transaction data is forwarded to <strong style={{ color: "#008800" }}>CyberFusion /analyze-transaction</strong> after confirmation.
+                  Transaction data is forwarded to <strong style={{ color: "#7A8E7A" }}>CyberFusion /analyze-transaction</strong> after confirmation.
                 </div>
               </>
             )}

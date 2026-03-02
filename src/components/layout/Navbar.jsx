@@ -15,7 +15,7 @@ export default function Navbar() {
     <div style={{
       height: 80,
       background: 'transparent',
-      borderBottom: '1px solid var(--border-color)',
+      borderBottom: 'none',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -38,7 +38,7 @@ export default function Navbar() {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.02)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px', borderRadius: 20, border: '1px solid rgba(0, 255, 65, 0.15)', background: 'rgba(255,255,255,0.02)' }}>
           <Clock size={16} color="var(--accent)" />
           <span style={{ fontFamily: "'JetBrains Mono', monospace", color: 'var(--text-main)', fontWeight: 600, fontSize: 14 }}>
             {time.toLocaleTimeString()}
@@ -60,8 +60,8 @@ export default function Navbar() {
           ACTIVE PROTOCOLS
         </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '4px', background: 'rgba(0, 255, 0, 0.1)', borderRadius: '50%', border: '1px solid rgba(0, 255, 0, 0.2)' }}>
-          <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 13, boxShadow: '0 0 15px rgba(0, 255, 0, 0.3)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '4px', background: 'rgba(0, 255, 65, 0.1)', borderRadius: '50%', border: '1px solid rgba(0, 255, 65, 0.2)' }}>
+          <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 13, boxShadow: '0 0 15px rgba(0, 255, 65, 0.3)' }}>
             AK
           </div>
         </div>

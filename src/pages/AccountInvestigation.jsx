@@ -38,19 +38,19 @@ const accounts = [
 ];
 
 const TYPE_CFG = {
-  safe:    { color: "#00ff00", bg: "#00ff0012" },
+  safe:    { color: "#00FF41", bg: "#00FF4112" },
   warning: { color: "#ffffff", bg: "#ffffff12" },
   danger:  { color: "#ffffff", bg: "#ffffff12" },
   alert:   { color: "#ffffff", bg: "#ffffff12" },
 };
 
-const RISK_COLOR   = { HIGH: "#ffffff", MEDIUM: "#ffffff", LOW: "#00ff00" };
-const STATUS_COLOR = { Blocked: "#ffffff", Cleared: "#00ff00", Pending: "#ffffff" };
+const RISK_COLOR   = { HIGH: "#ffffff", MEDIUM: "#ffffff", LOW: "#00FF41" };
+const STATUS_COLOR = { Blocked: "#ffffff", Cleared: "#00FF41", Pending: "#ffffff" };
 
 const ACCT_STATUS = {
   COMPROMISED:  { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff44" },
-  "HIGH RISK":  { color: "#ccff00", bg: "#ccff0014", glow: "#ccff0044" },
-  SAFE:         { color: "#00ff00", bg: "#00ff0014", glow: "#00ff0044" },
+  "HIGH RISK":  { color: "#A8EF00", bg: "#A8EF0014", glow: "#A8EF0044" },
+  SAFE:         { color: "#00FF41", bg: "#00FF4114", glow: "#00FF4144" },
 };
 
 function ScoreGauge({ score, label, color }) {
@@ -71,7 +71,7 @@ function ScoreGauge({ score, label, color }) {
         <text x="48" y="44" textAnchor="middle" dominantBaseline="middle" fill={color} fontSize="20" fontWeight="800" fontFamily="JetBrains Mono, monospace">{score}</text>
         <text x="48" y="60" textAnchor="middle" dominantBaseline="middle" fill="#3a5070" fontSize="9">/100</text>
       </svg>
-      <div style={{ fontSize: 10, color: "#008800", marginTop: 6, fontWeight: 600, letterSpacing: "0.05em" }}>{label}</div>
+      <div style={{ fontSize: 10, color: "#7A8E7A", marginTop: 6, fontWeight: 600, letterSpacing: "0.05em" }}>{label}</div>
     </div>
   );
 }
@@ -129,7 +129,7 @@ export default function AccountInvestigation() {
               onClick={() => { setSelected(acc); setShowAI(false); }}
               style={{
                 ...styles.tab,
-                color: active ? s.color : "#008800",
+                color: active ? s.color : "#7A8E7A",
                 background: active ? s.bg : "transparent",
                 borderBottom: active ? `2px solid ${s.color}` : "2px solid transparent",
                 boxShadow: active ? `inset 0 0 20px ${s.glow}` : "none",
@@ -165,7 +165,7 @@ export default function AccountInvestigation() {
               ].map(d => (
                 <div key={d.val} style={{ fontSize: 12, color: "#8499b8", display: "flex", gap: 6 }}>
                   <span>{d.icon}</span>
-                  <span style={d.mono ? { fontFamily: "'JetBrains Mono', monospace", color: "#88ff88", fontSize: 11 } : {}}>
+                  <span style={d.mono ? { fontFamily: "'JetBrains Mono', monospace", color: "#00FF41", fontSize: 11 } : {}}>
                     {d.val}
                   </span>
                 </div>
@@ -176,7 +176,7 @@ export default function AccountInvestigation() {
 
         {/* Gauges */}
         <div style={styles.gaugesRow}>
-          <ScoreGauge score={selected.cyberScore} label="CYBER RISK" color="#88ff88" />
+          <ScoreGauge score={selected.cyberScore} label="CYBER RISK" color="#00FF41" />
           <div style={{ width: 1, background: "#1e2d47", alignSelf: "stretch", margin: "8px 0" }} />
           <ScoreGauge score={selected.transactionScore} label="TXN RISK" color="#ffffff" />
           <div style={{ width: 1, background: "#1e2d47", alignSelf: "stretch", margin: "8px 0" }} />
@@ -189,7 +189,7 @@ export default function AccountInvestigation() {
             }}>
               {selected.status}
             </div>
-            <div style={{ fontSize: 10, color: "#008800" }}>Account Status</div>
+            <div style={{ fontSize: 10, color: "#7A8E7A" }}>Account Status</div>
             <div style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 11, color: sc.color,
@@ -205,22 +205,22 @@ export default function AccountInvestigation() {
       <button onClick={() => setShowAI(s => !s)} style={{
         ...styles.aiBtn,
         background: showAI
-          ? "linear-gradient(135deg, #ffffff33, #88ff8822)"
-          : "linear-gradient(135deg, #ffffff14, #88ff880a)",
+          ? "linear-gradient(135deg, #ffffff33, #00FF4122)"
+          : "linear-gradient(135deg, #ffffff14, #00FF410a)",
         borderColor: showAI ? "#ffffff" : "#ffffff44",
         color: showAI ? "#ffffff" : "#ffffff",
         marginBottom: 20,
       }}>
         <span style={{ fontSize: 16 }}>🤖</span>
         {showAI ? "Hide AI Investigation Report" : "Generate AI Investigation Report"}
-        <span style={{ marginLeft: "auto", fontSize: 11, color: "#008800" }}>Powered by Gemini</span>
+        <span style={{ marginLeft: "auto", fontSize: 11, color: "#7A8E7A" }}>Powered by Gemini</span>
       </button>
 
       {showAI && (
         <div style={styles.aiCard}>
           <div style={styles.aiHeader}>
             <span style={{ color: "#ffffff", fontSize: 13, fontWeight: 700 }}>🤖 AI Investigation Report</span>
-            <span style={{ fontSize: 10, color: "#008800", fontFamily: "'JetBrains Mono', monospace" }}>
+            <span style={{ fontSize: 10, color: "#7A8E7A", fontFamily: "'JetBrains Mono', monospace" }}>
               Gemini API · {new Date().toLocaleTimeString()}
             </span>
           </div>
@@ -293,7 +293,7 @@ export default function AccountInvestigation() {
                 <div style={{ fontSize: 22, fontWeight: 900, color: "#ffffff", fontFamily: "'JetBrains Mono', monospace", marginBottom: 2 }}>
                   {txn.amount}
                 </div>
-                <div style={{ fontSize: 12, color: "#008800", marginBottom: 8 }}>→ {txn.receiver}</div>
+                <div style={{ fontSize: 12, color: "#7A8E7A", marginBottom: 8 }}>→ {txn.receiver}</div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ fontSize: 10, color: "#3a5070", fontFamily: "'JetBrains Mono', monospace" }}>
                     🕐 {txn.time}
@@ -319,18 +319,18 @@ const styles = {
   breadcrumb: { fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: "#3a5070", letterSpacing: "0.15em", marginBottom: 8 },
   header: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 },
   heading: { fontSize: 32, fontWeight: 800, color: "#ffffff", letterSpacing: "-0.5px", marginBottom: 6 },
-  sub: { color: "#008800", fontSize: 13 },
+  sub: { color: "#7A8E7A", fontSize: 13 },
   searchRow: { display: "flex", gap: 8, alignItems: "center" },
   searchWrap: { position: "relative", display: "flex", alignItems: "center" },
-  searchIcon: { position: "absolute", left: 12, fontSize: 18, color: "#008800", pointerEvents: "none" },
+  searchIcon: { position: "absolute", left: 12, fontSize: 18, color: "#7A8E7A", pointerEvents: "none" },
   input: { background: "#0a0f1a", border: "1px solid #1e2d47", borderRadius: 10, padding: "10px 14px 10px 36px", color: "#ffffff", fontSize: 12, outline: "none", width: 240, fontFamily: "Inter, sans-serif" },
-  searchBtn: { background: "linear-gradient(135deg, #ffffff, #88ff88)", border: "none", color: "#fff", padding: "10px 20px", borderRadius: 10, cursor: "pointer", fontWeight: 700, fontSize: 13, fontFamily: "Inter, sans-serif" },
+  searchBtn: { background: "linear-gradient(135deg, #ffffff, #00FF41)", border: "none", color: "#fff", padding: "10px 20px", borderRadius: 10, cursor: "pointer", fontWeight: 700, fontSize: 13, fontFamily: "Inter, sans-serif" },
   tabRow: { display: "flex", gap: 2, borderBottom: "1px solid #1e2d47", marginBottom: 20 },
   tab: { padding: "10px 22px", cursor: "pointer", transition: "all 0.2s", borderRadius: "8px 8px 0 0" },
   profileCard: { position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #0a0f1a, #0f1623)", border: "1px solid #1e2d47", borderRadius: 16, padding: "28px", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 },
   profileGlow: { position: "absolute", top: -60, left: -30, width: 200, height: 200, borderRadius: "50%", filter: "blur(70px)", opacity: 0.08, pointerEvents: "none" },
   profileLeft: { display: "flex", gap: 20, alignItems: "center" },
-  bigAvatar: { width: 70, height: 70, borderRadius: "50%", background: "linear-gradient(135deg, #88ff88, #ffffff)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 30, fontWeight: 900, color: "#0a0f1a", border: "2px solid", flexShrink: 0 },
+  bigAvatar: { width: 70, height: 70, borderRadius: "50%", background: "linear-gradient(135deg, #00FF41, #ffffff)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 30, fontWeight: 900, color: "#0a0f1a", border: "2px solid", flexShrink: 0 },
   profileName: { fontSize: 22, fontWeight: 800, color: "#ffffff" },
   gaugesRow: { display: "flex", gap: 28, alignItems: "center" },
   statusChip: { fontSize: 12, fontWeight: 800, padding: "8px 18px", borderRadius: 30, letterSpacing: "0.05em" },
@@ -339,7 +339,7 @@ const styles = {
   aiHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, paddingBottom: 12, borderBottom: "1px solid #1e2d47" },
   aiText: { fontSize: 13, lineHeight: 1.8, color: "#8499b8", marginBottom: 14 },
   aiBadge: { display: "flex", gap: 12, flexWrap: "wrap" },
-  aiBadgeItem: { fontSize: 10, color: "#008800", fontFamily: "'JetBrains Mono', monospace", background: "#0a0f1a", border: "1px solid #1e2d47", padding: "3px 10px", borderRadius: 20 },
+  aiBadgeItem: { fontSize: 10, color: "#7A8E7A", fontFamily: "'JetBrains Mono', monospace", background: "#0a0f1a", border: "1px solid #1e2d47", padding: "3px 10px", borderRadius: 20 },
   bottomGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 },
   section: { background: "linear-gradient(135deg, #0a0f1a, #0f1623)", border: "1px solid #1e2d47", borderRadius: 14, padding: "20px" },
   sectionTitle: { fontSize: 13, fontWeight: 700, color: "#ffffff", marginBottom: 18 },

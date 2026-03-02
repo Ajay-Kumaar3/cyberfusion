@@ -5,10 +5,10 @@ import { fetchAlerts } from "../api/api";
 
 const sevColor = (sev) => {
     // Purified neon green cyberpunk theme
-    if (sev === "CRITICAL") return "#00ff00";
+    if (sev === "CRITICAL") return "#00FF41";
     if (sev === "HIGH") return "#00cc00";
-    if (sev === "MEDIUM") return "#008800";
-    return "#00ff00";
+    if (sev === "MEDIUM") return "#7A8E7A";
+    return "#00FF41";
 };
 
 const sevLabel = (sev) => {

@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
 from config import settings
 from database import engine
 import models
@@ -32,7 +35,7 @@ app.include_router(alerts.router, prefix="/api")
 app.include_router(dashboard.router, prefix="/api")
 
 
-@app.get("/")
+@app.get("/api")
 def root():
     return {
         "name": "CyberFusion API",
@@ -42,6 +45,22 @@ def root():
     }
 
 
-@app.get("/health")
+@app.get("/api/health")
 def health():
     return {"status": "ok"}
+
+# ── Serve React Frontend ─────────────────────────────────────────────────────────────
+build_dir = os.path.join(os.path.dirname(__file__), "..", "build")
+
+if os.path.isdir(build_dir):
+    app.mount("/static", StaticFiles(directory=os.path.join(build_dir, "static")), name="static")
+
+    @app.get("/{full_path:path}")
+    async def serve_react_app(full_path: str):
+        file_path = os.path.join(build_dir, full_path)
+        if os.path.isfile(file_path):
+            return FileResponse(file_path)
+        index_path = os.path.join(build_dir, "index.html")
+        if os.path.isfile(index_path):
+            return FileResponse(index_path)
+        return {"error": "React build not found. Run npm run build."}

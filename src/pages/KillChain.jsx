@@ -18,7 +18,7 @@ const COLORS = {
     PHISHING: "#cdffcd",
     COMPROMISED_ACCOUNT: "#ffffff",
     MULE_ACCOUNT: "#cdffcd",
-    TRANSACTION: "#88ff88",
+    TRANSACTION: "#00FF41",
     EXIT_POINT: "#ffffff"
 };
 
@@ -84,7 +84,7 @@ export default function KillChain() {
             .attr("stroke", d => {
                 if (d.type === "RECRUITS") return "rgba(205, 255, 205, 0.8)";
                 if (d.type === "CONTROLS") return "rgba(255, 255, 255, 0.8)";
-                if (d.type === "TRANSFERS" || d.type === "TRANSFERS_TO") return "#88ff88";
+                if (d.type === "TRANSFERS" || d.type === "TRANSFERS_TO") return "#00FF41";
                 if (d.type === "LAUNDERS_VIA") return "#ffffff";
                 return "rgba(255,255,255,0.5)";
             })
@@ -196,11 +196,11 @@ export default function KillChain() {
         <div style={{ display: 'flex', height: 'calc(100vh - 120px)', gap: 24 }}>
             {/* Graph Area */}
             <GlassCard style={{ flex: 1, padding: 0, overflow: 'hidden', position: 'relative' }}>
-                <div style={{ position: 'absolute', top: 20, left: 20, zIndex: 1, background: 'rgba(0,0,0,0.5)', padding: '12px 16px', borderRadius: 8, backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <div style={{ position: 'absolute', top: 20, left: 20, zIndex: 1, background: 'rgba(0,0,0,0.5)', padding: '12px 16px', borderRadius: 8, backdropFilter: 'blur(10px)', border: '1px solid rgba(0, 255, 65, 0.15)' }}>
                     <h3 style={{ margin: 0, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, color: '#ffffff' }}>
                         <span style={{ fontSize: 16 }}>🕸️</span> LIVE KILL CHAIN DIAGRAM
                     </h3>
-                    <div style={{ fontSize: 11, color: '#008800', marginTop: 4 }}>Graph updates automatically when connections are discovered</div>
+                    <div style={{ fontSize: 11, color: '#7A8E7A', marginTop: 4 }}>Graph updates automatically when connections are discovered</div>
                 </div>
                 <div style={{ position: 'absolute', bottom: 20, left: 20, zIndex: 1, display: 'flex', gap: 12, flexWrap: 'wrap', width: 400 }}>
                     {Object.entries(COLORS).map(([key, col]) => (
@@ -229,7 +229,7 @@ export default function KillChain() {
                             </div>
 
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: 11 }}>
-                                <span style={{ color: '#008800' }}>Risk Level</span>
+                                <span style={{ color: '#7A8E7A' }}>Risk Level</span>
                                 <span style={{ color: '#ffffff', fontWeight: 'bold' }}>{selectedNode.risk}%</span>
                             </div>
                             <div style={{ width: '100%', height: 4, background: 'rgba(255,255,255,0.1)', borderRadius: 2 }}>
@@ -257,7 +257,7 @@ export default function KillChain() {
                     </>
                 ) : (
                     <GlassCard style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: 32 }}>
-                        <div style={{ color: '#008800' }}>
+                        <div style={{ color: '#7A8E7A' }}>
                             <div style={{ fontSize: 32, marginBottom: 16 }}>👆</div>
                             <div style={{ fontSize: 14, fontWeight: 'bold', color: '#ffffff', marginBottom: 8 }}>Select a Node</div>
                             <div style={{ fontSize: 12 }}>Click any node on the kill chain graph to view intelligence and take action.</div>

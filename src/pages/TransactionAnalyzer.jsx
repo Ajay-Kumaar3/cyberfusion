@@ -12,7 +12,7 @@ const transactions = [
 ];
 
 const STATUS = {
-  Blocked: { color: "var(--danger)", bg: "rgba(0, 255, 136, 0.1)", icon: "🚫" },
+  Blocked: { color: "var(--danger)", bg: "rgba(0, 204, 51, 0.1)", icon: "🚫" },
   Flagged: { color: "var(--warning)", bg: "rgba(245, 158, 11, 0.1)", icon: "[!]️" },
   Cleared: { color: "var(--success)", bg: "rgba(16, 185, 129, 0.1)", icon: "✅" },
 };
@@ -197,13 +197,13 @@ export default function TransactionAnalyzer() {
                     <div style={styles.expandTitle}>🔍 Investigation Detail</div>
                     <div style={styles.detailGrid}>
                       {[
-                        { label: "Avg Monthly", val: `₹${txn.avgAmount.toLocaleString()}`, color: "#008800" },
+                        { label: "Avg Monthly", val: `₹${txn.avgAmount.toLocaleString()}`, color: "#7A8E7A" },
                         { label: "This Transfer", val: `₹${txn.amount.toLocaleString()}`, color: "#ffffff" },
-                        { label: "New Receiver", val: txn.newReceiver ? "Yes [!]" : "No ✓", color: txn.newReceiver ? "#ffffff" : "#00ff00" },
-                        { label: "Unusual Time", val: txn.timeFlag ? "Yes [!]" : "No ✓", color: txn.timeFlag ? "#ffffff" : "#00ff00" },
+                        { label: "New Receiver", val: txn.newReceiver ? "Yes [!]" : "No ✓", color: txn.newReceiver ? "#ffffff" : "#00FF41" },
+                        { label: "Unusual Time", val: txn.timeFlag ? "Yes [!]" : "No ✓", color: txn.timeFlag ? "#ffffff" : "#00FF41" },
                       ].map(d => (
                         <div key={d.label} style={styles.detailItem}>
-                          <div style={{ fontSize: 10, color: "#008800", marginBottom: 3 }}>{d.label}</div>
+                          <div style={{ fontSize: 10, color: "#7A8E7A", marginBottom: 3 }}>{d.label}</div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: d.color, fontFamily: "'JetBrains Mono', monospace" }}>{d.val}</div>
                         </div>
                       ))}

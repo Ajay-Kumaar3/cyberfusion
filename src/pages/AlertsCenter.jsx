@@ -11,14 +11,14 @@ const alertsData = [
 
 const SEV = {
   CRITICAL: { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", label: "CRITICAL", ring: "#ffffff44" },
-  HIGH:     { color: "#ccff00", bg: "#ccff0014", glow: "#ccff0033", label: "HIGH",     ring: "#ccff0044" },
+  HIGH:     { color: "#A8EF00", bg: "#A8EF0014", glow: "#A8EF0033", label: "HIGH",     ring: "#A8EF0044" },
   MEDIUM:   { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", label: "MEDIUM",   ring: "#ffffff44" },
-  LOW:      { color: "#00ff00", bg: "#00ff0014", glow: "#00ff0033", label: "LOW",       ring: "#00ff0044" },
+  LOW:      { color: "#00FF41", bg: "#00FF4114", glow: "#00FF4133", label: "LOW",       ring: "#00FF4144" },
 };
 const STAT = {
   Open:          { color: "#ffffff", bg: "#ffffff14" },
   "Under Review":{ color: "#ffffff", bg: "#ffffff14" },
-  Resolved:      { color: "#00ff00", bg: "#00ff0014" },
+  Resolved:      { color: "#00FF41", bg: "#00FF4114" },
 };
 
 function ScoreBar({ value, color }) {
@@ -70,11 +70,11 @@ export default function AlertsCenter() {
           {[
             { label: "Open", val: counts.open, color: "#ffffff" },
             { label: "In Review", val: counts.review, color: "#ffffff" },
-            { label: "Resolved", val: counts.resolved, color: "#00ff00" },
+            { label: "Resolved", val: counts.resolved, color: "#00FF41" },
           ].map(p => (
             <div key={p.label} style={{ ...styles.pill, borderColor: p.color + "44" }}>
               <span style={{ fontSize: 22, fontWeight: 800, color: p.color, fontFamily: "'JetBrains Mono', monospace" }}>{p.val}</span>
-              <span style={{ fontSize: 10, color: "#008800", marginTop: 2 }}>{p.label}</span>
+              <span style={{ fontSize: 10, color: "#7A8E7A", marginTop: 2 }}>{p.label}</span>
             </div>
           ))}
         </div>
@@ -86,14 +86,14 @@ export default function AlertsCenter() {
           {filters.map(f => (
             <button key={f} onClick={() => setFilter(f)} style={{
               ...styles.tab,
-              color: filter === f ? "#88ff88" : "#008800",
-              background: filter === f ? "#88ff8814" : "transparent",
-              borderBottom: filter === f ? "2px solid #88ff88" : "2px solid transparent",
+              color: filter === f ? "#00FF41" : "#7A8E7A",
+              background: filter === f ? "#00FF4114" : "transparent",
+              borderBottom: filter === f ? "2px solid #00FF41" : "2px solid transparent",
             }}>{f}
               {f !== "All" && <span style={{
                 marginLeft: 6, fontSize: 9, fontWeight: 800,
-                background: filter === f ? "#88ff8822" : "#1e2d47",
-                color: filter === f ? "#88ff88" : "#008800",
+                background: filter === f ? "#00FF4122" : "#1e2d47",
+                color: filter === f ? "#00FF41" : "#7A8E7A",
                 padding: "1px 6px", borderRadius: 8,
               }}>
                 {f === "Open" ? counts.open : f === "Under Review" ? counts.review : counts.resolved}
@@ -152,7 +152,7 @@ export default function AlertsCenter() {
                 <div style={styles.scoresGrid}>
                   <div>
                     <div style={styles.scoreTitle}>Cyber Risk</div>
-                    <ScoreBar value={alert.cyber} color="#88ff88" />
+                    <ScoreBar value={alert.cyber} color="#00FF41" />
                   </div>
                   <div>
                     <div style={styles.scoreTitle}>Txn Risk</div>
@@ -178,7 +178,7 @@ export default function AlertsCenter() {
                       </button>
                     )}
                     {alert.status !== "Resolved" && (
-                      <button onClick={() => update(alert.id, "Resolved")} style={{ ...styles.btn, color: "#00ff00", borderColor: "#00ff0044", background: "#00ff000a" }}>
+                      <button onClick={() => update(alert.id, "Resolved")} style={{ ...styles.btn, color: "#00FF41", borderColor: "#00FF4144", background: "#00FF410a" }}>
                         Resolve
                       </button>
                     )}
@@ -191,8 +191,8 @@ export default function AlertsCenter() {
         {filtered.length === 0 && (
           <div style={styles.empty}>
             <div style={{ fontSize: 40, marginBottom: 12 }}>✅</div>
-            <div style={{ color: "#00ff00", fontWeight: 700 }}>All clear</div>
-            <div style={{ color: "#008800", fontSize: 12 }}>No alerts match this filter</div>
+            <div style={{ color: "#00FF41", fontWeight: 700 }}>All clear</div>
+            <div style={{ color: "#7A8E7A", fontSize: 12 }}>No alerts match this filter</div>
           </div>
         )}
       </div>
@@ -205,7 +205,7 @@ const styles = {
   breadcrumb: { fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: "#3a5070", letterSpacing: "0.15em", marginBottom: 8 },
   header: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28 },
   heading: { fontSize: 32, fontWeight: 800, color: "#ffffff", letterSpacing: "-0.5px", marginBottom: 6 },
-  sub: { color: "#008800", fontSize: 13 },
+  sub: { color: "#7A8E7A", fontSize: 13 },
   pillRow: { display: "flex", gap: 10 },
   pill: {
     display: "flex", flexDirection: "column", alignItems: "center",
@@ -243,7 +243,7 @@ const styles = {
   cardLeft: { display: "flex", alignItems: "center", gap: 12 },
   avatar: {
     width: 40, height: 40, borderRadius: "50%",
-    background: "linear-gradient(135deg, #88ff88, #ffffff)",
+    background: "linear-gradient(135deg, #00FF41, #ffffff)",
     display: "flex", alignItems: "center", justifyContent: "center",
     border: "2px solid", fontSize: 16, flexShrink: 0,
   },
@@ -252,7 +252,7 @@ const styles = {
   badges: { display: "flex", gap: 8 },
   badge: { fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 20, letterSpacing: "0.04em" },
   scoresGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 24px", marginBottom: 12 },
-  scoreTitle: { fontSize: 10, color: "#008800", marginBottom: 4, fontWeight: 600, letterSpacing: "0.05em" },
+  scoreTitle: { fontSize: 10, color: "#7A8E7A", marginBottom: 4, fontWeight: 600, letterSpacing: "0.05em" },
   actionBox: {
     display: "flex", alignItems: "flex-start",
     background: "#060b12", borderRadius: 8,

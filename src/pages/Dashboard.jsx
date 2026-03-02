@@ -79,26 +79,26 @@ export default function Dashboard() {
         <StatCard title="ALERTS" targetValue={summary?.active_alerts ?? 0} color="var(--warning)" />
         <StatCard title="TXNS REVIEW" targetValue={summary?.transactions_flagged ?? 0} color="var(--info)" />
         <StatCard title="ON-CHAIN BLOCKED" targetValue={blockedCount} color="#ffffff" />
-        <GlassCard style={{ padding: 20, border: '1px solid rgba(0,255,0,0.3)', background: 'linear-gradient(135deg,rgba(0,255,0,0.1),rgba(0,255,0,0.02))' }}>
+        <GlassCard style={{ padding: 20, border: '1px solid rgba(0,255,65,0.3)', background: 'linear-gradient(135deg,rgba(0,255,65,0.1),rgba(0,255,65,0.02))' }}>
           <div style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600, letterSpacing: '0.05em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', animation: 'blink 1s infinite' }} /> RECOVERY WINDOW
           </div>
-          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--accent)', fontFamily: "'JetBrains Mono', monospace", filter: 'drop-shadow(0 0 10px rgba(0,255,0,0.4))' }}>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--accent)', fontFamily: "'JetBrains Mono', monospace", filter: 'drop-shadow(0 0 10px rgba(0,255,65,0.4))' }}>
             {fmt(timeLeft)}
           </div>
         </GlassCard>
       </div>
 
       {/* Gemini Threat Briefing Banner */}
-      <div style={{ backgroundColor: 'rgba(0, 255, 0, 0.08)', border: '1px solid rgba(0, 255, 0, 0.3)', borderRadius: 10, padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#00ff00', display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-          <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#00ff00', animation: 'blink 1.5s infinite' }} />
+      <div style={{ backgroundColor: 'rgba(0, 255, 65, 0.08)', border: '1px solid rgba(0, 255, 65, 0.3)', borderRadius: 10, padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#00FF41', display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+          <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#00FF41', animation: 'blink 1.5s infinite' }} />
           [+] GEMINI BRIEFING
         </div>
         <div style={{ color: briefing === "Analyzing threat landscape..." ? '#666' : '#fff', fontSize: 13, flex: 1 }}>
           {briefingDisplay}
         </div>
-        <button onClick={fetchBriefing} style={{ backgroundColor: 'transparent', border: 'none', color: '#00ff00', fontSize: 12, cursor: 'pointer', flexShrink: 0, fontWeight: 600 }}>
+        <button onClick={fetchBriefing} style={{ backgroundColor: 'transparent', border: 'none', color: '#00FF41', fontSize: 12, cursor: 'pointer', flexShrink: 0, fontWeight: 600 }}>
           ↻ REFRESH
         </button>
       </div>
@@ -114,8 +114,8 @@ export default function Dashboard() {
             </h3>
             <div style={{ display: 'flex', gap: '3%', justifyContent: 'space-between' }}>
               {[
-                { id: "ACC-4821", risk: 95, status: "COMPROMISED", color: "#00ff00" },
-                { id: "ACC-7743", risk: 88, status: "FROZEN", color: "#00ff00" },
+                { id: "ACC-4821", risk: 95, status: "COMPROMISED", color: "#00FF41" },
+                { id: "ACC-7743", risk: 88, status: "FROZEN", color: "#00FF41" },
                 { id: "MULE-001", risk: 85, status: "FLAGGED", color: "#00cc00" }
               ].map(acc => (
                 <GlassCard key={acc.id} style={{ width: '31%', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -187,14 +187,14 @@ export default function Dashboard() {
                 <path fill="#ffffff" d="M292.5,85.8c0,0-15.5,10.1-23,20.3c-2.5,0.2-4.8,0.8-4.8,0.8s-2.1,3,0.5,3 c2.2,0,14.8,0.6,16.3,0.2c1.7-0.5,8.1-12,8.1-12S295.6,85.3,292.5,85.8z M168,160.8c-2,10.1-13,20.3-13,20.3c-2.5,0.2-4.8,0.8-4.8,0.8s-2.1,3,0.5,3 c2.2,0,14.8,0.6,16.3,0.2c1.7-0.5,8.1-12,8.1-12S170,140.3,168,160.8z M228,120.8c-2,10.1-13,20.3-13,20.3c-2.5,0.2-4.8,0.8-4.8,0.8s-2.1,3,0.5,3 c2.2,0,14.8,0.6,16.3,0.2c1.7-0.5,8.1-12,8.1-12S230,120.3,228,120.8z" />
               </svg>
               {[
-                { label: "RU", x: 280, y: 70, color: "#00ff00", size: 8 },
-                { label: "CN", x: 340, y: 100, color: "#00ff00", size: 10 },
-                { label: "NG", x: 220, y: 160, color: "#00ff00", size: 6 },
-                { label: "BR", x: 130, y: 170, color: "#00ff00", size: 7 },
-                { label: "RO", x: 245, y: 85, color: "#00ff00", size: 5 },
-                { label: "UA", x: 255, y: 78, color: "#00ff00", size: 7 },
-                { label: "VN", x: 335, y: 130, color: "#00ff00", size: 5 },
-                { label: "IN", x: 310, y: 120, color: "#00ff00", size: 6 }
+                { label: "RU", x: 280, y: 70, color: "#00FF41", size: 8 },
+                { label: "CN", x: 340, y: 100, color: "#00FF41", size: 10 },
+                { label: "NG", x: 220, y: 160, color: "#00FF41", size: 6 },
+                { label: "BR", x: 130, y: 170, color: "#00FF41", size: 7 },
+                { label: "RO", x: 245, y: 85, color: "#00FF41", size: 5 },
+                { label: "UA", x: 255, y: 78, color: "#00FF41", size: 7 },
+                { label: "VN", x: 335, y: 130, color: "#00FF41", size: 5 },
+                { label: "IN", x: 310, y: 120, color: "#00FF41", size: 6 }
               ].map((dot, i) => (
                 <div key={i} style={{ position: 'absolute', top: dot.y, left: dot.x }}>
                   <div style={{ width: dot.size, height: dot.size, backgroundColor: dot.color, borderRadius: '50%', position: 'absolute', transform: 'translate(-50%, -50%)', zIndex: 2 }} title={dot.label} />
@@ -209,9 +209,9 @@ export default function Dashboard() {
               `}</style>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginTop: 16, fontSize: 11, color: 'var(--text-muted)' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#00ff00' }}></span> Critical Origin</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#00FF41' }}></span> Critical Origin</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#00cc00' }}></span> High</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#008800' }}></span> Medium</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#7A8E7A' }}></span> Medium</span>
             </div>
           </GlassCard>
 
@@ -220,8 +220,8 @@ export default function Dashboard() {
 
       {/* Marquee Ticker */}
       <div style={{
-        backgroundColor: 'rgba(0, 255, 0, 0.05)',
-        borderTop: '1px solid rgba(0, 255, 0, 0.2)',
+        backgroundColor: 'rgba(0, 255, 65, 0.05)',
+        borderTop: '1px solid rgba(0, 255, 65, 0.2)',
         borderRadius: '0 0 12px 12px',
         padding: '10px 20px',
         overflow: 'hidden',
@@ -230,23 +230,23 @@ export default function Dashboard() {
         gap: 16,
         marginTop: 'auto'
       }}>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#00ff00', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0, zIndex: 10, position: 'relative' }}>
-          <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#00ff00', animation: 'blink 1.5s infinite' }} />
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#00FF41', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0, zIndex: 10, position: 'relative' }}>
+          <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#00FF41', animation: 'blink 1.5s infinite' }} />
           LIVE TXN FEED
         </div>
 
         <div style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap', position: 'relative' }}>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, display: 'inline-flex', gap: 40, animation: 'slide-left 25s linear infinite' }}>
-            <span><span style={{ color: '#00ff00' }}>TXN-8821 · $4,200 · ACC-4821 → MULE-001</span> · <span style={{ color: '#ffffff' }}>[!] FLAGGED</span></span>
-            <span><span style={{ color: '#00ff00' }}>TXN-4492 · $12,400 · MULE-001 → Crypto Exchange A</span> · <span style={{ color: '#ffffff' }}>[x] CRITICAL</span></span>
-            <span><span style={{ color: '#00ff00' }}>TXN-3301 · $8,900 · MULE-002 → Crypto Exchange A</span> · <span style={{ color: '#ffffff' }}>[!] FLAGGED</span></span>
-            <span><span style={{ color: '#00ff00' }}>TXN-7721 · $15,200 · MULE-003 → Wire Transfer HK</span> · <span style={{ color: '#ffffff' }}>[x] CRITICAL</span></span>
-            <span><span style={{ color: '#00ff00' }}>TXN-1102 · $3,100 · ACC-9922 → Unknown Wallet</span> · <span style={{ color: '#ffffff' }}>[!] FLAGGED</span></span>
-            <span><span style={{ color: '#00ff00' }}>TXN-5543 · $9,800 · ACC-5512 → Exchange B</span> · <span style={{ color: '#00ff00' }}>[+] CLEARED</span></span>
-            <span><span style={{ color: '#00ff00' }}>TXN-6621 · $22,000 · MULE-006 → Offshore Account</span> · <span style={{ color: '#ffffff' }}>[x] CRITICAL</span></span>
+            <span><span style={{ color: '#00FF41' }}>TXN-8821 · $4,200 · ACC-4821 → MULE-001</span> · <span style={{ color: '#ffffff' }}>[!] FLAGGED</span></span>
+            <span><span style={{ color: '#00FF41' }}>TXN-4492 · $12,400 · MULE-001 → Crypto Exchange A</span> · <span style={{ color: '#ffffff' }}>[x] CRITICAL</span></span>
+            <span><span style={{ color: '#00FF41' }}>TXN-3301 · $8,900 · MULE-002 → Crypto Exchange A</span> · <span style={{ color: '#ffffff' }}>[!] FLAGGED</span></span>
+            <span><span style={{ color: '#00FF41' }}>TXN-7721 · $15,200 · MULE-003 → Wire Transfer HK</span> · <span style={{ color: '#ffffff' }}>[x] CRITICAL</span></span>
+            <span><span style={{ color: '#00FF41' }}>TXN-1102 · $3,100 · ACC-9922 → Unknown Wallet</span> · <span style={{ color: '#ffffff' }}>[!] FLAGGED</span></span>
+            <span><span style={{ color: '#00FF41' }}>TXN-5543 · $9,800 · ACC-5512 → Exchange B</span> · <span style={{ color: '#00FF41' }}>[+] CLEARED</span></span>
+            <span><span style={{ color: '#00FF41' }}>TXN-6621 · $22,000 · MULE-006 → Offshore Account</span> · <span style={{ color: '#ffffff' }}>[x] CRITICAL</span></span>
             {/* Duplicates for infinite scroll */}
-            <span><span style={{ color: '#00ff00' }}>TXN-8821 · $4,200 · ACC-4821 → MULE-001</span> · <span style={{ color: '#ffffff' }}>[!] FLAGGED</span></span>
-            <span><span style={{ color: '#00ff00' }}>TXN-4492 · $12,400 · MULE-001 → Crypto Exchange A</span> · <span style={{ color: '#ffffff' }}>[x] CRITICAL</span></span>
+            <span><span style={{ color: '#00FF41' }}>TXN-8821 · $4,200 · ACC-4821 → MULE-001</span> · <span style={{ color: '#ffffff' }}>[!] FLAGGED</span></span>
+            <span><span style={{ color: '#00FF41' }}>TXN-4492 · $12,400 · MULE-001 → Crypto Exchange A</span> · <span style={{ color: '#ffffff' }}>[x] CRITICAL</span></span>
           </div>
         </div>
         <style>{`

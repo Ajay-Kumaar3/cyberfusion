@@ -5,7 +5,7 @@ import { ShieldAlert, Globe } from "lucide-react";
 import { fetchLogins } from "../api/api";
 
 const getSeverity = s => s >= 75 ? "CRIT" : s >= 45 ? "HIGH" : "MED";
-const sevColor = s => s === "CRIT" ? "#00ff00" : s === "HIGH" ? "#ccff00" : "#88ff88";
+const sevColor = s => s === "CRIT" ? "#00FF41" : s === "HIGH" ? "#A8EF00" : "#00FF41";
 
 const deriveEvent = ev => {
     if (ev.password_changed) return "Password Changed After Anomalous Login";
@@ -51,9 +51,9 @@ export default function CyberRisk() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                     <h1 style={{ fontSize: 24, margin: 0, color: '#ffffff' }}>SOC ↔ AML INTEGRATION FEED</h1>
-                    <div style={{ color: '#008800', fontSize: 13, marginTop: 4, display: 'flex', gap: 20 }}>
+                    <div style={{ color: '#7A8E7A', fontSize: 13, marginTop: 4, display: 'flex', gap: 20 }}>
                         <span>Bridging cyber attacks and financial crime</span>
-                        {!loading && <><span style={{ color: '#00ff00', fontWeight: 'bold' }}>{critCount} CRITICAL</span><span style={{ color: '#ccff00', fontWeight: 'bold' }}>{amlCount} AML MATCHES</span></>}
+                        {!loading && <><span style={{ color: '#00FF41', fontWeight: 'bold' }}>{critCount} CRITICAL</span><span style={{ color: '#A8EF00', fontWeight: 'bold' }}>{amlCount} AML MATCHES</span></>}
                     </div>
                 </div>
                 <button onClick={() => setReportTrigger(Date.now())}
@@ -65,8 +65,8 @@ export default function CyberRisk() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
                 <GlassCard style={{ padding: 24, display: 'flex', flexDirection: 'column' }}>
                     <h3 style={{ fontSize: 14, color: '#ffffff', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <ShieldAlert size={16} color="#88ff88" /> RAW CYBER EVENTS
-                        {loading && <span style={{ fontSize: 11, color: '#008800', marginLeft: 8 }}>Loading...</span>}
+                        <ShieldAlert size={16} color="#00FF41" /> RAW CYBER EVENTS
+                        {loading && <span style={{ fontSize: 11, color: '#7A8E7A', marginLeft: 8 }}>Loading...</span>}
                     </h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, overflowY: 'auto', maxHeight: 600 }}>
                         {cyberEvents.map((ev, i) => (
@@ -77,17 +77,17 @@ export default function CyberRisk() {
                                         <span style={{ fontSize: 9, fontWeight: 'bold', padding: '2px 6px', borderRadius: 4, background: `${sevColor(ev.sev)}22`, color: sevColor(ev.sev) }}>{ev.sev}</span>
                                         <span style={{ fontSize: 10, color: '#555', fontFamily: "'JetBrains Mono',monospace" }}>{ev.score}/100</span>
                                     </div>
-                                    {ev.amlMatch && <span style={{ fontSize: 9, fontWeight: 'bold', padding: '2px 8px', borderRadius: 12, background: 'linear-gradient(90deg,#00ff0033,#ccff0033)', color: '#ccff00', border: '1px solid #ccff0044' }}>🔗 AML MATCH</span>}
+                                    {ev.amlMatch && <span style={{ fontSize: 9, fontWeight: 'bold', padding: '2px 8px', borderRadius: 12, background: 'linear-gradient(90deg,#00FF4133,#A8EF0033)', color: '#A8EF00', border: '1px solid #A8EF0044' }}>🔗 AML MATCH</span>}
                                 </div>
                                 <div style={{ fontSize: 13, fontWeight: 'bold', color: '#ffffff', marginBottom: 4 }}>{ev.event}</div>
-                                <div style={{ display: 'flex', gap: 16, fontSize: 11, color: '#008800', fontFamily: "'JetBrains Mono',monospace" }}>
+                                <div style={{ display: 'flex', gap: 16, fontSize: 11, color: '#7A8E7A', fontFamily: "'JetBrains Mono',monospace" }}>
                                     <span>Account: {ev.user}</span>
                                     <span>Source: {ev.source}</span>
                                     {ev.location && <span><Globe size={10} style={{ display: 'inline', marginRight: 3 }} />{ev.location}</span>}
                                 </div>
                             </div>
                         ))}
-                        {!loading && cyberEvents.length === 0 && <div style={{ color: '#008800', fontSize: 13, textAlign: 'center', padding: 40 }}>No login events found</div>}
+                        {!loading && cyberEvents.length === 0 && <div style={{ color: '#7A8E7A', fontSize: 13, textAlign: 'center', padding: 40 }}>No login events found</div>}
                     </div>
                 </GlassCard>
 
@@ -104,24 +104,24 @@ export default function CyberRisk() {
                             <h3 style={{ fontSize: 14, color: '#ffffff', marginBottom: 20 }}>CYBER ↔ AML CORRELATION MATRIX</h3>
                             <div style={{ display: 'grid', gridTemplateColumns: '120px repeat(4, 1fr)', gap: 4 }}>
                                 <div />
-                                {['Velocity', 'New Rcv', 'Mule Link', 'Geo-Fail'].map(h => <div key={h} style={{ fontSize: 10, color: '#008800', textAlign: 'center', fontWeight: 'bold' }}>{h}</div>)}
+                                {['Velocity', 'New Rcv', 'Mule Link', 'Geo-Fail'].map(h => <div key={h} style={{ fontSize: 10, color: '#7A8E7A', textAlign: 'center', fontWeight: 'bold' }}>{h}</div>)}
                                 {['Phishing', 'Device Fail', 'VPN Use', 'Dark Web'].map(row => (
                                     <React.Fragment key={row}>
                                         <div style={{ fontSize: 11, color: '#00aa00', display: 'flex', alignItems: 'center' }}>{row}</div>
-                                        {[1, 2, 3, 4].map((_, j) => { const v = Math.random(); const c = v > 0.8 ? '#00ff00' : v > 0.5 ? '#ccff00' : v > 0.2 ? '#88ff88' : 'rgba(255,255,255,0.05)'; return <div key={j} style={{ height: 40, background: c, opacity: 0.3 + v * 0.5, borderRadius: 4, border: `1px solid ${c}` }} />; })}
+                                        {[1, 2, 3, 4].map((_, j) => { const v = Math.random(); const c = v > 0.8 ? '#00FF41' : v > 0.5 ? '#A8EF00' : v > 0.2 ? '#00FF41' : 'rgba(255,255,255,0.05)'; return <div key={j} style={{ height: 40, background: c, opacity: 0.3 + v * 0.5, borderRadius: 4, border: `1px solid ${c}` }} />; })}
                                     </React.Fragment>
                                 ))}
                             </div>
                             <div style={{ marginTop: 24, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
-                                {[{ label: 'Total Events', value: cyberEvents.length, color: '#ffffff' }, { label: 'Critical', value: critCount, color: '#00ff00' }, { label: 'AML Matches', value: amlCount, color: '#ccff00' }].map(({ label, value, color }) => (
+                                {[{ label: 'Total Events', value: cyberEvents.length, color: '#ffffff' }, { label: 'Critical', value: critCount, color: '#00FF41' }, { label: 'AML Matches', value: amlCount, color: '#A8EF00' }].map(({ label, value, color }) => (
                                     <div key={label} style={{ background: 'rgba(0,0,0,0.3)', padding: 12, borderRadius: 8, textAlign: 'center' }}>
                                         <div style={{ fontSize: 24, fontWeight: 800, color, fontFamily: "'JetBrains Mono',monospace" }}>{value}</div>
-                                        <div style={{ fontSize: 10, color: '#008800', marginTop: 4 }}>{label}</div>
+                                        <div style={{ fontSize: 10, color: '#7A8E7A', marginTop: 4 }}>{label}</div>
                                     </div>
                                 ))}
                             </div>
-                            <div style={{ marginTop: 16, fontSize: 11, color: '#008800', lineHeight: 1.6 }}>
-                                💡 <strong style={{ color: '#88ff88' }}>How this works:</strong> Matrix correlates cyber signals (rows) against AML anomalies (columns). Green = strong correlation between breach and laundering attempt.
+                            <div style={{ marginTop: 16, fontSize: 11, color: '#7A8E7A', lineHeight: 1.6 }}>
+                                💡 <strong style={{ color: '#00FF41' }}>How this works:</strong> Matrix correlates cyber signals (rows) against AML anomalies (columns). Green = strong correlation between breach and laundering attempt.
                             </div>
                         </GlassCard>
                     )}
