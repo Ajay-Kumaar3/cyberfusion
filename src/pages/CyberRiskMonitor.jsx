@@ -11,13 +11,13 @@ const loginData = [
 ];
 
 const STATUS_CFG = {
-  Critical:   { color: "#ff3366", bg: "#ff336614", glow: "#ff336633", icon: "🔴" },
+  Critical:   { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", icon: "🔴" },
   Suspicious: { color: "#ff8800", bg: "#ff880014", glow: "#ff880033", icon: "🟠" },
-  Warning:    { color: "#ffd60a", bg: "#ffd60a14", glow: "#ffd60a33", icon: "🟡" },
-  Safe:       { color: "#00ff88", bg: "#00ff8814", glow: "#00ff8833", icon: "🟢" },
+  Warning:    { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", icon: "🟡" },
+  Safe:       { color: "#00ff00", bg: "#00ff0014", glow: "#00ff0033", icon: "🟢" },
 };
 
-const FLAG_COLORS = ["#ff3366", "#ff8800", "#ffd60a", "#a259ff", "#00d4ff", "#ff00ff"];
+const FLAG_COLORS = ["#ffffff", "#ff8800", "#ffffff", "#ffffff", "#88ff88", "#ff00ff"];
 
 function ScoreRing({ score, status }) {
   const cfg = STATUS_CFG[status];
@@ -66,7 +66,7 @@ export default function CyberRiskMonitor() {
         <div>
           <div style={styles.breadcrumb}>CYBERFUSION LITE &nbsp;/&nbsp; CYBER RISK MONITOR</div>
           <h1 style={styles.heading}>
-            Cyber Risk <span style={{ color: "#00d4ff" }}>Monitor</span>
+            Cyber Risk <span style={{ color: "#88ff88" }}>Monitor</span>
           </h1>
           <p style={styles.sub}>Login anomaly intelligence — device, IP & location signals</p>
         </div>
@@ -107,9 +107,9 @@ export default function CyberRiskMonitor() {
             return (
               <button key={f} onClick={() => setFilter(f)} style={{
                 ...styles.tab,
-                color: filter === f ? (cfg?.color ?? "#00d4ff") : "#5a7399",
-                background: filter === f ? (cfg?.color ?? "#00d4ff") + "14" : "transparent",
-                borderBottom: filter === f ? `2px solid ${cfg?.color ?? "#00d4ff"}` : "2px solid transparent",
+                color: filter === f ? (cfg?.color ?? "#88ff88") : "#008800",
+                background: filter === f ? (cfg?.color ?? "#88ff88") + "14" : "transparent",
+                borderBottom: filter === f ? `2px solid ${cfg?.color ?? "#88ff88"}` : "2px solid transparent",
               }}>{f}</button>
             );
           })}
@@ -143,7 +143,7 @@ export default function CyberRiskMonitor() {
                         {item.user.charAt(0)}
                       </div>
                       <div>
-                        <div style={{ color: "#e8edf5", fontSize: 13, fontWeight: 700 }}>{item.user}</div>
+                        <div style={{ color: "#ffffff", fontSize: 13, fontWeight: 700 }}>{item.user}</div>
                         <div style={{ color: "#3a5070", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>{item.accountId}</div>
                       </div>
                     </div>
@@ -154,7 +154,7 @@ export default function CyberRiskMonitor() {
                   </td>
                   {/* IP */}
                   <td style={styles.td}>
-                    <span style={{ color: "#00d4ff", fontSize: 11, fontFamily: "'JetBrains Mono', monospace", background: "#00d4ff0a", padding: "2px 8px", borderRadius: 4 }}>
+                    <span style={{ color: "#88ff88", fontSize: 11, fontFamily: "'JetBrains Mono', monospace", background: "#88ff880a", padding: "2px 8px", borderRadius: 4 }}>
                       {item.ip}
                     </span>
                   </td>
@@ -164,13 +164,13 @@ export default function CyberRiskMonitor() {
                   </td>
                   {/* Time */}
                   <td style={styles.td}>
-                    <span style={{ color: "#5a7399", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }}>🕐 {item.time}</span>
+                    <span style={{ color: "#008800", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }}>🕐 {item.time}</span>
                   </td>
                   {/* Flags */}
                   <td style={styles.td}>
                     <div style={styles.flagsWrap}>
                       {item.flags.length === 0
-                        ? <span style={{ color: "#00ff88", fontSize: 10, background: "#00ff8814", padding: "2px 8px", borderRadius: 20, fontWeight: 700 }}>✓ Clean</span>
+                        ? <span style={{ color: "#00ff00", fontSize: 10, background: "#00ff0014", padding: "2px 8px", borderRadius: 20, fontWeight: 700 }}>✓ Clean</span>
                         : item.flags.map((flag, fi) => (
                           <span key={fi} style={{
                             fontSize: 9, fontWeight: 700, padding: "2px 8px", borderRadius: 20,
@@ -204,14 +204,14 @@ const styles = {
   page: { padding: "28px 32px", minHeight: "100%", animation: "fadeIn 0.4s ease" },
   breadcrumb: { fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: "#3a5070", letterSpacing: "0.15em", marginBottom: 8 },
   header: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28 },
-  heading: { fontSize: 32, fontWeight: 800, color: "#e8edf5", letterSpacing: "-0.5px", marginBottom: 6 },
-  sub: { color: "#5a7399", fontSize: 13 },
+  heading: { fontSize: 32, fontWeight: 800, color: "#ffffff", letterSpacing: "-0.5px", marginBottom: 6 },
+  sub: { color: "#008800", fontSize: 13 },
   searchWrap: { position: "relative", display: "flex", alignItems: "center" },
-  searchIcon: { position: "absolute", left: 12, fontSize: 18, color: "#5a7399", pointerEvents: "none" },
+  searchIcon: { position: "absolute", left: 12, fontSize: 18, color: "#008800", pointerEvents: "none" },
   input: {
     background: "#0a0f1a", border: "1px solid #1e2d47",
     borderRadius: 10, padding: "10px 14px 10px 36px",
-    color: "#e8edf5", fontSize: 13, outline: "none", width: 240,
+    color: "#ffffff", fontSize: 13, outline: "none", width: 240,
     fontFamily: "Inter, sans-serif",
     transition: "border-color 0.2s",
   },
@@ -238,7 +238,7 @@ const styles = {
   userCell: { display: "flex", alignItems: "center", gap: 10 },
   avatar: {
     width: 34, height: 34, borderRadius: "50%",
-    background: "linear-gradient(135deg, #00d4ff, #a259ff)",
+    background: "linear-gradient(135deg, #88ff88, #ffffff)",
     display: "flex", alignItems: "center", justifyContent: "center",
     fontSize: 13, fontWeight: 800, color: "#0a0f1a",
     border: "1.5px solid", flexShrink: 0,

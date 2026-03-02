@@ -1,196 +1,85 @@
-import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-
-const navItems = [
-  { label: "Dashboard",             path: "/",            icon: "◈", sub: "Overview" },
-  { label: "Alerts Center",         path: "/alerts",       icon: "◉", sub: "Fraud Alerts" },
-  { label: "Account Investigation", path: "/account",      icon: "◎", sub: "User Profiles" },
-  { label: "Cyber Risk Monitor",    path: "/cyber-risk",   icon: "◆", sub: "Login Intel" },
-  { label: "Transaction Analyzer",  path: "/transactions", icon: "◇", sub: "Financial Scan" },
-];
+import React from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { Activity, Share2, Users, DollarSign, ShieldAlert, FileText, Shield } from 'lucide-react';
 
 export default function Sidebar() {
-  const navigate = useNavigate();
   const location = useLocation();
-  const [hovered, setHovered] = useState(null);
+
+  const navItems = [
+    { label: "Dashboard", path: "/", icon: <Activity size={18} /> },
+    { label: "Kill Chain Graph", path: "/killchain", icon: <Share2 size={18} />, highlight: true },
+    { label: "Mule Accounts", path: "/accounts", icon: <Users size={18} /> },
+    { label: "Transactions", path: "/transactions", icon: <DollarSign size={18} /> },
+    { label: "Cyber Risk SOC", path: "/cyber-risk", icon: <ShieldAlert size={18} /> },
+    { label: "AI Reports", path: "/reports", icon: <FileText size={18} /> }
+  ];
 
   return (
-    <div style={styles.sidebar}>
-      {/* Logo */}
-      <div style={styles.logo}>
-        <div style={styles.logoIcon}>⬡</div>
+    <div style={{
+      width: 250,
+      height: '100vh',
+      background: 'rgba(0, 0, 0, 0.7)',
+      backdropFilter: 'blur(30px)',
+      borderRight: '1px solid var(--border-color)',
+      display: 'flex',
+      flexDirection: 'column',
+      padding: '24px 0',
+      flexShrink: 0,
+      zIndex: 10
+    }}>
+      <div style={{ padding: '0 24px', marginBottom: 40, display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ border: '1px solid var(--accent)', padding: '6px', borderRadius: 8, color: 'var(--accent)', background: 'var(--accent-dim)' }}>
+          <Shield size={22} />
+        </div>
         <div>
-          <div style={styles.logoText}>CyberFusion</div>
-          <div style={styles.logoSub}>LITE v1.0</div>
+          <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontStyle: 'italic', fontSize: 18, fontWeight: 800, margin: 0, color: '#fff', letterSpacing: '0.05em' }}>AGENTCHAIN</h1>
+          <div style={{ fontSize: 9, color: 'var(--accent)', fontFamily: "'JetBrains Mono', monospace", display: 'flex', alignItems: 'center', gap: 4, letterSpacing: '0.1em' }}>
+            <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'var(--accent)' }}></span> CYBERFUSION EVM
+          </div>
         </div>
       </div>
 
-      <div style={styles.sectionLabel}>NAVIGATION</div>
-
-      {/* Nav */}
-      <nav style={styles.nav}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8, padding: '0 12px' }}>
         {navItems.map(item => {
-          const active = location.pathname === item.path;
-          const hov = hovered === item.path;
+          const isActive = location.pathname === item.path;
           return (
-            <div
+            <NavLink
               key={item.path}
-              onClick={() => navigate(item.path)}
-              onMouseEnter={() => setHovered(item.path)}
-              onMouseLeave={() => setHovered(null)}
+              to={item.path}
               style={{
-                ...styles.navItem,
-                background: active
-                  ? "linear-gradient(135deg, #00d4ff14, #a259ff08)"
-                  : hov ? "#00d4ff08" : "transparent",
-                borderLeft: active ? "2px solid #00d4ff" : "2px solid transparent",
-                boxShadow: active ? "inset 8px 0 16px #00d4ff08" : "none",
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                padding: '12px 16px',
+                color: isActive ? 'var(--accent)' : 'var(--text-muted)',
+                background: isActive ? 'var(--accent-dim)' : 'transparent',
+                border: isActive ? '1px solid var(--accent)' : '1px solid transparent',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontSize: 13,
+                fontWeight: 700,
+                letterSpacing: '0.05em',
+                transition: 'all 0.2s',
+                position: 'relative'
               }}
             >
-              {active && <div style={styles.activeDot} />}
-              <div style={{ ...styles.navIcon, color: active ? "#00d4ff" : "#3a5070" }}>
-                {item.icon}
-              </div>
-              <div style={styles.navText}>
-                <div style={{ ...styles.navLabel, color: active ? "#e8edf5" : "#8499b8" }}>
-                  {item.label}
-                </div>
-                <div style={{ ...styles.navSub, color: active ? "#5a7399" : "#3a5070" }}>
-                  {item.sub}
-                </div>
-              </div>
-              {active && <div style={styles.navArrow} />}
-            </div>
+              {item.highlight && !isActive && <span style={{ position: 'absolute', right: 12, background: 'var(--special)', color: '#fff', fontSize: 9, padding: '2px 6px', borderRadius: 4, fontWeight: 'bold' }}>CORE</span>}
+              <span style={{ opacity: isActive ? 1 : 0.6 }}>{item.icon}</span>
+              {item.label}
+              {isActive && <div style={{ position: 'absolute', right: 12, width: 4, height: 12, borderRadius: 2, background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }}></div>}
+            </NavLink>
           );
         })}
-      </nav>
+      </div>
 
-      {/* Footer */}
-      <div style={styles.footer}>
-        <div style={styles.footerInner}>
-          <div style={styles.statusDot} />
-          <div>
-            <div style={styles.statusLabel}>System Active</div>
-            <div style={styles.statusSub}>All monitors online</div>
-          </div>
-        </div>
-        <div style={styles.versionTag}>BUILD 2025.03</div>
+      <div style={{ padding: '0 24px', paddingTop: 24 }}>
+        <button style={{
+          width: '100%', padding: '12px', background: 'transparent', color: 'var(--accent)', border: '1px solid var(--accent)', borderRadius: 8, fontWeight: 'bold', fontFamily: "'Space Grotesk', sans-serif", fontSize: 12, display: 'flex', justifyContent: 'center', gap: 8, alignItems: 'center', cursor: 'pointer', transition: 'all 0.2s'
+        }} className="hover-lift">
+          <Shield size={14} /> CONNECT ALPHA
+        </button>
       </div>
     </div>
   );
 }
-
-const styles = {
-  sidebar: {
-    width: 240,
-    background: "linear-gradient(180deg, #060b12 0%, #0a0f1a 100%)",
-    borderRight: "1px solid #1e2d47",
-    display: "flex",
-    flexDirection: "column",
-    flexShrink: 0,
-    position: "relative",
-    overflow: "hidden",
-  },
-  logo: {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-    padding: "22px 20px",
-    borderBottom: "1px solid #1e2d47",
-    marginBottom: 10,
-  },
-  logoIcon: {
-    fontSize: 28,
-    color: "#00d4ff",
-    filter: "drop-shadow(0 0 8px #00d4ff88)",
-    lineHeight: 1,
-  },
-  logoText: { fontSize: 15, fontWeight: 800, color: "#e8edf5" },
-  logoSub: {
-    fontSize: 9,
-    color: "#3a5070",
-    fontFamily: "'JetBrains Mono', monospace",
-    letterSpacing: "0.12em",
-    marginTop: 1,
-  },
-  sectionLabel: {
-    fontSize: 9,
-    color: "#3a5070",
-    fontWeight: 700,
-    letterSpacing: "0.18em",
-    padding: "6px 20px 10px",
-  },
-  nav: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    gap: 2,
-    padding: "0 10px",
-    overflowY: "auto",
-  },
-  navItem: {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-    padding: "10px 12px 10px 18px",
-    borderRadius: "0 8px 8px 0",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-    position: "relative",
-    marginLeft: -10,
-  },
-  activeDot: {
-    position: "absolute",
-    left: 0,
-    top: "50%",
-    transform: "translateY(-50%)",
-    width: 2,
-    height: 20,
-    background: "#00d4ff",
-    boxShadow: "0 0 8px #00d4ff",
-    borderRadius: 2,
-  },
-  navIcon: { fontSize: 16, fontWeight: 900, flexShrink: 0, width: 20, textAlign: "center" },
-  navText: { flex: 1, minWidth: 0 },
-  navLabel: {
-    fontSize: 12.5,
-    fontWeight: 600,
-    transition: "color 0.2s",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-  },
-  navSub: {
-    fontSize: 9.5,
-    marginTop: 1,
-    transition: "color 0.2s",
-    fontFamily: "'JetBrains Mono', monospace",
-  },
-  navArrow: {
-    width: 4,
-    height: 4,
-    borderRight: "1.5px solid #00d4ff",
-    borderTop: "1.5px solid #00d4ff",
-    transform: "rotate(45deg)",
-    flexShrink: 0,
-    opacity: 0.7,
-  },
-  footer: { padding: "14px 18px", borderTop: "1px solid #1e2d47" },
-  footerInner: { display: "flex", alignItems: "center", gap: 10, marginBottom: 8 },
-  statusDot: {
-    width: 7,
-    height: 7,
-    borderRadius: "50%",
-    background: "#00ff88",
-    boxShadow: "0 0 8px #00ff88",
-    flexShrink: 0,
-  },
-  statusLabel: { fontSize: 11, fontWeight: 700, color: "#00ff88" },
-  statusSub: { fontSize: 9.5, color: "#3a5070", marginTop: 1 },
-  versionTag: {
-    fontSize: 8.5,
-    color: "#1e2d47",
-    fontFamily: "'JetBrains Mono', monospace",
-    letterSpacing: "0.12em",
-  },
-};

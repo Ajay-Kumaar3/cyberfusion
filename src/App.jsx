@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
-import AccountInvestigation from "./pages/AccountInvestigation";
-import CyberRiskMonitor from "./pages/CyberRiskMonitor";
-import TransactionAnalyzer from "./pages/TransactionAnalyzer";
-import AlertsCenter from "./pages/AlertsCenter";
+import KillChain from "./pages/KillChain";
+import Accounts from "./pages/Accounts";
+import Transactions from "./pages/Transactions";
+import CyberRisk from "./pages/CyberRisk";
+import Reports from "./pages/Reports";
 
 function App() {
   return (
@@ -13,10 +14,11 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/account" element={<AccountInvestigation />} />
-          <Route path="/cyber-risk" element={<CyberRiskMonitor />} />
-          <Route path="/transactions" element={<TransactionAnalyzer />} />
-          <Route path="/alerts" element={<AlertsCenter />} />
+          <Route path="/killchain" element={<KillChain />} />
+          <Route path="/accounts" element={<Accounts />} />
+          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/cyber-risk" element={<CyberRisk />} />
+          <Route path="/reports" element={<Reports />} />
         </Routes>
       </Layout>
     </Router>

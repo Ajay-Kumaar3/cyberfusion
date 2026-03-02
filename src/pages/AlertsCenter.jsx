@@ -10,15 +10,15 @@ const alertsData = [
 ];
 
 const SEV = {
-  CRITICAL: { color: "#ff3366", bg: "#ff336614", glow: "#ff336633", label: "CRITICAL", ring: "#ff336644" },
+  CRITICAL: { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", label: "CRITICAL", ring: "#ffffff44" },
   HIGH:     { color: "#ff8800", bg: "#ff880014", glow: "#ff880033", label: "HIGH",     ring: "#ff880044" },
-  MEDIUM:   { color: "#ffd60a", bg: "#ffd60a14", glow: "#ffd60a33", label: "MEDIUM",   ring: "#ffd60a44" },
-  LOW:      { color: "#00ff88", bg: "#00ff8814", glow: "#00ff8833", label: "LOW",       ring: "#00ff8844" },
+  MEDIUM:   { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", label: "MEDIUM",   ring: "#ffffff44" },
+  LOW:      { color: "#00ff00", bg: "#00ff0014", glow: "#00ff0033", label: "LOW",       ring: "#00ff0044" },
 };
 const STAT = {
-  Open:          { color: "#ff3366", bg: "#ff336614" },
-  "Under Review":{ color: "#ffd60a", bg: "#ffd60a14" },
-  Resolved:      { color: "#00ff88", bg: "#00ff8814" },
+  Open:          { color: "#ffffff", bg: "#ffffff14" },
+  "Under Review":{ color: "#ffffff", bg: "#ffffff14" },
+  Resolved:      { color: "#00ff00", bg: "#00ff0014" },
 };
 
 function ScoreBar({ value, color }) {
@@ -61,20 +61,20 @@ export default function AlertsCenter() {
         <div>
           <div style={styles.breadcrumb}>CYBERFUSION LITE &nbsp;/&nbsp; ALERTS CENTER</div>
           <h1 style={styles.heading}>
-            Alerts <span style={{ color: "#ff3366" }}>Center</span>
+            Alerts <span style={{ color: "#ffffff" }}>Center</span>
           </h1>
           <p style={styles.sub}>All triggered fraud alerts — review and manage in real-time</p>
         </div>
         {/* Counter pills */}
         <div style={styles.pillRow}>
           {[
-            { label: "Open", val: counts.open, color: "#ff3366" },
-            { label: "In Review", val: counts.review, color: "#ffd60a" },
-            { label: "Resolved", val: counts.resolved, color: "#00ff88" },
+            { label: "Open", val: counts.open, color: "#ffffff" },
+            { label: "In Review", val: counts.review, color: "#ffffff" },
+            { label: "Resolved", val: counts.resolved, color: "#00ff00" },
           ].map(p => (
             <div key={p.label} style={{ ...styles.pill, borderColor: p.color + "44" }}>
               <span style={{ fontSize: 22, fontWeight: 800, color: p.color, fontFamily: "'JetBrains Mono', monospace" }}>{p.val}</span>
-              <span style={{ fontSize: 10, color: "#5a7399", marginTop: 2 }}>{p.label}</span>
+              <span style={{ fontSize: 10, color: "#008800", marginTop: 2 }}>{p.label}</span>
             </div>
           ))}
         </div>
@@ -86,14 +86,14 @@ export default function AlertsCenter() {
           {filters.map(f => (
             <button key={f} onClick={() => setFilter(f)} style={{
               ...styles.tab,
-              color: filter === f ? "#00d4ff" : "#5a7399",
-              background: filter === f ? "#00d4ff14" : "transparent",
-              borderBottom: filter === f ? "2px solid #00d4ff" : "2px solid transparent",
+              color: filter === f ? "#88ff88" : "#008800",
+              background: filter === f ? "#88ff8814" : "transparent",
+              borderBottom: filter === f ? "2px solid #88ff88" : "2px solid transparent",
             }}>{f}
               {f !== "All" && <span style={{
                 marginLeft: 6, fontSize: 9, fontWeight: 800,
-                background: filter === f ? "#00d4ff22" : "#1e2d47",
-                color: filter === f ? "#00d4ff" : "#5a7399",
+                background: filter === f ? "#88ff8822" : "#1e2d47",
+                color: filter === f ? "#88ff88" : "#008800",
                 padding: "1px 6px", borderRadius: 8,
               }}>
                 {f === "Open" ? counts.open : f === "Under Review" ? counts.review : counts.resolved}
@@ -152,11 +152,11 @@ export default function AlertsCenter() {
                 <div style={styles.scoresGrid}>
                   <div>
                     <div style={styles.scoreTitle}>Cyber Risk</div>
-                    <ScoreBar value={alert.cyber} color="#00d4ff" />
+                    <ScoreBar value={alert.cyber} color="#88ff88" />
                   </div>
                   <div>
                     <div style={styles.scoreTitle}>Txn Risk</div>
-                    <ScoreBar value={alert.transaction} color="#a259ff" />
+                    <ScoreBar value={alert.transaction} color="#ffffff" />
                   </div>
                 </div>
 
@@ -173,12 +173,12 @@ export default function AlertsCenter() {
                   </span>
                   <div style={{ display: "flex", gap: 8 }}>
                     {alert.status !== "Under Review" && (
-                      <button onClick={() => update(alert.id, "Under Review")} style={{ ...styles.btn, color: "#ffd60a", borderColor: "#ffd60a44", background: "#ffd60a0a" }}>
+                      <button onClick={() => update(alert.id, "Under Review")} style={{ ...styles.btn, color: "#ffffff", borderColor: "#ffffff44", background: "#ffffff0a" }}>
                         Review
                       </button>
                     )}
                     {alert.status !== "Resolved" && (
-                      <button onClick={() => update(alert.id, "Resolved")} style={{ ...styles.btn, color: "#00ff88", borderColor: "#00ff8844", background: "#00ff880a" }}>
+                      <button onClick={() => update(alert.id, "Resolved")} style={{ ...styles.btn, color: "#00ff00", borderColor: "#00ff0044", background: "#00ff000a" }}>
                         Resolve
                       </button>
                     )}
@@ -191,8 +191,8 @@ export default function AlertsCenter() {
         {filtered.length === 0 && (
           <div style={styles.empty}>
             <div style={{ fontSize: 40, marginBottom: 12 }}>✅</div>
-            <div style={{ color: "#00ff88", fontWeight: 700 }}>All clear</div>
-            <div style={{ color: "#5a7399", fontSize: 12 }}>No alerts match this filter</div>
+            <div style={{ color: "#00ff00", fontWeight: 700 }}>All clear</div>
+            <div style={{ color: "#008800", fontSize: 12 }}>No alerts match this filter</div>
           </div>
         )}
       </div>
@@ -204,8 +204,8 @@ const styles = {
   page: { padding: "28px 32px", minHeight: "100%", animation: "fadeIn 0.4s ease" },
   breadcrumb: { fontSize: 10, fontFamily: "'JetBrains Mono', monospace", color: "#3a5070", letterSpacing: "0.15em", marginBottom: 8 },
   header: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28 },
-  heading: { fontSize: 32, fontWeight: 800, color: "#e8edf5", letterSpacing: "-0.5px", marginBottom: 6 },
-  sub: { color: "#5a7399", fontSize: 13 },
+  heading: { fontSize: 32, fontWeight: 800, color: "#ffffff", letterSpacing: "-0.5px", marginBottom: 6 },
+  sub: { color: "#008800", fontSize: 13 },
   pillRow: { display: "flex", gap: 10 },
   pill: {
     display: "flex", flexDirection: "column", alignItems: "center",
@@ -243,16 +243,16 @@ const styles = {
   cardLeft: { display: "flex", alignItems: "center", gap: 12 },
   avatar: {
     width: 40, height: 40, borderRadius: "50%",
-    background: "linear-gradient(135deg, #00d4ff, #a259ff)",
+    background: "linear-gradient(135deg, #88ff88, #ffffff)",
     display: "flex", alignItems: "center", justifyContent: "center",
     border: "2px solid", fontSize: 16, flexShrink: 0,
   },
-  userName: { color: "#e8edf5", fontWeight: 700, fontSize: 14, marginBottom: 2 },
+  userName: { color: "#ffffff", fontWeight: 700, fontSize: 14, marginBottom: 2 },
   accountId: { color: "#3a5070", fontSize: 11 },
   badges: { display: "flex", gap: 8 },
   badge: { fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 20, letterSpacing: "0.04em" },
   scoresGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 24px", marginBottom: 12 },
-  scoreTitle: { fontSize: 10, color: "#5a7399", marginBottom: 4, fontWeight: 600, letterSpacing: "0.05em" },
+  scoreTitle: { fontSize: 10, color: "#008800", marginBottom: 4, fontWeight: 600, letterSpacing: "0.05em" },
   actionBox: {
     display: "flex", alignItems: "flex-start",
     background: "#060b12", borderRadius: 8,
