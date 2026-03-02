@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import StatCard from "../components/StatCard";
 import AlertFeed from "../components/AlertFeed";
 import GlassCard from "../components/GlassCard";
+import { fetchDashboardSummary } from "../api/api";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
 import { askGemini } from "../utils/gemini";
 
@@ -18,6 +19,7 @@ export default function Dashboard() {
   const [timeLeft, setTimeLeft] = useState(47 * 60 + 23); // 47:23
   const [briefing, setBriefing] = useState("Analyzing threat landscape...");
   const [briefingDisplay, setBriefingDisplay] = useState("");
+  const [summary, setSummary] = useState(null);
 
   const fetchBriefing = async () => {
     setBriefing("Analyzing threat landscape...");
@@ -57,6 +59,12 @@ export default function Dashboard() {
     return () => clearInterval(t);
   }, []);
 
+  useEffect(() => {
+    fetchDashboardSummary()
+      .then(setSummary)
+      .catch(err => console.error("Dashboard API error:", err));
+  }, []);
+
   const formatTime = (secs) => {
     const h = Math.floor(secs / 3600).toString().padStart(2, '0');
     const m = Math.floor((secs % 3600) / 60).toString().padStart(2, '0');
@@ -68,9 +76,9 @@ export default function Dashboard() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, zIndex: 1, position: 'relative' }}>
       {/* Top Stat Row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
-        <StatCard title="ACTIVE THREATS" targetValue={14} color="var(--danger)" />
-        <StatCard title="MULE ACCOUNTS FLAGGED" targetValue={37} color="var(--warning)" />
-        <StatCard title="TXNS UNDER REVIEW" targetValue={2400000} color="var(--info)" prefix="$" />
+        <StatCard title="HIGH RISK ACCOUNTS" targetValue={summary?.high_risk_accounts ?? 14} color="var(--danger)" />
+        <StatCard title="ACTIVE ALERTS" targetValue={summary?.active_alerts ?? 37} color="var(--warning)" />
+        <StatCard title="TXNS UNDER REVIEW" targetValue={summary?.transactions_flagged ?? 0} color="var(--info)" />
         <GlassCard style={{ padding: 20, border: '1px solid rgba(0,255,0,0.3)', background: 'linear-gradient(135deg, rgba(0,255,0,0.1), rgba(0,255,0,0.02))' }}>
           <div style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600, letterSpacing: '0.05em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', animation: 'blink 1s infinite' }} />
@@ -155,24 +163,20 @@ export default function Dashboard() {
           <GlassCard style={{ padding: 20 }}>
             <h3 style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 16, letterSpacing: '0.1em' }}>SYSTEM STATUS</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '10px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.05)' }}>
-                <span style={{ fontSize: 13, color: 'var(--text-main)' }}>SOC Integration</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--accent)', fontWeight: 'bold' }}>
-                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', animation: 'pulse-glow 2s infinite' }}></div> ACTIVE
+              {[
+                { label: 'SOC Integration', color: 'var(--accent)', text: 'ACTIVE' },
+                { label: 'AML Engine', color: 'var(--accent)', text: 'ACTIVE' },
+                { label: 'Gemini AI', color: 'var(--special)', text: 'CONNECTED' },
+                { label: `Accounts Monitored`, color: 'var(--info)', text: summary ? summary.total_accounts : '…' },
+              ].map(({ label, color, text }) => (
+                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '10px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ fontSize: 13, color: 'var(--text-main)' }}>{label}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color, fontWeight: 'bold' }}>
+                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: color, animation: 'pulse-glow 2s infinite' }}></div>
+                    {text}
+                  </div>
                 </div>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '10px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.05)' }}>
-                <span style={{ fontSize: 13, color: 'var(--text-main)' }}>AML Engine</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--accent)', fontWeight: 'bold' }}>
-                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', animation: 'pulse-glow 2s infinite', animationDelay: '0.5s' }}></div> ACTIVE
-                </div>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '10px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.05)' }}>
-                <span style={{ fontSize: 13, color: 'var(--text-main)' }}>Gemini AI</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--special)', fontWeight: 'bold' }}>
-                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--special)', animation: 'pulse-glow 2s infinite', animationDelay: '1s' }}></div> CONNECTED
-                </div>
-              </div>
+              ))}
             </div>
           </GlassCard>
 
