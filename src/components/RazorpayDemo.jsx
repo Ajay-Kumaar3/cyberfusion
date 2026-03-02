@@ -237,9 +237,10 @@ export default function RazorpayDemo({ onStatsUpdate }) {
                                     className="hover-lift"
                                     style={{
                                         width: '100%', padding: '16px', borderRadius: 8,
-                                        background: 'var(--accent)', border: 'none', color: '#fff',
+                                        background: 'rgba(0, 255, 65, 0.05)', color: '#00FF41',
+                                        border: '1px solid rgba(0, 255, 65, 0.3)',
                                         fontFamily: "'Space Grotesk', sans-serif", fontSize: 16, fontWeight: 'bold', letterSpacing: '0.05em', cursor: 'pointer',
-                                        boxShadow: '0 0 20px rgba(0,255,0,0.2)'
+                                        boxShadow: '0 4px 12px rgba(0, 255, 65, 0.1)'
                                     }}>
                                     INITIATE PAYMENT
                                 </button>

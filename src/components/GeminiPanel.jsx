@@ -30,7 +30,6 @@ export default function GeminiPanel({ title = "GEMINI INTELLIGENCE REPORT", prom
     return (
         <GlassCard style={{ borderColor: 'rgba(255, 255, 255, 0.3)', backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: 12, borderBottom: '1px solid rgba(255, 255, 255, 0.2)', paddingBottom: 8 }}>
-                <span style={{ fontSize: 18, marginRight: 8 }}>🤖</span>
                 <h3 style={{ margin: 0, color: '#ffffff', fontSize: 13, fontWeight: 700, letterSpacing: '0.05em' }}>{title}</h3>
             </div>
 

@@ -14,12 +14,12 @@ const ICONS = {
 };
 
 const COLORS = {
-    ATTACK_ORIGIN: "#ffffff",
-    PHISHING: "#cdffcd",
-    COMPROMISED_ACCOUNT: "#ffffff",
-    MULE_ACCOUNT: "#cdffcd",
+    ATTACK_ORIGIN: "#00FF41",
+    PHISHING: "#A8EF00",
+    COMPROMISED_ACCOUNT: "#00FF41",
+    MULE_ACCOUNT: "#A8EF00",
     TRANSACTION: "#00FF41",
-    EXIT_POINT: "#ffffff"
+    EXIT_POINT: "#A8EF00"
 };
 
 export default function KillChain() {
@@ -217,7 +217,7 @@ export default function KillChain() {
             <div style={{ width: 340, display: 'flex', flexDirection: 'column', gap: 20 }}>
                 {selectedNode ? (
                     <>
-                        <GlassCard style={{ padding: 20, borderColor: `${COLORS[selectedNode.type]}44`, background: 'rgba(255,255,255,0.02)' }}>
+                        <GlassCard style={{ padding: 20, borderColor: 'rgba(0, 255, 65, 0.2)', background: 'rgba(0, 255, 65, 0.02)' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
                                 <div style={{ fontSize: 24, border: `2px solid ${COLORS[selectedNode.type]}`, width: 48, height: 48, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,12,0,0.8)' }}>
                                     {ICONS[selectedNode.type]}
@@ -230,10 +230,10 @@ export default function KillChain() {
 
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: 11 }}>
                                 <span style={{ color: '#7A8E7A' }}>Risk Level</span>
-                                <span style={{ color: '#ffffff', fontWeight: 'bold' }}>{selectedNode.risk}%</span>
+                                <span style={{ color: '#00FF41', fontWeight: 'bold' }}>{selectedNode.risk}%</span>
                             </div>
-                            <div style={{ width: '100%', height: 4, background: 'rgba(255,255,255,0.1)', borderRadius: 2 }}>
-                                <div style={{ width: `${selectedNode.risk}%`, height: '100%', background: '#ffffff', borderRadius: 2, boxShadow: '0 0 8px #ffffff' }}></div>
+                            <div style={{ width: '100%', height: 4, background: 'rgba(0, 255, 65, 0.1)', borderRadius: 2 }}>
+                                <div style={{ width: `${selectedNode.risk}%`, height: '100%', background: '#00FF41', borderRadius: 2, boxShadow: '0 0 8px #00FF41' }}></div>
                             </div>
                         </GlassCard>
 
@@ -243,12 +243,12 @@ export default function KillChain() {
                             dataContext={selectedNode}
                         />
 
-                        <GlassCard style={{ padding: 20, background: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(255, 255, 255, 0.2)' }}>
-                            <div style={{ fontSize: 11, color: '#ffffff', fontWeight: 'bold', marginBottom: 12 }}>RECOMMENDED ACTION</div>
-                            <button style={{
-                                width: '100%', padding: '12px', background: '#ffffff', color: '#fff',
-                                border: 'none', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer',
-                                fontFamily: "Space Grotesk, sans-serif", fontSize: 14, boxShadow: '0 4px 12px rgba(255,255,255,0.3)'
+                        <GlassCard style={{ padding: 20, background: 'rgba(0, 255, 65, 0.02)', borderColor: 'rgba(0, 255, 65, 0.2)' }}>
+                            <div style={{ fontSize: 11, color: '#00FF41', fontWeight: 'bold', marginBottom: 12, letterSpacing: '0.05em' }}>RECOMMENDED ACTION</div>
+                            <button className="hover-lift" style={{
+                                width: '100%', padding: '12px', background: 'rgba(0, 255, 65, 0.05)', color: '#00FF41',
+                                border: '1px solid rgba(0, 255, 65, 0.3)', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer',
+                                fontFamily: "Space Grotesk, sans-serif", fontSize: 14, boxShadow: '0 4px 12px rgba(0, 255, 65, 0.1)', letterSpacing: '0.05em'
                             }}>
                                 {selectedNode.type.includes('ACCOUNT') ? 'FREEZE ACCOUNT' :
                                     selectedNode.type === 'TRANSACTION' ? 'REVERSE TRANSACTION' : 'FLAG ACTIVITY'}
