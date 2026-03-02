@@ -24,11 +24,11 @@ export default function Dashboard() {
   const [briefingDisplay, setBriefingDisplay] = useState("");
   const [summary, setSummary] = useState(null);
 
-  const fetchBriefing = async () => {
+  const fetchBriefing = async (forceRefresh = false) => {
     setBriefing("Analyzing threat landscape...");
     setBriefingDisplay("");
     const prompt = "You are a SOC analyst AI. Given these active threats: 14 active threats, 37 mule accounts flagged, $2.4M under review, recovery window at 47 minutes. Write a 1-sentence threat briefing for the security team. Be specific and urgent.";
-    const response = await askGemini(prompt);
+    const response = await askGemini(prompt, forceRefresh);
     setBriefing(response);
   };
 
@@ -99,7 +99,7 @@ export default function Dashboard() {
         <div style={{ color: briefing === "Analyzing threat landscape..." ? '#666' : '#fff', fontSize: 13, flex: 1 }}>
           {briefingDisplay}
         </div>
-        <button onClick={fetchBriefing} style={{ backgroundColor: 'transparent', border: 'none', color: '#00FF41', fontSize: 12, cursor: 'pointer', flexShrink: 0, fontWeight: 600 }}>
+        <button onClick={() => fetchBriefing(true)} style={{ backgroundColor: 'transparent', border: 'none', color: '#00FF41', fontSize: 12, cursor: 'pointer', flexShrink: 0, fontWeight: 600 }}>
           ↻ REFRESH
         </button>
       </div>

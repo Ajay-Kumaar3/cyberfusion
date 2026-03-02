@@ -3,7 +3,7 @@ import google.generativeai as genai
 from config import settings
 
 genai.configure(api_key=settings.gemini_api_key)
-_model = genai.GenerativeModel("gemini-1.5-flash")
+_model = genai.GenerativeModel("gemini-2.5-flash")
 
 
 def generate_explanation(account_name: str, account_id: str,
