@@ -20,7 +20,7 @@ const sevLabel = (sev) => {
 export default function AlertFeed() {
     const [alerts, setAlerts] = useState([]);
     const [pool, setPool] = useState([]);
-    const [poolIndex, setPoolIndex] = useState(2);
+    const [poolIndex, setPoolIndex] = useState(2); // eslint-disable-line no-unused-vars
 
     useEffect(() => {
         fetchAlerts({ limit: 50 })
