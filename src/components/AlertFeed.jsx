@@ -4,17 +4,18 @@ import GlassCard from "./GlassCard";
 import { fetchAlerts } from "../api/api";
 
 const sevColor = (sev) => {
-    if (sev === "CRITICAL") return "#ff4444";
-    if (sev === "HIGH") return "#ffcc00";
-    if (sev === "MEDIUM") return "#88ff88";
-    return "#00ff88";
+    // Purified neon green cyberpunk theme
+    if (sev === "CRITICAL") return "#00ff00";
+    if (sev === "HIGH") return "#00cc00";
+    if (sev === "MEDIUM") return "#008800";
+    return "#00ff00";
 };
 
 const sevLabel = (sev) => {
-    if (sev === "CRITICAL") return "CRITICAL_ALERT";
-    if (sev === "HIGH") return "HIGH_RISK_TXN";
-    if (sev === "MEDIUM") return "SUSPICIOUS_TXN";
-    return "MONITOR";
+    if (sev === "CRITICAL") return "[x] CRITICAL_ALERT";
+    if (sev === "HIGH") return "[!] HIGH_RISK_TXN";
+    if (sev === "MEDIUM") return "[!] SUSPICIOUS_TXN";
+    return "[+] MONITOR";
 };
 
 export default function AlertFeed() {
@@ -71,12 +72,20 @@ export default function AlertFeed() {
                                         <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 4, backgroundColor: `${color}22`, color, border: `1px solid ${color}44` }}>
                                             {type}
                                         </span>
-                                        <span style={{ fontSize: 10, color: '#008800', fontFamily: "'JetBrains Mono', monospace" }}>{alert.timeLabel}</span>
+                                        <span style={{ fontSize: 10, color: 'var(--text-muted)', fontFamily: "'JetBrains Mono', monospace" }}>
+                                            {alert.timeLabel}
+                                        </span>
                                     </div>
-                                    <button style={{ background: 'transparent', border: `1px solid ${color}88`, color, borderRadius: 4, padding: '4px 10px', fontSize: 10, fontWeight: 600, cursor: 'pointer' }}>Investigate</button>
+                                    <button style={{ background: 'transparent', border: `1px solid ${color}88`, color, borderRadius: 4, padding: '4px 10px', fontSize: 10, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}>
+                                        Investigate
+                                    </button>
                                 </div>
-                                <div style={{ fontSize: 13, fontWeight: 700, color: '#ffffff', marginBottom: 4 }}>{alert.account_id}</div>
-                                <div style={{ fontSize: 12, color: '#00aa00' }}>{alert.description?.slice(0, 80)}{alert.description?.length > 80 ? '…' : ''}</div>
+                                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-main)', marginBottom: 4, fontFamily: "'JetBrains Mono', monospace" }}>
+                                    {alert.account_id}
+                                </div>
+                                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                                    {alert.description?.slice(0, 80)}{alert.description?.length > 80 ? '…' : ''}
+                                </div>
                             </GlassCard>
                         </motion.div>
                     );
