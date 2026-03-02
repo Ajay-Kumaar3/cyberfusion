@@ -1,5 +1,5 @@
-const GEMINI_API_KEY = "AIzaSyA0gzE_lRgeCbluZp5bB7MqUKTBZmHkGQc";
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_API_KEY = "AIzaSyA0gzE_lRgeCbluZp5bB7MqUKTBZmHkGQc"; // Replace before demo
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 export async function askGemini(prompt) {
     try {
@@ -26,8 +26,6 @@ export async function askGemini(prompt) {
 }
 
 export async function streamGemini(prompt, onChunk) {
-    // For typing effect: call askGemini then simulate streaming 
-    // by revealing characters with setInterval
     const fullText = await askGemini(prompt);
     let i = 0;
     return new Promise(resolve => {
