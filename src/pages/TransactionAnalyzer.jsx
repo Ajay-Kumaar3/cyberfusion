@@ -12,8 +12,8 @@ const transactions = [
 ];
 
 const STATUS = {
-  Blocked: { color: "var(--danger)", bg: "rgba(244, 63, 94, 0.1)", icon: "🚫" },
-  Flagged: { color: "var(--warning)", bg: "rgba(245, 158, 11, 0.1)", icon: "⚠️" },
+  Blocked: { color: "var(--danger)", bg: "rgba(0, 255, 136, 0.1)", icon: "🚫" },
+  Flagged: { color: "var(--warning)", bg: "rgba(245, 158, 11, 0.1)", icon: "[!]️" },
   Cleared: { color: "var(--success)", bg: "rgba(16, 185, 129, 0.1)", icon: "✅" },
 };
 const FLAG_COLORS = ["var(--accent)", "var(--warning)", "var(--special)", "var(--info)", "var(--success)"];
@@ -81,7 +81,7 @@ export default function TransactionAnalyzer() {
       <div style={styles.summaryBanner}>
         {[
           { icon: "🚫", val: blocked.length, label: "Blocked", sub: `₹${blockedAmt.toLocaleString()} saved`, color: "var(--danger)" },
-          { icon: "⚠️", val: transactions.filter(t => t.status === "Flagged").length, label: "Flagged", sub: "Under review", color: "var(--warning)" },
+          { icon: "[!]️", val: transactions.filter(t => t.status === "Flagged").length, label: "Flagged", sub: "Under review", color: "var(--warning)" },
           { icon: "✅", val: transactions.filter(t => t.status === "Cleared").length, label: "Cleared", sub: "Normal activity", color: "var(--success)" },
           { icon: "🛡️", val: `₹${blockedAmt.toLocaleString()}`, label: "Protected", sub: "Fraud prevented", color: "var(--accent)" },
         ].map((s, i) => (
@@ -199,8 +199,8 @@ export default function TransactionAnalyzer() {
                       {[
                         { label: "Avg Monthly", val: `₹${txn.avgAmount.toLocaleString()}`, color: "#008800" },
                         { label: "This Transfer", val: `₹${txn.amount.toLocaleString()}`, color: "#ffffff" },
-                        { label: "New Receiver", val: txn.newReceiver ? "Yes ⚠" : "No ✓", color: txn.newReceiver ? "#ffffff" : "#00ff00" },
-                        { label: "Unusual Time", val: txn.timeFlag ? "Yes ⚠" : "No ✓", color: txn.timeFlag ? "#ffffff" : "#00ff00" },
+                        { label: "New Receiver", val: txn.newReceiver ? "Yes [!]" : "No ✓", color: txn.newReceiver ? "#ffffff" : "#00ff00" },
+                        { label: "Unusual Time", val: txn.timeFlag ? "Yes [!]" : "No ✓", color: txn.timeFlag ? "#ffffff" : "#00ff00" },
                       ].map(d => (
                         <div key={d.label} style={styles.detailItem}>
                           <div style={{ fontSize: 10, color: "#008800", marginBottom: 3 }}>{d.label}</div>

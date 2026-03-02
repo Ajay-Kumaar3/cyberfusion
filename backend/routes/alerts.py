@@ -6,7 +6,7 @@ from schemas import AlertOut, AlertStatusUpdate
 from services.gemini import generate_explanation
 from typing import List
 
-router = APIRouter(prefix="/api/alerts", tags=["alerts"])
+router = APIRouter(prefix="/alerts", tags=["alerts"])
 
 
 @router.get("/", response_model=List[AlertOut])

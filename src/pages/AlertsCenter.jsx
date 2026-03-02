@@ -11,7 +11,7 @@ const alertsData = [
 
 const SEV = {
   CRITICAL: { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", label: "CRITICAL", ring: "#ffffff44" },
-  HIGH:     { color: "#ff8800", bg: "#ff880014", glow: "#ff880033", label: "HIGH",     ring: "#ff880044" },
+  HIGH:     { color: "#ccff00", bg: "#ccff0014", glow: "#ccff0033", label: "HIGH",     ring: "#ccff0044" },
   MEDIUM:   { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", label: "MEDIUM",   ring: "#ffffff44" },
   LOW:      { color: "#00ff00", bg: "#00ff0014", glow: "#00ff0033", label: "LOW",       ring: "#00ff0044" },
 };
@@ -162,7 +162,7 @@ export default function AlertsCenter() {
 
                 {/* Action text */}
                 <div style={styles.actionBox}>
-                  <span style={{ color: sev.color, marginRight: 6 }}>⚠</span>
+                  <span style={{ color: sev.color, marginRight: 6 }}>[!]</span>
                   <span style={{ color: "#8499b8", fontSize: 12 }}>{alert.action}</span>
                 </div>
 

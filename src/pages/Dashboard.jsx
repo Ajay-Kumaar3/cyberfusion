@@ -78,7 +78,7 @@ export default function Dashboard() {
         <StatCard title="HIGH RISK" targetValue={summary?.high_risk_accounts ?? 0} color="var(--danger)" />
         <StatCard title="ALERTS" targetValue={summary?.active_alerts ?? 0} color="var(--warning)" />
         <StatCard title="TXNS REVIEW" targetValue={summary?.transactions_flagged ?? 0} color="var(--info)" />
-        <StatCard title="ON-CHAIN BLOCKED" targetValue={blockedCount} color="#ff3366" />
+        <StatCard title="ON-CHAIN BLOCKED" targetValue={blockedCount} color="#ffffff" />
         <GlassCard style={{ padding: 20, border: '1px solid rgba(0,255,0,0.3)', background: 'linear-gradient(135deg,rgba(0,255,0,0.1),rgba(0,255,0,0.02))' }}>
           <div style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600, letterSpacing: '0.05em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', animation: 'blink 1s infinite' }} /> RECOVERY WINDOW

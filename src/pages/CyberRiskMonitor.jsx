@@ -11,13 +11,13 @@ const loginData = [
 ];
 
 const STATUS_CFG = {
-  Critical:   { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", icon: "🔴" },
-  Suspicious: { color: "#ff8800", bg: "#ff880014", glow: "#ff880033", icon: "🟠" },
-  Warning:    { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", icon: "🟡" },
+  Critical:   { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", icon: "[x]" },
+  Suspicious: { color: "#ccff00", bg: "#ccff0014", glow: "#ccff0033", icon: "🟠" },
+  Warning:    { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", icon: "[!]" },
   Safe:       { color: "#00ff00", bg: "#00ff0014", glow: "#00ff0033", icon: "🟢" },
 };
 
-const FLAG_COLORS = ["#ffffff", "#ff8800", "#ffffff", "#ffffff", "#88ff88", "#ff00ff"];
+const FLAG_COLORS = ["#ffffff", "#ccff00", "#ffffff", "#ffffff", "#88ff88", "#ff00ff"];
 
 function ScoreRing({ score, status }) {
   const cfg = STATUS_CFG[status];

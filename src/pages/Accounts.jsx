@@ -8,8 +8,8 @@ import { freezeAccountOnChain } from "../utils/blockchain";
 import { DEMO_CONFIG, truncateAddress } from "../config/demo.config";
 import { ExternalLink, ShieldAlert, Lock } from "lucide-react";
 
-const riskColor = (level) => ({ Critical: "#ff4444", High: "#ff8800", Medium: "#ffcc00" }[level] || "#00ff88");
-const statusColor = (s) => ({ Compromised: "#ff4444", Flagged: "#ffcc00", Frozen: "#aaaaaa" }[s] || "#00ff88");
+const riskColor = (level) => ({ Critical: "#00ff00", High: "#ccff00", Medium: "#ccff00" }[level] || "#00ff88");
+const statusColor = (s) => ({ Compromised: "#00ff00", Flagged: "#ccff00", Frozen: "#889488" }[s] || "#00ff88");
 
 export default function Accounts() {
     const { signer, walletConnected, connect } = useBlockchain();
@@ -124,9 +124,9 @@ export default function Accounts() {
 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
                                 {[
-                                    { label: 'Cyber Risk Score', value: `${selectedAcc.cyber_score}/100`, color: selectedAcc.cyber_score > 70 ? '#ff4444' : '#00ff88' },
-                                    { label: 'Transaction Risk', value: `${selectedAcc.txn_score}/100`, color: selectedAcc.txn_score > 70 ? '#ff4444' : '#00ff88' },
-                                    { label: 'Combined Score', value: `${selectedAcc.final_score}/100`, color: selectedAcc.final_score > 70 ? '#ff4444' : '#00ff88' },
+                                    { label: 'Cyber Risk Score', value: `${selectedAcc.cyber_score}/100`, color: selectedAcc.cyber_score > 70 ? '#00ff00' : '#00ff88' },
+                                    { label: 'Transaction Risk', value: `${selectedAcc.txn_score}/100`, color: selectedAcc.txn_score > 70 ? '#00ff00' : '#00ff88' },
+                                    { label: 'Combined Score', value: `${selectedAcc.final_score}/100`, color: selectedAcc.final_score > 70 ? '#00ff00' : '#00ff88' },
                                     { label: 'Avg Monthly TXN', value: `₹${(selectedAcc.avg_monthly_transaction || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`, color: '#cdffcd' },
                                     { label: 'Location', value: selectedAcc.location || '—', color: '#ffffff' },
                                     { label: 'Status', value: selectedAcc.status, color: statusColor(selectedAcc.status) },
@@ -164,14 +164,14 @@ export default function Accounts() {
                                     <button
                                         onClick={handleOnChainFreeze}
                                         disabled={isFreezing}
-                                        style={{ flex: 2, padding: '12px', background: '#ff3366', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 0 15px rgba(255,51,102,0.3)' }}
+                                        style={{ flex: 2, padding: '12px', background: '#00ff00', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 0 15px rgba(0, 255, 0,0.3)' }}
                                     >
                                         {isFreezing ? (
                                             <div style={{ width: 16, height: 16, border: '2px solid #fff', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
                                         ) : <><Lock size={14} /> FREEZE ON-CHAIN</>}
                                     </button>
                                 ) : (
-                                    <button style={{ flex: 1, padding: '12px', background: '#ff444422', color: '#ff4444', border: '1px solid #ff444466', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer', fontSize: 12 }}>FREEZE</button>
+                                    <button style={{ flex: 1, padding: '12px', background: '#00ff0022', color: '#00ff00', border: '1px solid #00ff0066', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer', fontSize: 12 }}>FREEZE</button>
                                 )}
                                 <button style={{ flex: 1, padding: '12px', background: 'transparent', color: '#cdffcd', border: '1px solid #cdffcd', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer', fontSize: 12 }}>FLAG SAR</button>
                                 <button style={{ flex: 1, padding: '12px', background: 'transparent', color: '#88ff88', border: '1px solid #88ff88', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer', fontSize: 12 }}>MONITOR</button>

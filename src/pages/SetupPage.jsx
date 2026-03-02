@@ -131,14 +131,14 @@ export default function SetupPage() {
                             {check.status === 'success' ? (
                                 <CheckCircle2 color="#00ff88" size={24} />
                             ) : check.status === 'fail' ? (
-                                <XCircle color="#ff3366" size={24} />
+                                <XCircle color="#00ff00" size={24} />
                             ) : (
                                 <RefreshCw color="rgba(255,255,255,0.2)" size={24} />
                             )}
                         </div>
                         <p style={{ margin: '0 0 12px', fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{check.desc}</p>
                         {check.status === 'fail' && (
-                            <div style={{ padding: 10, background: 'rgba(255, 51, 102, 0.1)', borderRadius: 6, fontSize: 11, color: '#ff8888', border: '1px solid rgba(255, 51, 102, 0.2)' }}>
+                            <div style={{ padding: 10, background: 'rgba(0, 255, 0, 0.1)', borderRadius: 6, fontSize: 11, color: '#00ff00', border: '1px solid rgba(0, 255, 0, 0.2)' }}>
                                 FIX: {check.id === 'sepolia' ? 'Switch MetaMask to Sepolia Testnet' :
                                     check.id === 'balance' ? 'Get test ETH from a Sepolia faucet' :
                                         check.id === 'contract' ? 'Paste the address in src/config/demo.config.js' :
@@ -151,8 +151,8 @@ export default function SetupPage() {
             </div>
 
             <div style={{ display: 'flex', gap: 16 }}>
-                <GlassCard style={{ flex: 1, padding: 24, border: '1px solid rgba(255, 51, 102, 0.2)' }}>
-                    <h3 style={{ margin: '0 0 12px', fontSize: 14, color: '#ff3366', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <GlassCard style={{ flex: 1, padding: 24, border: '1px solid rgba(0, 255, 0, 0.2)' }}>
+                    <h3 style={{ margin: '0 0 12px', fontSize: 14, color: '#00ff00', display: 'flex', alignItems: 'center', gap: 8 }}>
                         <Trash2 size={16} /> DANGER ZONE
                     </h3>
                     <p style={{ margin: '0 0 20px', fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
@@ -161,7 +161,7 @@ export default function SetupPage() {
                     <button
                         onClick={handleResetDemo}
                         className={isResetting ? "shimmer" : ""}
-                        style={{ width: '100%', padding: '12px', borderRadius: 8, background: 'transparent', border: '1px solid #ff3366', color: '#ff3366', fontWeight: 700, cursor: 'pointer' }}
+                        style={{ width: '100%', padding: '12px', borderRadius: 8, background: 'transparent', border: '1px solid #00ff00', color: '#00ff00', fontWeight: 700, cursor: 'pointer' }}
                     >
                         RESET DEMO STATE
                     </button>

@@ -48,12 +48,12 @@ export default function MetaMaskPanel({ onFraudAlert }) {
         style={{
           position: "fixed", bottom: 28, right: 28, zIndex: 9999,
           width: 56, height: 56, borderRadius: "50%",
-          background: account ? "rgba(239, 68, 68, 0.15)" : "rgba(255,255,255,0.06)",
-          border: `1px solid ${account ? "rgba(239, 68, 68, 0.45)" : "rgba(255,255,255,0.15)"}`,
+          background: account ? "rgba(0, 255, 0, 0.15)" : "rgba(255,255,255,0.06)",
+          border: `1px solid ${account ? "rgba(0, 255, 0, 0.45)" : "rgba(255,255,255,0.15)"}`,
           color: account ? "var(--accent)" : "#fff",
           display: "flex", alignItems: "center", justifyContent: "center",
           cursor: "pointer",
-          boxShadow: account ? "0 0 20px rgba(239, 68, 68, 0.25)" : "0 4px 20px rgba(0,0,0,0.5)",
+          boxShadow: account ? "0 0 20px rgba(0, 255, 0, 0.25)" : "0 4px 20px rgba(0,0,0,0.5)",
           backdropFilter: "blur(12px)",
           transition: "all 0.2s",
         }}
@@ -68,9 +68,9 @@ export default function MetaMaskPanel({ onFraudAlert }) {
           width: 360,
           background: "rgba(10, 2, 2, 0.96)",
           backdropFilter: "blur(28px)",
-          border: "1px solid rgba(239, 68, 68, 0.25)",
+          border: "1px solid rgba(0, 255, 0, 0.25)",
           borderRadius: 16,
-          boxShadow: "0 24px 60px rgba(0,0,0,0.8), 0 0 40px rgba(239, 68, 68, 0.04)",
+          boxShadow: "0 24px 60px rgba(0,0,0,0.8), 0 0 40px rgba(0, 255, 0, 0.04)",
           overflow: "hidden",
           animation: "fadeInUp 0.22s ease",
         }}>
@@ -78,8 +78,8 @@ export default function MetaMaskPanel({ onFraudAlert }) {
           {/* Header */}
           <div style={{
             display: "flex", justifyContent: "space-between", alignItems: "center",
-            padding: "14px 18px", borderBottom: "1px solid rgba(239, 68, 68, 0.1)",
-            background: "rgba(239, 68, 68, 0.03)",
+            padding: "14px 18px", borderBottom: "1px solid rgba(0, 255, 0, 0.1)",
+            background: "rgba(0, 255, 0, 0.03)",
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Shield size={15} color="var(--accent)" />
@@ -112,7 +112,7 @@ export default function MetaMaskPanel({ onFraudAlert }) {
                 <div style={{
                   display: "flex", justifyContent: "space-between", alignItems: "center",
                   padding: "8px 12px", borderRadius: 8, marginBottom: 16,
-                  background: "rgba(239, 68, 68, 0.05)", border: "1px solid rgba(239, 68, 68, 0.14)",
+                  background: "rgba(0, 255, 0, 0.05)", border: "1px solid rgba(0, 255, 0, 0.14)",
                 }}>
                   <div>
                     <div style={{ fontSize: 9, color: "var(--accent)", letterSpacing: "0.12em", marginBottom: 2, fontWeight: 700 }}>WALLET CONNECTED</div>

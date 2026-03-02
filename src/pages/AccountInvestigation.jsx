@@ -49,7 +49,7 @@ const STATUS_COLOR = { Blocked: "#ffffff", Cleared: "#00ff00", Pending: "#ffffff
 
 const ACCT_STATUS = {
   COMPROMISED:  { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff44" },
-  "HIGH RISK":  { color: "#ff8800", bg: "#ff880014", glow: "#ff880044" },
+  "HIGH RISK":  { color: "#ccff00", bg: "#ccff0014", glow: "#ccff0044" },
   SAFE:         { color: "#00ff00", bg: "#00ff0014", glow: "#00ff0044" },
 };
 
@@ -226,7 +226,7 @@ export default function AccountInvestigation() {
           </div>
           <div style={styles.aiText}>{selected.aiReport}</div>
           <div style={styles.aiBadge}>
-            <span style={styles.aiBadgeItem}>⚠ CONFIDENCE: HIGH</span>
+            <span style={styles.aiBadgeItem}>[!] CONFIDENCE: HIGH</span>
             <span style={styles.aiBadgeItem}>ACCOUNT: {selected.id}</span>
             <span style={styles.aiBadgeItem}>COMBINED SCORE: {combinedRisk}/100</span>
           </div>

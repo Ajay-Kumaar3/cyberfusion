@@ -5,7 +5,7 @@ from database import get_db
 from models import Account, Alert, Transaction
 from schemas import DashboardSummary
 
-router = APIRouter(prefix="/api/dashboard", tags=["dashboard"])
+router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 
 
 @router.get("/summary", response_model=DashboardSummary)

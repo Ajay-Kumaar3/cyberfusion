@@ -49,10 +49,10 @@ export default function BlockchainDemoPage() {
                             {[
                                 { label: "CyberFusion detects mule", color: "#00ff88" },
                                 { label: "Analyst clicks FREEZE", color: "#00ff88" },
-                                { label: "Smart contract blacklists wallet", color: "#ffcc00" },
-                                { label: "Mule attempts transfer", color: "#ff3366" },
-                                { label: "Contract REVERTS transaction", color: "#ff3366" },
-                                { label: "MetaMask shows real error", color: "#ff3366" }
+                                { label: "Smart contract blacklists wallet", color: "#ccff00" },
+                                { label: "Mule attempts transfer", color: "#00ff00" },
+                                { label: "Contract REVERTS transaction", color: "#00ff00" },
+                                { label: "MetaMask shows real error", color: "#00ff00" }
                             ].map((step, i) => (
                                 <React.Fragment key={i}>
                                     <div style={{
@@ -79,7 +79,7 @@ export default function BlockchainDemoPage() {
                                 { label: 'Network', value: 'Sepolia Testnet', color: '#00ffff' },
                                 { label: 'Contract', value: truncateAddress(DEMO_CONFIG.CONTRACT_ADDRESS), link: `${DEMO_CONFIG.ETHERSCAN_BASE}/address/${DEMO_CONFIG.CONTRACT_ADDRESS}` },
                                 { label: 'Owner', value: address ? truncateAddress(address) : 'Not connected' },
-                                { label: 'Total Blocked', value: totalBlocked, color: '#ff3366', bold: true },
+                                { label: 'Total Blocked', value: totalBlocked, color: '#00ff00', bold: true },
                             ].map((row, i) => (
                                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: 12 }}>
                                     <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>{row.label.toUpperCase()}</span>

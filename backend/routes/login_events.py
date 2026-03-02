@@ -7,7 +7,7 @@ from services.cyber_risk import compute_cyber_risk
 from typing import List
 from datetime import datetime
 
-router = APIRouter(prefix="/api/logins", tags=["logins"])
+router = APIRouter(prefix="/logins", tags=["logins"])
 
 
 @router.get("/", response_model=List[LoginEventOut])

@@ -25,11 +25,11 @@ app.add_middleware(
 )
 
 # ── Register routers ──────────────────────────────────────────────────────────
-app.include_router(accounts.router)
-app.include_router(login_events.router)
-app.include_router(transactions.router)
-app.include_router(alerts.router)
-app.include_router(dashboard.router)
+app.include_router(accounts.router, prefix="/api")
+app.include_router(login_events.router, prefix="/api")
+app.include_router(transactions.router, prefix="/api")
+app.include_router(alerts.router, prefix="/api")
+app.include_router(dashboard.router, prefix="/api")
 
 
 @app.get("/")

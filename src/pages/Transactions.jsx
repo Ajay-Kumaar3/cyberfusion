@@ -4,11 +4,11 @@ import { fetchTransactions } from "../api/api";
 import { AlertTriangle } from "lucide-react";
 
 const statusDisplay = {
-    ON_HOLD: { label: "BLOCKED", color: "#ff4444" },
-    REVIEW: { label: "FLAGGED", color: "#ffcc00" },
+    ON_HOLD: { label: "BLOCKED", color: "#00ff00" },
+    REVIEW: { label: "FLAGGED", color: "#ccff00" },
     APPROVED: { label: "CLEARED", color: "#00ff88" },
-    BLOCKED: { label: "BLOCKED", color: "#ff4444" },
-    PENDING: { label: "PENDING", color: "#aaaaaa" },
+    BLOCKED: { label: "BLOCKED", color: "#00ff00" },
+    PENDING: { label: "PENDING", color: "#889488" },
 };
 
 export default function Transactions() {
@@ -91,7 +91,7 @@ export default function Transactions() {
                     </thead>
                     <tbody>
                         {filtered.map(t => {
-                            const sd = statusDisplay[t.status] || { label: t.status, color: '#aaaaaa' };
+                            const sd = statusDisplay[t.status] || { label: t.status, color: '#889488' };
                             const flags = parseFlags(t.flags);
                             return (
                                 <React.Fragment key={t.txn_id}>
@@ -105,9 +105,9 @@ export default function Transactions() {
                                         <td style={{ padding: '16px 20px' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                                                 <div style={{ width: 40, height: 4, background: '#1e2d47', borderRadius: 2 }}>
-                                                    <div style={{ width: `${t.final_score}%`, height: '100%', background: t.final_score > 75 ? '#ff4444' : t.final_score > 55 ? '#ffcc00' : '#00ff88', borderRadius: 2 }}></div>
+                                                    <div style={{ width: `${t.final_score}%`, height: '100%', background: t.final_score > 75 ? '#00ff00' : t.final_score > 55 ? '#ccff00' : '#00ff88', borderRadius: 2 }}></div>
                                                 </div>
-                                                <span style={{ fontSize: 11, color: t.final_score > 75 ? '#ff4444' : t.final_score > 55 ? '#ffcc00' : '#00ff88', fontWeight: 'bold' }}>{t.final_score}</span>
+                                                <span style={{ fontSize: 11, color: t.final_score > 75 ? '#00ff00' : t.final_score > 55 ? '#ccff00' : '#00ff88', fontWeight: 'bold' }}>{t.final_score}</span>
                                             </div>
                                         </td>
                                         <td style={{ padding: '16px 20px' }}>
@@ -122,15 +122,15 @@ export default function Transactions() {
                                                     <h4 style={{ margin: '0 0 12px', fontSize: 12, color: '#88ff88', display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} /> RISK FLAGS</h4>
                                                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
                                                         {flags.length > 0 ? flags.map(f => (
-                                                            <span key={f} style={{ padding: '4px 10px', background: '#ff444422', border: '1px solid #ff444466', borderRadius: 12, fontSize: 11, color: '#ff8888', fontWeight: 'bold' }}>{f}</span>
+                                                            <span key={f} style={{ padding: '4px 10px', background: '#00ff0022', border: '1px solid #00ff0066', borderRadius: 12, fontSize: 11, color: '#00ff00', fontWeight: 'bold' }}>{f}</span>
                                                         )) : <span style={{ color: '#008800', fontSize: 12 }}>No flags</span>}
                                                     </div>
                                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                                                         {[
                                                             { label: 'Category', value: t.category },
                                                             { label: 'Cyber Score', value: `${t.cyber_score}/100` },
-                                                            { label: 'New Receiver', value: t.new_receiver ? 'YES ⚠' : 'No', color: t.new_receiver ? '#ff8888' : '#00ff88' },
-                                                            { label: 'Unusual Hour', value: t.time_flag ? 'YES ⚠' : 'No', color: t.time_flag ? '#ff8888' : '#00ff88' },
+                                                            { label: 'New Receiver', value: t.new_receiver ? 'YES [!]' : 'No', color: t.new_receiver ? '#00ff00' : '#00ff88' },
+                                                            { label: 'Unusual Hour', value: t.time_flag ? 'YES [!]' : 'No', color: t.time_flag ? '#00ff00' : '#00ff88' },
                                                         ].map(({ label, value, color }) => (
                                                             <div key={label} style={{ background: 'rgba(255,255,255,0.02)', padding: 12, borderRadius: 8 }}>
                                                                 <div style={{ fontSize: 10, color: '#008800', marginBottom: 4 }}>{label}</div>
@@ -141,10 +141,10 @@ export default function Transactions() {
                                                 </div>
                                                 <div style={{ flex: 1, borderLeft: '1px solid rgba(255,255,255,0.1)', paddingLeft: 32 }}>
                                                     {t.status === "ON_HOLD" || t.status === "BLOCKED" ? (
-                                                        <div style={{ background: '#ff444411', border: '1px solid #ff444444', padding: 16, borderRadius: 8, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                                                            <div style={{ fontSize: 11, color: '#ff4444', fontWeight: 'bold', marginBottom: 8 }}>TRANSACTION ON HOLD</div>
+                                                        <div style={{ background: '#00ff0011', border: '1px solid #00ff0044', padding: 16, borderRadius: 8, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                                            <div style={{ fontSize: 11, color: '#00ff00', fontWeight: 'bold', marginBottom: 8 }}>TRANSACTION ON HOLD</div>
                                                             <div style={{ fontSize: 13, color: '#ffffff', marginBottom: 16 }}>Blocked by risk engine. Score: {t.final_score}/100. Funds protected.</div>
-                                                            <button style={{ background: 'transparent', border: '1px solid #ff4444', color: '#ff4444', padding: '8px 16px', borderRadius: 6, fontWeight: 'bold', cursor: 'pointer', fontSize: 11 }}>VIEW AUDIT LOG</button>
+                                                            <button style={{ background: 'transparent', border: '1px solid #00ff00', color: '#00ff00', padding: '8px 16px', borderRadius: 6, fontWeight: 'bold', cursor: 'pointer', fontSize: 11 }}>VIEW AUDIT LOG</button>
                                                         </div>
                                                     ) : (
                                                         <div style={{ background: '#00ff0011', border: '1px solid #00ff0044', padding: 16, borderRadius: 8, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>

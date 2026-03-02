@@ -1,4 +1,4 @@
-const BASE = "http://localhost:8000/api";
+const BASE = "/api";
 
 // Helper
 const get = (url) => fetch(BASE + url).then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); });
@@ -21,28 +21,28 @@ export const fetchDashboardSummary = () => get("/dashboard/summary");
 // ── Accounts ─────────────────────────────────────────────────────────────────
 export const fetchAccounts = (params = {}) => {
     const q = new URLSearchParams(params).toString();
-    return get(`/accounts${q ? "?" + q : ""}`);
+    return get(`/accounts/${q ? "?" + q : ""}`);
 };
 export const fetchAccount = (id) => get(`/accounts/${id}`);
 
 // ── Login Events ─────────────────────────────────────────────────────────────
 export const fetchLogins = (params = {}) => {
     const q = new URLSearchParams(params).toString();
-    return get(`/logins${q ? "?" + q : ""}`);
+    return get(`/logins/${q ? "?" + q : ""}`);
 };
-export const createLoginEvent = (payload) => post("/logins", payload);
+export const createLoginEvent = (payload) => post("/logins/", payload);
 
 // ── Transactions ──────────────────────────────────────────────────────────────
 export const fetchTransactions = (params = {}) => {
     const q = new URLSearchParams(params).toString();
-    return get(`/transactions${q ? "?" + q : ""}`);
+    return get(`/transactions/${q ? "?" + q : ""}`);
 };
-export const createTransaction = (payload) => post("/transactions", payload);
+export const createTransaction = (payload) => post("/transactions/", payload);
 
 // ── Alerts ────────────────────────────────────────────────────────────────────
 export const fetchAlerts = (params = {}) => {
     const q = new URLSearchParams(params).toString();
-    return get(`/alerts${q ? "?" + q : ""}`);
+    return get(`/alerts/${q ? "?" + q : ""}`);
 };
 export const updateAlertStatus = (id, status) => patch(`/alerts/${id}`, { status });
 export const explainAlert = (id) => post(`/alerts/${id}/explain`, {});

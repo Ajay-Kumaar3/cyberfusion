@@ -29,7 +29,7 @@ export default function Sidebar() {
       zIndex: 10
     }}>
       <div style={{ padding: '0 24px', marginBottom: 40, display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', padding: '6px', borderRadius: 10, color: '#fff', boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)' }}>
+        <div style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', padding: '6px', borderRadius: 10, color: '#fff', boxShadow: '0 4px 12px rgba(0, 255, 0, 0.3)' }}>
           <Shield size={24} />
         </div>
         <div>
@@ -53,8 +53,8 @@ export default function Sidebar() {
                 gap: 12,
                 padding: '12px 16px',
                 color: isActive ? '#fff' : 'var(--text-muted)',
-                background: isActive ? 'rgba(239, 68, 68, 0.12)' : 'transparent',
-                border: isActive ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid transparent',
+                background: isActive ? 'rgba(0, 255, 0, 0.12)' : 'transparent',
+                border: isActive ? '1px solid rgba(0, 255, 0, 0.3)' : '1px solid transparent',
                 borderRadius: '12px',
                 textDecoration: 'none',
                 fontFamily: "'Space Grotesk', sans-serif",
@@ -84,7 +84,7 @@ export default function Sidebar() {
 
       <div style={{ padding: '0 24px', paddingTop: 24 }}>
         <button style={{
-          width: '100%', padding: '14px', background: 'rgba(239, 68, 68, 0.08)', color: 'var(--accent)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: 12, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", fontSize: 11, display: 'flex', justifyContent: 'center', gap: 8, alignItems: 'center', cursor: 'pointer', transition: 'all 0.2s', letterSpacing: '0.05em'
+          width: '100%', padding: '14px', background: 'rgba(0, 255, 0, 0.08)', color: 'var(--accent)', border: '1px solid rgba(0, 255, 0, 0.3)', borderRadius: 12, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", fontSize: 11, display: 'flex', justifyContent: 'center', gap: 8, alignItems: 'center', cursor: 'pointer', transition: 'all 0.2s', letterSpacing: '0.05em'
         }} className="hover-lift">
           <Shield size={14} /> SECURITY PROTOCOLS
         </button>

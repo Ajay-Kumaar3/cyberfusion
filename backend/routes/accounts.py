@@ -5,7 +5,7 @@ from models import Account, LoginEvent, Transaction, Alert
 from schemas import AccountOut
 from typing import List
 
-router = APIRouter(prefix="/api/accounts", tags=["accounts"])
+router = APIRouter(prefix="/accounts", tags=["accounts"])
 
 
 @router.get("/", response_model=List[AccountOut])

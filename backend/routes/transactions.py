@@ -10,7 +10,7 @@ from datetime import datetime
 import uuid
 import json
 
-router = APIRouter(prefix="/api/transactions", tags=["transactions"])
+router = APIRouter(prefix="/transactions", tags=["transactions"])
 
 
 @router.get("/", response_model=List[TransactionOut])

@@ -4,7 +4,7 @@ import GeminiPanel from "../components/GeminiPanel";
 import { FileText, Download, Target, AlertTriangle } from "lucide-react";
 import { fetchAlerts, fetchDashboardSummary } from "../api/api";
 
-const sevColor = s => ({ CRITICAL: "#ff4444", HIGH: "#ffcc00", MEDIUM: "#88ff88" }[s] || "#aaaaaa");
+const sevColor = s => ({ CRITICAL: "#00ff00", HIGH: "#ccff00", MEDIUM: "#88ff88" }[s] || "#889488");
 
 export default function Reports() {
     const [triggerReport, setTriggerReport] = useState(0);
@@ -107,7 +107,7 @@ export default function Reports() {
                             <div style={{ fontSize: 12, color: '#00aa00', marginBottom: 12, lineHeight: 1.5 }}>{a.description}</div>
                             <div style={{ display: 'flex', gap: 24, fontSize: 12, color: '#00aa00', marginBottom: 12 }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Target size={14} color="#88ff88" /><span>Risk Score: {a.final_score}/100</span></div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} color="#ffcc00" /><span style={{ color: a.status === 'Open' ? '#ffcc00' : a.status === 'Resolved' ? '#00ff88' : '#ffffff' }}>{a.status}</span></div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} color="#ccff00" /><span style={{ color: a.status === 'Open' ? '#ccff00' : a.status === 'Resolved' ? '#00ff88' : '#ffffff' }}>{a.status}</span></div>
                             </div>
                             <button style={{ width: '100%', padding: '10px', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 6, color: '#88ff88', fontSize: 12, fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, cursor: 'pointer' }}>
                                 VIEW FULL REPORT <Download size={14} />

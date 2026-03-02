@@ -117,8 +117,8 @@ export default function BlockchainDemo() {
             <StepIndicator />
 
             {error && (
-                <div style={{ padding: 12, background: 'rgba(255, 51, 102, 0.1)', border: '1px solid rgba(255, 51, 102, 0.3)', borderRadius: 8, color: '#ff3366', fontSize: 12, marginBottom: 20 }}>
-                    ⚠️ {error}
+                <div style={{ padding: 12, background: 'rgba(0, 255, 0, 0.1)', border: '1px solid rgba(0, 255, 0, 0.3)', borderRadius: 8, color: '#00ff00', fontSize: 12, marginBottom: 20 }}>
+                    [!]️ {error}
                 </div>
             )}
 
@@ -195,9 +195,9 @@ export default function BlockchainDemo() {
                         </div>
                     )}
 
-                    <div style={{ padding: 24, background: 'rgba(255,51,102,0.05)', border: '1px solid rgba(255,51,102,0.2)', borderRadius: 12 }}>
-                        <h3 style={{ margin: '0 0 8px', color: '#ff3366', display: 'flex', alignItems: 'center', gap: 8 }}>
-                            ⚡ NOW ATTEMPT A TRANSFER
+                    <div style={{ padding: 24, background: 'rgba(0, 255, 0,0.05)', border: '1px solid rgba(0, 255, 0,0.2)', borderRadius: 12 }}>
+                        <h3 style={{ margin: '0 0 8px', color: '#00ff00', display: 'flex', alignItems: 'center', gap: 8 }}>
+                            [+] NOW ATTEMPT A TRANSFER
                         </h3>
                         <p style={{ margin: '0 0 20px', fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>Switch MetaMask to the frozen wallet, then click below</p>
 
@@ -210,10 +210,10 @@ export default function BlockchainDemo() {
                         <button
                             onClick={handleAttempt}
                             disabled={isAttempting}
-                            style={{ padding: '14px', background: 'rgba(255,51,102,0.2)', border: '1px solid #ff3366', borderRadius: 8, color: '#ff3366', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%' }}
+                            style={{ padding: '14px', background: 'rgba(0, 255, 0,0.2)', border: '1px solid #00ff00', borderRadius: 8, color: '#00ff00', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%' }}
                         >
                             {isAttempting ? (
-                                <div style={{ width: 20, height: 20, border: '3px solid #ff3366', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+                                <div style={{ width: 20, height: 20, border: '3px solid #00ff00', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
                             ) : <><RotateCcw size={18} /> ATTEMPT TRANSFER (0.001 ETH)</>}
                         </button>
                     </div>
@@ -224,16 +224,16 @@ export default function BlockchainDemo() {
             {currentStep === 4 && blockResult && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                     {blockResult.blocked ? (
-                        <div style={{ padding: 32, background: 'rgba(255,51,102,0.1)', border: '2px solid #ff3366', borderRadius: 12, textAlign: 'center' }}>
-                            <div style={{ background: '#ff3366', width: 64, height: 64, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', color: '#fff' }}>
+                        <div style={{ padding: 32, background: 'rgba(0, 255, 0,0.1)', border: '2px solid #00ff00', borderRadius: 12, textAlign: 'center' }}>
+                            <div style={{ background: '#00ff00', width: 64, height: 64, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', color: '#fff' }}>
                                 <ShieldAlert size={32} />
                             </div>
-                            <h2 style={{ margin: '0 0 8px', color: '#ff3366', letterSpacing: '0.05em' }}>🚫 TRANSACTION BLOCKED</h2>
+                            <h2 style={{ margin: '0 0 8px', color: '#00ff00', letterSpacing: '0.05em' }}>🚫 TRANSACTION BLOCKED</h2>
                             <p style={{ margin: '0 0 24px', fontSize: 15, color: '#fff' }}>CyberFusion Guard rejected this transaction</p>
 
-                            <div style={{ padding: 16, background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,51,102,0.3)', borderRadius: 8, textAlign: 'left', marginBottom: 24 }}>
+                            <div style={{ padding: 16, background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(0, 255, 0,0.3)', borderRadius: 8, textAlign: 'left', marginBottom: 24 }}>
                                 <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', fontWeight: 600, marginBottom: 6 }}>BLOCK REASON:</div>
-                                <div style={{ fontSize: 14, color: '#ff3366', fontWeight: 600, fontFamily: "'JetBrains Mono', monospace" }}>{blockResult.reason}</div>
+                                <div style={{ fontSize: 14, color: '#00ff00', fontWeight: 600, fontFamily: "'JetBrains Mono', monospace" }}>{blockResult.reason}</div>
                             </div>
 
                             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginBottom: 24 }}>
@@ -283,9 +283,9 @@ export default function BlockchainDemo() {
                                     <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', fontFamily: "'JetBrains Mono', monospace" }}>{ev.timestamp}</span>
                                     <span style={{
                                         padding: '2px 8px', borderRadius: 4, fontSize: 9, fontWeight: 800,
-                                        background: ev.type === 'BLOCKED' ? '#ff336622' : ev.type === 'ALLOWED' ? '#00ff8822' : '#ffcc0022',
-                                        color: ev.type === 'BLOCKED' ? '#ff3366' : ev.type === 'ALLOWED' ? '#00ff88' : '#ffcc00',
-                                        border: `1px solid ${ev.type === 'BLOCKED' ? '#ff336644' : ev.type === 'ALLOWED' ? '#00ff8844' : '#ffcc0044'}`
+                                        background: ev.type === 'BLOCKED' ? '#00ff0022' : ev.type === 'ALLOWED' ? '#00ff8822' : '#ccff0022',
+                                        color: ev.type === 'BLOCKED' ? '#00ff00' : ev.type === 'ALLOWED' ? '#00ff88' : '#ccff00',
+                                        border: `1px solid ${ev.type === 'BLOCKED' ? '#00ff0044' : ev.type === 'ALLOWED' ? '#00ff8844' : '#ccff0044'}`
                                     }}>{ev.type}</span>
                                     <span style={{ fontSize: 11, color: '#fff', fontFamily: "'JetBrains Mono', monospace", flex: 1 }}>{truncateAddress(ev.address)}</span>
                                     <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)' }}>{ev.amount}</span>
