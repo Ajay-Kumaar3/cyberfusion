@@ -117,9 +117,9 @@ export default function Dashboard() {
             </h3>
             <div style={{ display: 'flex', gap: '3%', justifyContent: 'space-between' }}>
               {[
-                { id: "ACC-4821", risk: 95, status: "COMPROMISED", color: "#ffffff" },
-                { id: "ACC-7743", risk: 88, status: "FROZEN", color: "#ffffff" },
-                { id: "MULE-001", risk: 85, status: "FLAGGED", color: "#ffffff" }
+                { id: "ACC-4821", risk: 95, status: "COMPROMISED", color: "#00ff00" },
+                { id: "ACC-7743", risk: 88, status: "FROZEN", color: "#00ff00" },
+                { id: "MULE-001", risk: 85, status: "FLAGGED", color: "#00cc00" }
               ].map(acc => (
                 <GlassCard key={acc.id} style={{ width: '31%', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -191,14 +191,14 @@ export default function Dashboard() {
                 <path fill="#ffffff" d="M292.5,85.8c0,0-15.5,10.1-23,20.3c-2.5,0.2-4.8,0.8-4.8,0.8s-2.1,3,0.5,3 c2.2,0,14.8,0.6,16.3,0.2c1.7-0.5,8.1-12,8.1-12S295.6,85.3,292.5,85.8z M168,160.8c-2,10.1-13,20.3-13,20.3c-2.5,0.2-4.8,0.8-4.8,0.8s-2.1,3,0.5,3 c2.2,0,14.8,0.6,16.3,0.2c1.7-0.5,8.1-12,8.1-12S170,140.3,168,160.8z M228,120.8c-2,10.1-13,20.3-13,20.3c-2.5,0.2-4.8,0.8-4.8,0.8s-2.1,3,0.5,3 c2.2,0,14.8,0.6,16.3,0.2c1.7-0.5,8.1-12,8.1-12S230,120.3,228,120.8z" />
               </svg>
               {[
-                { label: "RU", x: 280, y: 70, color: "#ffffff", size: 8 },
-                { label: "CN", x: 340, y: 100, color: "#ffffff", size: 10 },
-                { label: "NG", x: 220, y: 160, color: "#ffffff", size: 6 },
-                { label: "BR", x: 130, y: 170, color: "#ffffff", size: 7 },
-                { label: "RO", x: 245, y: 85, color: "#ffffff", size: 5 },
-                { label: "UA", x: 255, y: 78, color: "#ffffff", size: 7 },
-                { label: "VN", x: 335, y: 130, color: "#ffffff", size: 5 },
-                { label: "IN", x: 310, y: 120, color: "#ffffff", size: 6 }
+                { label: "RU", x: 280, y: 70, color: "#00ff00", size: 8 },
+                { label: "CN", x: 340, y: 100, color: "#00ff00", size: 10 },
+                { label: "NG", x: 220, y: 160, color: "#00ff00", size: 6 },
+                { label: "BR", x: 130, y: 170, color: "#00ff00", size: 7 },
+                { label: "RO", x: 245, y: 85, color: "#00ff00", size: 5 },
+                { label: "UA", x: 255, y: 78, color: "#00ff00", size: 7 },
+                { label: "VN", x: 335, y: 130, color: "#00ff00", size: 5 },
+                { label: "IN", x: 310, y: 120, color: "#00ff00", size: 6 }
               ].map((dot, i) => (
                 <div key={i} style={{ position: 'absolute', top: dot.y, left: dot.x }}>
                   <div style={{ width: dot.size, height: dot.size, backgroundColor: dot.color, borderRadius: '50%', position: 'absolute', transform: 'translate(-50%, -50%)', zIndex: 2 }} title={dot.label} />
@@ -213,9 +213,9 @@ export default function Dashboard() {
               `}</style>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginTop: 16, fontSize: 11, color: 'var(--text-muted)' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#ffffff' }}></span> Critical Origin</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#ffffff' }}></span> High</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#ffffff' }}></span> Medium</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#00ff00' }}></span> Critical Origin</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#00cc00' }}></span> High</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#008800' }}></span> Medium</span>
             </div>
           </GlassCard>
 
