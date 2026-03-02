@@ -7,12 +7,12 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Responsi
 import { askGemini } from "../utils/gemini";
 
 const radarData = [
-  { subject: 'Phishing', A: 85, fullMark: 100 },
-  { subject: 'Takeover', A: 65, fullMark: 100 },
-  { subject: 'Mule', A: 92, fullMark: 100 },
-  { subject: 'Velocity', A: 78, fullMark: 100 },
-  { subject: 'Geo-Anomaly', A: 45, fullMark: 100 },
-  { subject: 'Dark Web', A: 60, fullMark: 100 }
+  { subject: 'Phishing', A: 85 },
+  { subject: 'Takeover', A: 65 },
+  { subject: 'Mule', A: 92 },
+  { subject: 'Velocity', A: 78 },
+  { subject: 'Geo-Anomaly', A: 45 },
+  { subject: 'Dark Web', A: 60 },
 ];
 
 export default function Dashboard() {
@@ -53,39 +53,35 @@ export default function Dashboard() {
   }, [briefing]);
 
   useEffect(() => {
-    const t = setInterval(() => {
-      setTimeLeft(prev => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
+    const t = setInterval(() => setTimeLeft(p => p > 0 ? p - 1 : 0), 1000);
     return () => clearInterval(t);
   }, []);
 
   useEffect(() => {
     fetchDashboardSummary()
       .then(setSummary)
-      .catch(err => console.error("Dashboard API error:", err));
+      .catch(err => console.error("Dashboard API:", err));
   }, []);
 
-  const formatTime = (secs) => {
-    const h = Math.floor(secs / 3600).toString().padStart(2, '0');
-    const m = Math.floor((secs % 3600) / 60).toString().padStart(2, '0');
-    const s = (secs % 60).toString().padStart(2, '0');
-    return `${h}:${m}:${s}`;
+  const fmt = s => {
+    const h = Math.floor(s / 3600).toString().padStart(2, '0');
+    const m = Math.floor((s % 3600) / 60).toString().padStart(2, '0');
+    const sc = (s % 60).toString().padStart(2, '0');
+    return `${h}:${m}:${sc}`;
   };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, zIndex: 1, position: 'relative' }}>
-      {/* Top Stat Row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
-        <StatCard title="HIGH RISK ACCOUNTS" targetValue={summary?.high_risk_accounts ?? 14} color="var(--danger)" />
-        <StatCard title="ACTIVE ALERTS" targetValue={summary?.active_alerts ?? 37} color="var(--warning)" />
+        <StatCard title="HIGH RISK ACCOUNTS" targetValue={summary?.high_risk_accounts ?? 0} color="var(--danger)" />
+        <StatCard title="ACTIVE ALERTS" targetValue={summary?.active_alerts ?? 0} color="var(--warning)" />
         <StatCard title="TXNS UNDER REVIEW" targetValue={summary?.transactions_flagged ?? 0} color="var(--info)" />
-        <GlassCard style={{ padding: 20, border: '1px solid rgba(0,255,0,0.3)', background: 'linear-gradient(135deg, rgba(0,255,0,0.1), rgba(0,255,0,0.02))' }}>
+        <GlassCard style={{ padding: 20, border: '1px solid rgba(0,255,0,0.3)', background: 'linear-gradient(135deg,rgba(0,255,0,0.1),rgba(0,255,0,0.02))' }}>
           <div style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600, letterSpacing: '0.05em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', animation: 'blink 1s infinite' }} />
-            RECOVERY WINDOW
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', animation: 'blink 1s infinite' }} /> RECOVERY WINDOW
           </div>
           <div style={{ fontSize: 36, fontWeight: 800, color: 'var(--accent)', fontFamily: "'JetBrains Mono', monospace", filter: 'drop-shadow(0 0 10px rgba(0,255,0,0.4))' }}>
-            {formatTime(timeLeft)}
+            {fmt(timeLeft)}
           </div>
         </GlassCard>
       </div>
@@ -106,8 +102,6 @@ export default function Dashboard() {
 
       {/* Main content grid */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 24, minHeight: 480 }}>
-
-        {/* Left Col - Alerts */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
 
           {/* Top 3 Accounts at Risk strip */}
@@ -144,15 +138,14 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Right Col - Radar & Status */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           <GlassCard style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 0' }}>
             <h3 style={{ fontSize: 14, color: 'var(--info)', marginBottom: 10, letterSpacing: '0.1em' }}>THREAT LEVEL RADAR</h3>
-            <div style={{ width: '100%', height: 280, animation: 'pulse-glow 4s infinite' }}>
+            <div style={{ width: '100%', height: 280 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
                   <PolarGrid stroke="rgba(255,255,255,0.1)" />
-                  <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-muted)', fontSize: 11, fontFamily: 'Space Grotesk' }} />
+                  <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} />
                   <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                   <Radar name="Threat" dataKey="A" stroke="var(--accent)" strokeWidth={2} fill="var(--accent)" fillOpacity={0.15} />
                 </RadarChart>
@@ -167,7 +160,7 @@ export default function Dashboard() {
                 { label: 'SOC Integration', color: 'var(--accent)', text: 'ACTIVE' },
                 { label: 'AML Engine', color: 'var(--accent)', text: 'ACTIVE' },
                 { label: 'Gemini AI', color: 'var(--special)', text: 'CONNECTED' },
-                { label: `Accounts Monitored`, color: 'var(--info)', text: summary ? summary.total_accounts : '…' },
+                { label: 'Accounts Monitored', color: 'var(--info)', text: summary ? `${summary.total_accounts}` : '…' },
               ].map(({ label, color, text }) => (
                 <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '10px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.05)' }}>
                   <span style={{ fontSize: 13, color: 'var(--text-main)' }}>{label}</span>

@@ -20,10 +20,9 @@ const sevLabel = (sev) => {
 
 export default function AlertFeed() {
     const [alerts, setAlerts] = useState([]);
-    const [poolIndex, setPoolIndex] = useState(0);
     const [pool, setPool] = useState([]);
+    const [poolIndex, setPoolIndex] = useState(2); // eslint-disable-line no-unused-vars
 
-    // Fetch real alerts once on mount
     useEffect(() => {
         fetchAlerts({ limit: 50 })
             .then(data => {
@@ -33,20 +32,13 @@ export default function AlertFeed() {
                         { ...data[0], instanceId: Date.now() + 1, timeLabel: "Just now" },
                         { ...data[1], instanceId: Date.now() + 2, timeLabel: "2m ago" },
                     ]);
-                    setPoolIndex(2);
                 }
             })
             .catch(() => {
-                // Fallback if API down
-                setAlerts([{
-                    alert_id: 0, severity: "HIGH", account_id: "ACC-???",
-                    description: "Backend offline — restart uvicorn",
-                    instanceId: Date.now(), timeLabel: "Now"
-                }]);
+                setAlerts([{ alert_id: 0, severity: "HIGH", account_id: "API-OFFLINE", description: "Backend offline — restart uvicorn server", instanceId: Date.now(), timeLabel: "Now" }]);
             });
     }, []);
 
-    // Rotate through real alerts every 8s
     useEffect(() => {
         if (pool.length === 0) return;
         const interval = setInterval(() => {
