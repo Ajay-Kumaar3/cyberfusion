@@ -1,6 +1,25 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Activity, Share2, Users, DollarSign, ShieldAlert, FileText, Shield, Link as LinkIcon } from 'lucide-react';
+import { Activity, Share2, Users, DollarSign, ShieldAlert, FileText, Link as LinkIcon } from 'lucide-react';
+
+const CyberShield = ({ size = 24, color = "currentColor", strokeWidth = 2 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M 11 1 L 3 9 L 3 15 L 11 23 L 7 19 L 7 15 L 11 11 L 7 7 L 7 5 L 11 1 Z"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M 13 1 L 21 9 L 21 15 L 13 23 L 17 19 L 17 15 L 13 11 L 17 7 L 17 5 L 13 1 Z"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
 export default function Sidebar() {
   const location = useLocation();
@@ -30,7 +49,7 @@ export default function Sidebar() {
     }}>
       <div style={{ padding: '0 24px', marginBottom: 40, display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{ background: 'rgba(0, 255, 65, 0.1)', border: '1px solid rgba(0, 255, 65, 0.3)', padding: '6px', borderRadius: 10, color: 'var(--accent)', boxShadow: '0 4px 12px rgba(0, 255, 65, 0.1)' }}>
-          <Shield size={24} />
+          <CyberShield size={24} strokeWidth={2.5} />
         </div>
         <div>
           <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 18, fontWeight: 800, margin: 0, color: '#fff', letterSpacing: '0.08em', textTransform: 'uppercase' }}>CYBERFUSION</h1>
