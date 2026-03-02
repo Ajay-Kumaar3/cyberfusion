@@ -12,6 +12,7 @@ import MetaMaskPanel from "./components/web3/MetaMaskPanel";
 import { BlockchainProvider } from "./context/BlockchainContext";
 import BlockchainDemoPage from "./pages/BlockchainDemo";
 import SetupPage from "./pages/SetupPage";
+import PaymentDemoPage from "./pages/PaymentDemo";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/reports" element={<Reports />} />
             <Route path="/blockchain" element={<BlockchainDemoPage />} />
             <Route path="/setup" element={<SetupPage />} />
+            <Route path="/payments" element={<PaymentDemoPage />} />
           </Routes>
         </Layout>
         <MetaMaskPanel onFraudAlert={(alert) => console.log("[CyberFusion] Fraud alert:", alert)} />

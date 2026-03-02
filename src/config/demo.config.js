@@ -21,6 +21,9 @@ export const DEMO_CONFIG = {
 
     // Etherscan Base URL for Sepolia
     ETHERSCAN_BASE: "https://sepolia.etherscan.io",
+
+    // Razorpay Key for Payment Intercept Demo
+    RAZORPAY_KEY: "rzp_test_PASTE_YOUR_KEY_HERE",
 };
 
 export function truncateAddress(addr) {
