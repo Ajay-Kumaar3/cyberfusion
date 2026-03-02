@@ -46,20 +46,22 @@ export default function Navbar() {
         </div>
 
         <button style={{
-          background: 'transparent',
-          border: '1px solid rgba(255,255,255,0.1)',
+          background: 'rgba(255,255,255,0.03)',
+          border: '1px solid rgba(255,255,255,0.08)',
           color: 'var(--text-main)',
           padding: '8px 16px',
           borderRadius: 8,
-          fontSize: 11,
+          fontSize: 10,
           fontFamily: "'JetBrains Mono', monospace",
+          fontWeight: 600,
+          letterSpacing: '0.05em',
           cursor: 'pointer'
         }} className="hover-lift">
-          ALL PROTOCOLS
+          ACTIVE PROTOCOLS
         </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.1)' }}>
-          <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--accent)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '4px', background: 'rgba(239, 68, 68, 0.1)', borderRadius: '50%', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+          <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 13, boxShadow: '0 0 15px rgba(239, 68, 68, 0.3)' }}>
             AK
           </div>
         </div>

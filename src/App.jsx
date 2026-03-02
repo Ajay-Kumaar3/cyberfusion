@@ -7,6 +7,7 @@ import Accounts from "./pages/Accounts";
 import Transactions from "./pages/Transactions";
 import CyberRisk from "./pages/CyberRisk";
 import Reports from "./pages/Reports";
+import MetaMaskPanel from "./components/web3/MetaMaskPanel";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/reports" element={<Reports />} />
         </Routes>
       </Layout>
+      <MetaMaskPanel onFraudAlert={(alert) => console.log("[CyberFusion] Fraud alert:", alert)} />
     </Router>
   );
 }

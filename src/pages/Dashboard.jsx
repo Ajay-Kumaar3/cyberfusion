@@ -50,7 +50,7 @@ export default function Dashboard() {
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', animation: 'blink 1s infinite' }} />
             RECOVERY WINDOW
           </div>
-          <div style={{ fontSize: 36, fontWeight: 800, color: 'var(--accent)', fontFamily: "'JetBrains Mono', monospace", filter: 'drop-shadow(0 0 10px rgba(0,255,0,0.4))' }}>
+          <div style={{ fontSize: 36, fontWeight: 800, color: 'var(--accent)', fontFamily: "'JetBrains Mono', monospace", filter: 'drop-shadow(0 0 12px rgba(239, 68, 68, 0.5))' }}>
             {formatTime(timeLeft)}
           </div>
         </GlassCard>

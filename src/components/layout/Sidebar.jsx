@@ -18,7 +18,7 @@ export default function Sidebar() {
     <div style={{
       width: 250,
       height: '100vh',
-      background: 'rgba(0, 0, 0, 0.7)',
+      background: 'rgba(10, 2, 2, 0.8)',
       backdropFilter: 'blur(30px)',
       borderRight: '1px solid var(--border-color)',
       display: 'flex',
@@ -28,18 +28,18 @@ export default function Sidebar() {
       zIndex: 10
     }}>
       <div style={{ padding: '0 24px', marginBottom: 40, display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ border: '1px solid var(--accent)', padding: '6px', borderRadius: 8, color: 'var(--accent)', background: 'var(--accent-dim)' }}>
-          <Shield size={22} />
+        <div style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', padding: '6px', borderRadius: 10, color: '#fff', boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)' }}>
+          <Shield size={24} />
         </div>
         <div>
-          <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontStyle: 'italic', fontSize: 18, fontWeight: 800, margin: 0, color: '#fff', letterSpacing: '0.05em' }}>AGENTCHAIN</h1>
-          <div style={{ fontSize: 9, color: 'var(--accent)', fontFamily: "'JetBrains Mono', monospace", display: 'flex', alignItems: 'center', gap: 4, letterSpacing: '0.1em' }}>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'var(--accent)' }}></span> CYBERFUSION EVM
+          <h1 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 18, fontWeight: 800, margin: 0, color: '#fff', letterSpacing: '0.08em', textTransform: 'uppercase' }}>CYBERFUSION</h1>
+          <div style={{ fontSize: 9, color: 'var(--accent-secondary)', fontFamily: "'JetBrains Mono', monospace", display: 'flex', alignItems: 'center', gap: 4, letterSpacing: '0.12em', fontWeight: 600 }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent-secondary)', boxShadow: '0 0 8px var(--accent-secondary)' }}></span> NETWORK LITE
           </div>
         </div>
       </div>
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8, padding: '0 12px' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6, padding: '0 12px' }}>
         {navItems.map(item => {
           const isActive = location.pathname === item.path;
           return (
@@ -51,23 +51,23 @@ export default function Sidebar() {
                 alignItems: 'center',
                 gap: 12,
                 padding: '12px 16px',
-                color: isActive ? 'var(--accent)' : 'var(--text-muted)',
-                background: isActive ? 'var(--accent-dim)' : 'transparent',
-                border: isActive ? '1px solid var(--accent)' : '1px solid transparent',
-                borderRadius: '8px',
+                color: isActive ? '#fff' : 'var(--text-muted)',
+                background: isActive ? 'rgba(239, 68, 68, 0.12)' : 'transparent',
+                border: isActive ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid transparent',
+                borderRadius: '12px',
                 textDecoration: 'none',
                 fontFamily: "'Space Grotesk', sans-serif",
                 fontSize: 13,
-                fontWeight: 700,
-                letterSpacing: '0.05em',
+                fontWeight: 600,
+                letterSpacing: '0.03em',
                 transition: 'all 0.2s',
                 position: 'relative'
               }}
             >
-              {item.highlight && !isActive && <span style={{ position: 'absolute', right: 12, background: 'var(--special)', color: '#fff', fontSize: 9, padding: '2px 6px', borderRadius: 4, fontWeight: 'bold' }}>CORE</span>}
-              <span style={{ opacity: isActive ? 1 : 0.6 }}>{item.icon}</span>
+              {item.highlight && !isActive && <span style={{ position: 'absolute', right: 12, background: 'var(--special)', color: '#fff', fontSize: 8, padding: '2px 6px', borderRadius: 4, fontWeight: 800 }}>CORE</span>}
+              <span style={{ opacity: isActive ? 1 : 0.6, color: isActive ? 'var(--accent)' : 'inherit' }}>{item.icon}</span>
               {item.label}
-              {isActive && <div style={{ position: 'absolute', right: 12, width: 4, height: 12, borderRadius: 2, background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }}></div>}
+              {isActive && <div style={{ position: 'absolute', right: 12, width: 4, height: 16, borderRadius: 2, background: 'var(--accent)', boxShadow: '0 0 10px var(--accent)' }}></div>}
             </NavLink>
           );
         })}
@@ -75,9 +75,9 @@ export default function Sidebar() {
 
       <div style={{ padding: '0 24px', paddingTop: 24 }}>
         <button style={{
-          width: '100%', padding: '12px', background: 'transparent', color: 'var(--accent)', border: '1px solid var(--accent)', borderRadius: 8, fontWeight: 'bold', fontFamily: "'Space Grotesk', sans-serif", fontSize: 12, display: 'flex', justifyContent: 'center', gap: 8, alignItems: 'center', cursor: 'pointer', transition: 'all 0.2s'
+          width: '100%', padding: '14px', background: 'rgba(239, 68, 68, 0.08)', color: 'var(--accent)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: 12, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", fontSize: 11, display: 'flex', justifyContent: 'center', gap: 8, alignItems: 'center', cursor: 'pointer', transition: 'all 0.2s', letterSpacing: '0.05em'
         }} className="hover-lift">
-          <Shield size={14} /> CONNECT ALPHA
+          <Shield size={14} /> SECURITY PROTOCOLS
         </button>
       </div>
     </div>
