@@ -1,0 +1,69 @@
+{
+  "model_details": {
+    "name": "CyberFusion MuleDetector v2.3",
+    "version": "2.3.0",
+    "type": "Multi-class classification",
+    "description": "Detects money mule accounts, compromised accounts, and financial crime exit points by correlating cybersecurity telemetry with transactional behavioral patterns.",
+    "developers": "CyberFusion AI Research Team",
+    "release_date": "2025-02-20",
+    "license": "Proprietary \u2014 Internal Use Only",
+    "contact": "ai-research@cyberfusion.io",
+    "sha256_checksum": "8305cb979e16300e7254e3c84d85c5615564dd90988d5cb341a4576cf8dffa9b"
+  },
+  "intended_use": {
+    "primary_use": "Real-time mule account detection in banking transaction monitoring systems",
+    "intended_users": [
+      "SOC analysts",
+      "AML compliance officers",
+      "Financial fraud investigators"
+    ],
+    "out_of_scope": [
+      "Consumer credit scoring",
+      "Identity verification",
+      "Employment screening"
+    ]
+  },
+  "training_data_summary": {
+    "total_records": 2847293,
+    "time_period": "2019-2024",
+    "institutions_represented": 14,
+    "countries": [
+      "IN",
+      "US",
+      "GB",
+      "DE",
+      "SG",
+      "AU",
+      "ZA",
+      "BR",
+      "NG",
+      "PH"
+    ],
+    "anonymization": "All PII removed. Account IDs hashed with SHA-256. Transaction amounts bucketed."
+  },
+  "performance_summary": {
+    "headline_metric": "AUC-ROC: 0.9923",
+    "mule_detection_f1": 0.9673,
+    "false_positive_rate": "2.88% on mule class",
+    "inference_latency_p95_ms": 4.1
+  },
+  "ethical_considerations": {
+    "bias_testing": "Model tested across demographic proxies. No significant disparity detected across geographic regions.",
+    "fairness_metric": "Equalized odds difference < 0.03 across all tested subgroups",
+    "human_oversight": "All model outputs require analyst review before account action. Model is advisory only.",
+    "explainability": "SHAP values computed for every prediction in production"
+  },
+  "limitations": [
+    "Performance may degrade on novel attack vectors not present in training data",
+    "Graph features require minimum 30-day transaction history",
+    "Dark web signal features dependent on third-party threat intel feed freshness",
+    "Model trained primarily on Asian and Western markets \u2014 may underperform in underrepresented regions"
+  ],
+  "versioning": {
+    "v1.0": "2023-06-01 \u2014 Binary classifier, 23 features, AUC 0.941",
+    "v2.0": "2024-03-15 \u2014 Multi-class, 41 features, graph features added, AUC 0.978",
+    "v2.1": "2024-07-22 \u2014 Dark web signal integration, AUC 0.983",
+    "v2.2": "2024-11-08 \u2014 SMOTE rebalancing, TabNet architecture, AUC 0.989",
+    "v2.3": "2025-02-20 \u2014 Kill chain correlation features, AUC 0.9923"
+  }
+}

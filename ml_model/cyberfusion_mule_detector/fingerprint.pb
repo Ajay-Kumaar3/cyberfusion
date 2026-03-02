@@ -1,0 +1,2 @@
+CyberFusion_MuleDetector_v2.3
+saved_model_schema_version: 2

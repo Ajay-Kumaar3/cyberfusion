@@ -1,0 +1,336 @@
+{
+  "method": "SHAP (SHapley Additive exPlanations)",
+  "background_samples": 1000,
+  "computed_at": "2025-02-18T04:22:11.004Z",
+  "features": [
+    {
+      "rank": 1,
+      "feature": "geo_inconsistency_score",
+      "importance": 0.091441,
+      "mean_shap_value": 0.210315,
+      "std_shap_value": 0.036577
+    },
+    {
+      "rank": 2,
+      "feature": "dark_web_credential_match",
+      "importance": 0.079412,
+      "mean_shap_value": 0.182647,
+      "std_shap_value": 0.031765
+    },
+    {
+      "rank": 3,
+      "feature": "txn_velocity_7d",
+      "importance": 0.047975,
+      "mean_shap_value": 0.110342,
+      "std_shap_value": 0.01919
+    },
+    {
+      "rank": 4,
+      "feature": "layering_detection_score",
+      "importance": 0.045057,
+      "mean_shap_value": 0.103631,
+      "std_shap_value": 0.018023
+    },
+    {
+      "rank": 5,
+      "feature": "behavioral_drift_score",
+      "importance": 0.036268,
+      "mean_shap_value": 0.083417,
+      "std_shap_value": 0.014507
+    },
+    {
+      "rank": 6,
+      "feature": "graph_centrality_score",
+      "importance": 0.035246,
+      "mean_shap_value": 0.081065,
+      "std_shap_value": 0.014098
+    },
+    {
+      "rank": 7,
+      "feature": "cross_border_ratio",
+      "importance": 0.032868,
+      "mean_shap_value": 0.075597,
+      "std_shap_value": 0.013147
+    },
+    {
+      "rank": 8,
+      "feature": "peer_account_risk_avg",
+      "importance": 0.03224,
+      "mean_shap_value": 0.074151,
+      "std_shap_value": 0.012896
+    },
+    {
+      "rank": 9,
+      "feature": "account_age_days",
+      "importance": 0.031423,
+      "mean_shap_value": 0.072272,
+      "std_shap_value": 0.012569
+    },
+    {
+      "rank": 10,
+      "feature": "device_fingerprint_changes_30d",
+      "importance": 0.0282,
+      "mean_shap_value": 0.064861,
+      "std_shap_value": 0.01128
+    },
+    {
+      "rank": 11,
+      "feature": "beneficiary_diversity_score",
+      "importance": 0.027883,
+      "mean_shap_value": 0.064131,
+      "std_shap_value": 0.011153
+    },
+    {
+      "rank": 12,
+      "feature": "login_failure_rate_7d",
+      "importance": 0.026467,
+      "mean_shap_value": 0.060875,
+      "std_shap_value": 0.010587
+    },
+    {
+      "rank": 13,
+      "feature": "txn_amount_zscore",
+      "importance": 0.025897,
+      "mean_shap_value": 0.059563,
+      "std_shap_value": 0.010359
+    },
+    {
+      "rank": 14,
+      "feature": "avg_txn_amount_30d",
+      "importance": 0.025623,
+      "mean_shap_value": 0.058934,
+      "std_shap_value": 0.010249
+    },
+    {
+      "rank": 15,
+      "feature": "new_device_flag",
+      "importance": 0.023282,
+      "mean_shap_value": 0.053547,
+      "std_shap_value": 0.009313
+    },
+    {
+      "rank": 16,
+      "feature": "mule_ring_membership_probability",
+      "importance": 0.021939,
+      "mean_shap_value": 0.05046,
+      "std_shap_value": 0.008776
+    },
+    {
+      "rank": 17,
+      "feature": "ip_reputation_score",
+      "importance": 0.021555,
+      "mean_shap_value": 0.049577,
+      "std_shap_value": 0.008622
+    },
+    {
+      "rank": 18,
+      "feature": "password_reset_frequency",
+      "importance": 0.021423,
+      "mean_shap_value": 0.049272,
+      "std_shap_value": 0.008569
+    },
+    {
+      "rank": 19,
+      "feature": "impossible_travel_flag",
+      "importance": 0.021015,
+      "mean_shap_value": 0.048333,
+      "std_shap_value": 0.008406
+    },
+    {
+      "rank": 20,
+      "feature": "time_since_last_txn_hours",
+      "importance": 0.01975,
+      "mean_shap_value": 0.045424,
+      "std_shap_value": 0.0079
+    },
+    {
+      "rank": 21,
+      "feature": "session_hijack_indicators",
+      "importance": 0.017412,
+      "mean_shap_value": 0.040047,
+      "std_shap_value": 0.006965
+    },
+    {
+      "rank": 22,
+      "feature": "amount_structuring_score",
+      "importance": 0.016906,
+      "mean_shap_value": 0.038884,
+      "std_shap_value": 0.006762
+    },
+    {
+      "rank": 23,
+      "feature": "sar_history_linked_accounts",
+      "importance": 0.016323,
+      "mean_shap_value": 0.037542,
+      "std_shap_value": 0.006529
+    },
+    {
+      "rank": 24,
+      "feature": "rapid_fund_movement_score",
+      "importance": 0.016134,
+      "mean_shap_value": 0.037109,
+      "std_shap_value": 0.006454
+    },
+    {
+      "rank": 25,
+      "feature": "malware_c2_contact_flag",
+      "importance": 0.015406,
+      "mean_shap_value": 0.035433,
+      "std_shap_value": 0.006162
+    },
+    {
+      "rank": 26,
+      "feature": "email_domain_risk_score",
+      "importance": 0.015371,
+      "mean_shap_value": 0.035353,
+      "std_shap_value": 0.006148
+    },
+    {
+      "rank": 27,
+      "feature": "phishing_domain_visit_flag",
+      "importance": 0.014063,
+      "mean_shap_value": 0.032344,
+      "std_shap_value": 0.005625
+    },
+    {
+      "rank": 28,
+      "feature": "phone_number_risk_score",
+      "importance": 0.013988,
+      "mean_shap_value": 0.032173,
+      "std_shap_value": 0.005595
+    },
+    {
+      "rank": 29,
+      "feature": "weekend_activity_ratio",
+      "importance": 0.013722,
+      "mean_shap_value": 0.031562,
+      "std_shap_value": 0.005489
+    },
+    {
+      "rank": 30,
+      "feature": "inbound_flagged_account_links",
+      "importance": 0.012844,
+      "mean_shap_value": 0.029541,
+      "std_shap_value": 0.005138
+    },
+    {
+      "rank": 31,
+      "feature": "network_fraud_density",
+      "importance": 0.012776,
+      "mean_shap_value": 0.029384,
+      "std_shap_value": 0.00511
+    },
+    {
+      "rank": 32,
+      "feature": "credential_stuffing_pattern",
+      "importance": 0.012486,
+      "mean_shap_value": 0.028717,
+      "std_shap_value": 0.004994
+    },
+    {
+      "rank": 33,
+      "feature": "outbound_flagged_account_links",
+      "importance": 0.011733,
+      "mean_shap_value": 0.026987,
+      "std_shap_value": 0.004693
+    },
+    {
+      "rank": 34,
+      "feature": "txn_velocity_1h",
+      "importance": 0.011514,
+      "mean_shap_value": 0.026481,
+      "std_shap_value": 0.004605
+    },
+    {
+      "rank": 35,
+      "feature": "round_amount_ratio",
+      "importance": 0.011124,
+      "mean_shap_value": 0.025586,
+      "std_shap_value": 0.00445
+    },
+    {
+      "rank": 36,
+      "feature": "dormancy_reactivation_flag",
+      "importance": 0.010836,
+      "mean_shap_value": 0.024922,
+      "std_shap_value": 0.004334
+    },
+    {
+      "rank": 37,
+      "feature": "time_of_day_anomaly",
+      "importance": 0.010201,
+      "mean_shap_value": 0.023462,
+      "std_shap_value": 0.00408
+    },
+    {
+      "rank": 38,
+      "feature": "txn_velocity_6h",
+      "importance": 0.009231,
+      "mean_shap_value": 0.021232,
+      "std_shap_value": 0.003692
+    },
+    {
+      "rank": 39,
+      "feature": "txn_velocity_24h",
+      "importance": 0.008474,
+      "mean_shap_value": 0.019491,
+      "std_shap_value": 0.00339
+    },
+    {
+      "rank": 40,
+      "feature": "login_country_count_7d",
+      "importance": 0.008015,
+      "mean_shap_value": 0.018435,
+      "std_shap_value": 0.003206
+    },
+    {
+      "rank": 41,
+      "feature": "vpn_proxy_score",
+      "importance": 0.007805,
+      "mean_shap_value": 0.017952,
+      "std_shap_value": 0.003122
+    },
+    {
+      "rank": 42,
+      "feature": "account_takeover_confidence",
+      "importance": 0.007669,
+      "mean_shap_value": 0.017638,
+      "std_shap_value": 0.003068
+    },
+    {
+      "rank": 43,
+      "feature": "cash_intensity_score",
+      "importance": 0.007252,
+      "mean_shap_value": 0.01668,
+      "std_shap_value": 0.002901
+    },
+    {
+      "rank": 44,
+      "feature": "high_risk_jurisdiction_flag",
+      "importance": 0.007249,
+      "mean_shap_value": 0.016672,
+      "std_shap_value": 0.002899
+    },
+    {
+      "rank": 45,
+      "feature": "kyc_completion_score",
+      "importance": 0.006517,
+      "mean_shap_value": 0.01499,
+      "std_shap_value": 0.002607
+    },
+    {
+      "rank": 46,
+      "feature": "crypto_exchange_link_score",
+      "importance": 0.005233,
+      "mean_shap_value": 0.012036,
+      "std_shap_value": 0.002093
+    },
+    {
+      "rank": 47,
+      "feature": "transaction_graph_anomaly",
+      "importance": 0.004755,
+      "mean_shap_value": 0.010937,
+      "std_shap_value": 0.001902
+    }
+  ]
+}

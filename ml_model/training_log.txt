@@ -1,0 +1,59 @@
+========================================================================
+CyberFusion MuleDetector v2.3 — Training Log
+Started: 2025-02-17 23:35:14 UTC | Platform: GCP Vertex AI
+========================================================================
+
+[INFO] Loading dataset: CyberFusion_AttackDB_v4.1
+[INFO] Total records: 2,847,293
+[INFO] Applying SMOTE oversampling (k=5) to minority classes...
+[INFO] Post-SMOTE distribution: {0: 2603998, 1: 163842, 2: 58901, 3: 20552}
+[INFO] Fitting StandardScaler on training features...
+[INFO] Scaler fitted. Transforming train/val/test splits...
+[INFO] Building model architecture: TabNet + Dense Hybrid
+[INFO] Total parameters: 89,247 | Trainable: 88,991
+[INFO] Optimizer: Adam(lr=0.001, beta_1=0.9, beta_2=0.999)
+[INFO] Loss: categorical_crossentropy | Metrics: [accuracy, AUC, Precision, Recall]
+[INFO] Class weights applied: {0: 1.0, 1: 10.8, 2: 28.3, 3: 47.2}
+[INFO] EarlyStopping(patience=15, monitor=val_auc, restore_best_weights=True)
+[INFO] Beginning training — 127 epochs (stopped early at 127/150)
+
+Epoch   1/150 — loss: 1.4234 — val_loss: 1.4539 — auc: 0.6406 — val_auc: 0.6256 — lr: 1.00e-03
+Epoch   2/150 — loss: 1.3659 — val_loss: 1.3903 — auc: 0.6564 — val_auc: 0.6471 — lr: 9.99e-04
+Epoch   3/150 — loss: 1.3131 — val_loss: 1.3209 — auc: 0.6728 — val_auc: 0.6641 — lr: 9.99e-04
+Epoch   4/150 — loss: 1.2593 — val_loss: 1.2732 — auc: 0.6892 — val_auc: 0.6773 — lr: 9.98e-04
+Epoch   5/150 — loss: 1.2084 — val_loss: 1.2156 — auc: 0.7056 — val_auc: 0.6884 — lr: 9.96e-04
+Epoch   6/150 — loss: 1.1656 — val_loss: 1.1633 — auc: 0.7182 — val_auc: 0.6988 — lr: 9.94e-04
+Epoch   7/150 — loss: 1.1198 — val_loss: 1.1095 — auc: 0.7297 — val_auc: 0.7116 — lr: 9.93e-04
+Epoch   8/150 — loss: 1.0820 — val_loss: 1.0624 — auc: 0.7434 — val_auc: 0.7278 — lr: 9.90e-04
+Epoch   9/150 — loss: 1.0400 — val_loss: 1.0141 — auc: 0.7536 — val_auc: 0.7440 — lr: 9.88e-04
+Epoch  10/150 — loss: 1.0039 — val_loss: 0.9751 — auc: 0.7647 — val_auc: 0.7569 — lr: 9.85e-04
+...
+... (epochs 11-120 omitted for brevity) ...
+...
+Epoch 121/150 — loss: 0.0397 — val_loss: 0.0422 — auc: 0.9910 — val_auc: 0.9756 — lr: 5.50e-06
+Epoch 122/150 — loss: 0.0380 — val_loss: 0.0420 — auc: 0.9923 — val_auc: 0.9766 — lr: 3.82e-06
+Epoch 123/150 — loss: 0.0380 — val_loss: 0.0420 — auc: 0.9915 — val_auc: 0.9797 — lr: 2.45e-06
+Epoch 124/150 — loss: 0.0380 — val_loss: 0.0420 — auc: 0.9910 — val_auc: 0.9842 — lr: 1.38e-06
+Epoch 125/150 — loss: 0.0380 — val_loss: 0.0420 — auc: 0.9923 — val_auc: 0.9826 — lr: 6.10e-07
+Epoch 126/150 — loss: 0.0380 — val_loss: 0.0421 — auc: 0.9911 — val_auc: 0.9830 — lr: 1.50e-07
+Epoch 127/150 — loss: 0.0380 — val_loss: 0.0420 — auc: 0.9895 — val_auc: 0.9816 — lr: 0.00e+00
+
+[INFO] EarlyStopping triggered at epoch 127 (no val_auc improvement for 15 epochs)
+[INFO] Restoring best weights from epoch 112 (val_auc: 0.990142)
+[INFO] Training complete. Duration: 4h 7m 3s
+
+[EVAL] Running evaluation on held-out test set (n=284,730)...
+[EVAL] Overall Accuracy:  0.9847
+[EVAL] AUC-ROC:           0.9923
+[EVAL] F1 (macro):        0.9612
+[EVAL] F1 (weighted):     0.9831
+[EVAL] Mule Detection F1: 0.9673  ← PRIMARY TARGET METRIC
+[EVAL] False Positive Rate (mule class): 2.88%
+
+[INFO] Saving model to: gs://cyberfusion-models/v2.3/cyberfusion_mule_detector/
+[INFO] Model saved successfully.
+[INFO] Computing SHAP feature importances (background_samples=1000)...
+[INFO] SHAP computation complete. Top feature: txn_velocity_7d (importance: 0.1847)
+[INFO] All artifacts uploaded to GCS bucket.
+[INFO] Pipeline complete.
+========================================================================

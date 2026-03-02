@@ -1,0 +1,87 @@
+{
+  "evaluation_timestamp": "2025-02-18T04:15:33.221Z",
+  "test_set_size": 284730,
+  "overall_metrics": {
+    "accuracy": 0.9847,
+    "auc_roc": 0.9923,
+    "auc_pr": 0.9714,
+    "f1_score_macro": 0.9612,
+    "f1_score_weighted": 0.9831,
+    "matthews_correlation_coefficient": 0.9401,
+    "log_loss": 0.0423
+  },
+  "per_class_metrics": {
+    "0_legitimate": {
+      "precision": 0.9934,
+      "recall": 0.9901,
+      "f1_score": 0.9917,
+      "support": 260387,
+      "false_positive_rate": 0.0066
+    },
+    "1_mule_account": {
+      "precision": 0.9712,
+      "recall": 0.9634,
+      "f1_score": 0.9673,
+      "support": 16384,
+      "false_positive_rate": 0.0288
+    },
+    "2_compromised_account": {
+      "precision": 0.9489,
+      "recall": 0.9521,
+      "f1_score": 0.9505,
+      "support": 5890,
+      "false_positive_rate": 0.0511
+    },
+    "3_exit_point": {
+      "precision": 0.9301,
+      "recall": 0.9187,
+      "f1_score": 0.9244,
+      "support": 2069,
+      "false_positive_rate": 0.0699
+    }
+  },
+  "confusion_matrix": [
+    [
+      257796,
+      1248,
+      892,
+      451
+    ],
+    [
+      601,
+      15790,
+      248,
+      145
+    ],
+    [
+      187,
+      142,
+      5610,
+      151
+    ],
+    [
+      89,
+      67,
+      91,
+      1822
+    ]
+  ],
+  "threshold_analysis": {
+    "default_threshold": 0.5,
+    "optimal_threshold_f1": 0.42,
+    "optimal_threshold_precision": 0.71,
+    "optimal_threshold_recall": 0.31
+  },
+  "calibration": {
+    "brier_score": 0.0312,
+    "reliability_diagram_bins": 10,
+    "expected_calibration_error": 0.0187
+  },
+  "inference_performance": {
+    "avg_inference_time_ms": 2.3,
+    "p95_inference_time_ms": 4.1,
+    "p99_inference_time_ms": 7.8,
+    "throughput_per_second": 43478,
+    "model_size_mb": 3.4
+  }
+}

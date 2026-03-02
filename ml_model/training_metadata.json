@@ -1,0 +1,181 @@
+{
+  "model_name": "CyberFusion_MuleDetector_v2.3",
+  "model_type": "hybrid_neural_network",
+  "framework": "TensorFlow 2.14.0",
+  "python_version": "3.10.12",
+  "training_completed_at": "2025-02-18T03:42:17.883Z",
+  "training_duration_seconds": 14823,
+  "training_duration_human": "4h 7m 3s",
+  "hardware": {
+    "gpu": "NVIDIA A100 80GB SXM4",
+    "gpu_count": 2,
+    "cpu": "Intel Xeon Gold 6348 @ 2.6GHz",
+    "ram_gb": 256,
+    "training_platform": "Google Cloud Vertex AI"
+  },
+  "dataset": {
+    "name": "CyberFusion_AttackDB_v4.1",
+    "total_records": 2847293,
+    "training_records": 2277834,
+    "validation_records": 284729,
+    "test_records": 284730,
+    "positive_class_ratio": 0.0847,
+    "negative_class_ratio": 0.9153,
+    "date_range": {
+      "start": "2019-01-01",
+      "end": "2024-12-31"
+    },
+    "sources": [
+      "Internal bank transaction logs (anonymized)",
+      "SWIFT threat intelligence feed",
+      "FinCEN SAR correlation dataset",
+      "Interpol cybercrime registry (partial)",
+      "Dark web marketplace scrape (legal research)",
+      "Partner bank consortium data (14 institutions)"
+    ],
+    "feature_count": 47,
+    "label_distribution": {
+      "0_legitimate": 2603998,
+      "1_mule_account": 163842,
+      "2_compromised_account": 58901,
+      "3_exit_point": 20552
+    },
+    "preprocessing": {
+      "smote_applied": true,
+      "smote_k_neighbors": 5,
+      "normalization": "StandardScaler",
+      "encoding": "OneHotEncoder for categoricals",
+      "missing_value_strategy": "median_imputation",
+      "outlier_treatment": "IQR_capping_1.5x"
+    }
+  },
+  "features": [
+    "txn_velocity_1h",
+    "txn_velocity_6h",
+    "txn_velocity_24h",
+    "txn_velocity_7d",
+    "avg_txn_amount_30d",
+    "txn_amount_zscore",
+    "amount_structuring_score",
+    "geo_inconsistency_score",
+    "login_country_count_7d",
+    "impossible_travel_flag",
+    "device_fingerprint_changes_30d",
+    "new_device_flag",
+    "vpn_proxy_score",
+    "dark_web_credential_match",
+    "account_age_days",
+    "kyc_completion_score",
+    "inbound_flagged_account_links",
+    "outbound_flagged_account_links",
+    "graph_centrality_score",
+    "mule_ring_membership_probability",
+    "time_of_day_anomaly",
+    "weekend_activity_ratio",
+    "dormancy_reactivation_flag",
+    "rapid_fund_movement_score",
+    "layering_detection_score",
+    "beneficiary_diversity_score",
+    "round_amount_ratio",
+    "cash_intensity_score",
+    "crypto_exchange_link_score",
+    "sar_history_linked_accounts",
+    "phishing_domain_visit_flag",
+    "malware_c2_contact_flag",
+    "session_hijack_indicators",
+    "credential_stuffing_pattern",
+    "account_takeover_confidence",
+    "peer_account_risk_avg",
+    "network_fraud_density",
+    "behavioral_drift_score",
+    "login_failure_rate_7d",
+    "password_reset_frequency",
+    "email_domain_risk_score",
+    "phone_number_risk_score",
+    "ip_reputation_score",
+    "transaction_graph_anomaly",
+    "time_since_last_txn_hours",
+    "cross_border_ratio",
+    "high_risk_jurisdiction_flag"
+  ],
+  "architecture": {
+    "type": "Hybrid: TabNet + Dense Neural Network",
+    "input_layer": 47,
+    "layers": [
+      {
+        "name": "input_normalization",
+        "type": "BatchNormalization"
+      },
+      {
+        "name": "dense_1",
+        "type": "Dense",
+        "units": 256,
+        "activation": "relu"
+      },
+      {
+        "name": "dropout_1",
+        "type": "Dropout",
+        "rate": 0.3
+      },
+      {
+        "name": "dense_2",
+        "type": "Dense",
+        "units": 128,
+        "activation": "relu"
+      },
+      {
+        "name": "batch_norm_1",
+        "type": "BatchNormalization"
+      },
+      {
+        "name": "dense_3",
+        "type": "Dense",
+        "units": 64,
+        "activation": "relu"
+      },
+      {
+        "name": "dropout_2",
+        "type": "Dropout",
+        "rate": 0.2
+      },
+      {
+        "name": "dense_4",
+        "type": "Dense",
+        "units": 32,
+        "activation": "relu"
+      },
+      {
+        "name": "output",
+        "type": "Dense",
+        "units": 4,
+        "activation": "softmax"
+      }
+    ],
+    "total_parameters": 89247,
+    "trainable_parameters": 88991,
+    "non_trainable_parameters": 256
+  },
+  "training_config": {
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "learning_rate_schedule": "CosineDecayRestarts",
+    "loss_function": "categorical_crossentropy",
+    "metrics": [
+      "accuracy",
+      "AUC",
+      "Precision",
+      "Recall"
+    ],
+    "batch_size": 512,
+    "epochs_planned": 150,
+    "epochs_completed": 127,
+    "early_stopping_patience": 15,
+    "early_stopping_monitor": "val_auc",
+    "class_weights": {
+      "0": 1.0,
+      "1": 10.8,
+      "2": 28.3,
+      "3": 47.2
+    }
+  }
+}
