@@ -56,9 +56,11 @@ export default function CyberRisk() {
                         {!loading && <><span style={{ color: '#00FF41', fontWeight: 'bold' }}>{critCount} CRITICAL</span><span style={{ color: '#A8EF00', fontWeight: 'bold' }}>{amlCount} AML MATCHES</span></>}
                     </div>
                 </div>
-                <button onClick={() => setReportTrigger(Date.now())}
-                    style={{ padding: '12px 24px', background: '#ffffff', border: 'none', borderRadius: 8, color: '#000', fontSize: 13, fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 0 20px rgba(255,255,255,0.4)' }}>
-                    ✨ GENERATE UNIFIED REPORT
+                <button
+                    onClick={() => setReportTrigger(Date.now())}
+                    className="hover-lift"
+                    style={{ padding: '12px 24px', background: 'rgba(0, 255, 65, 0.05)', border: '1px solid rgba(0, 255, 65, 0.3)', borderRadius: 8, color: 'var(--accent)', fontSize: 13, fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s', letterSpacing: '0.05em' }}>
+                    GENERATE UNIFIED REPORT
                 </button>
             </div>
 

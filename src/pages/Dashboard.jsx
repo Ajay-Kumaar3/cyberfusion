@@ -75,15 +75,15 @@ export default function Dashboard() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, zIndex: 1, position: 'relative' }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16 }}>
-        <StatCard title="HIGH RISK" targetValue={summary?.high_risk_accounts ?? 0} color="var(--danger)" />
-        <StatCard title="ALERTS" targetValue={summary?.active_alerts ?? 0} color="var(--warning)" />
-        <StatCard title="TXNS REVIEW" targetValue={summary?.transactions_flagged ?? 0} color="var(--info)" />
-        <StatCard title="ON-CHAIN BLOCKED" targetValue={blockedCount} color="#ffffff" />
-        <GlassCard style={{ padding: 20, border: '1px solid rgba(0,255,65,0.3)', background: 'linear-gradient(135deg,rgba(0,255,65,0.1),rgba(0,255,65,0.02))' }}>
+        <StatCard title="HIGH RISK" targetValue={summary?.high_risk_accounts ?? 0} color="var(--accent)" />
+        <StatCard title="ALERTS" targetValue={summary?.active_alerts ?? 0} color="var(--accent)" />
+        <StatCard title="TXNS REVIEW" targetValue={summary?.transactions_flagged ?? 0} color="var(--accent)" />
+        <StatCard title="ON-CHAIN BLOCKED" targetValue={blockedCount} color="var(--text-main)" />
+        <GlassCard style={{ padding: 20, background: 'rgba(0, 255, 65, 0.05)', border: '1px solid rgba(0, 255, 65, 0.2)' }}>
           <div style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600, letterSpacing: '0.05em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', animation: 'blink 1s infinite' }} /> RECOVERY WINDOW
           </div>
-          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--accent)', fontFamily: "'JetBrains Mono', monospace", filter: 'drop-shadow(0 0 10px rgba(0,255,65,0.4))' }}>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--accent)', fontFamily: "'JetBrains Mono', monospace" }}>
             {fmt(timeLeft)}
           </div>
         </GlassCard>

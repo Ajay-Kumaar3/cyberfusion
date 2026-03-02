@@ -109,7 +109,7 @@ export default function BlockchainDemo() {
                     </h2>
                     <p style={{ margin: '4px 0 0', fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>Real-time transaction enforcement on Sepolia Testnet</p>
                 </div>
-                <div style={{ padding: '4px 10px', borderRadius: 4, background: 'rgba(0, 255, 255, 0.1)', border: '1px solid rgba(0, 255, 255, 0.3)', color: '#00ffff', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em' }}>
+                <div style={{ padding: '4px 10px', borderRadius: 4, background: 'rgba(0, 255, 65, 0.1)', border: '1px solid rgba(0, 255, 65, 0.3)', color: 'var(--accent)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em' }}>
                     SEPOLIA TESTNET
                 </div>
             </div>

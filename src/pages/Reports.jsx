@@ -65,9 +65,11 @@ export default function Reports() {
                                 }
                             </div>
 
-                            <button onClick={() => setTriggerReport(Date.now())}
-                                style={{ width: '100%', marginTop: 8, padding: '16px', background: 'linear-gradient(135deg,rgba(255,255,255,0.4),rgba(136,255,136,0.4))', border: '1px solid #ffffff', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, cursor: 'pointer', boxShadow: '0 0 20px rgba(255,255,255,0.2)' }}>
-                                <span>✨</span> GENERATE WITH GEMINI
+                            <button
+                                onClick={() => setTriggerReport(Date.now())}
+                                className="hover-lift"
+                                style={{ width: '100%', marginTop: 8, padding: '16px', background: 'rgba(0, 255, 65, 0.05)', border: '1px solid rgba(0, 255, 65, 0.3)', borderRadius: 8, color: 'var(--accent)', fontSize: 14, fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, cursor: 'pointer', transition: 'all 0.2s', letterSpacing: '0.05em' }}>
+                                GENERATE REPORT
                             </button>
                         </div>
                     </GlassCard>

@@ -10,10 +10,10 @@ export default function Sidebar() {
     { label: "Kill Chain Graph", path: "/killchain", icon: <Share2 size={18} />, highlight: true },
     { label: "Mule Accounts", path: "/accounts", icon: <Users size={18} /> },
     { label: "Transactions", path: "/transactions", icon: <DollarSign size={18} /> },
-    { label: "💳 Payment Demo", path: "/payments", icon: <Activity size={18} />, highlight: true },
+    { label: "Payment Demo", path: "/payments", icon: <Activity size={18} />, highlight: true },
     { label: "Cyber Risk SOC", path: "/cyber-risk", icon: <ShieldAlert size={18} /> },
     { label: "AI Reports", path: "/reports", icon: <FileText size={18} /> },
-    { label: "⛓ Live Demo", path: "/blockchain", icon: <LinkIcon size={18} />, special: true }
+    { label: "Live Demo", path: "/blockchain", icon: <LinkIcon size={18} />, special: true }
   ];
 
   return (
@@ -29,7 +29,7 @@ export default function Sidebar() {
       zIndex: 10
     }}>
       <div style={{ padding: '0 24px', marginBottom: 40, display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', padding: '6px', borderRadius: 10, color: '#fff', boxShadow: '0 4px 12px rgba(0, 255, 65, 0.3)' }}>
+        <div style={{ background: 'rgba(0, 255, 65, 0.1)', border: '1px solid rgba(0, 255, 65, 0.3)', padding: '6px', borderRadius: 10, color: 'var(--accent)', boxShadow: '0 4px 12px rgba(0, 255, 65, 0.1)' }}>
           <Shield size={24} />
         </div>
         <div>
@@ -73,7 +73,7 @@ export default function Sidebar() {
                   100% { border-color: transparent; }
                 }
               `}</style>
-              {item.highlight && !isActive && <span style={{ position: 'absolute', right: 12, background: 'var(--special)', color: '#fff', fontSize: 9, padding: '2px 6px', borderRadius: 4, fontWeight: 'bold' }}>CORE</span>}
+              {item.highlight && !isActive && <span style={{ position: 'absolute', right: 12, background: 'rgba(0, 255, 65, 0.1)', color: 'var(--accent)', border: '1px solid rgba(0, 255, 65, 0.3)', fontSize: 9, padding: '2px 6px', borderRadius: 4, fontWeight: 'bold' }}>CORE</span>}
               <span style={{ opacity: isActive ? 1 : 0.6 }}>{item.icon}</span>
               {item.label}
               {isActive && <div style={{ position: 'absolute', right: 12, width: 4, height: 16, borderRadius: 2, background: 'var(--accent)', boxShadow: '0 0 10px var(--accent)' }}></div>}
@@ -82,13 +82,7 @@ export default function Sidebar() {
         })}
       </div>
 
-      <div style={{ padding: '0 24px', paddingTop: 24 }}>
-        <button style={{
-          width: '100%', padding: '14px', background: 'rgba(0, 255, 65, 0.08)', color: 'var(--accent)', border: '1px solid rgba(0, 255, 65, 0.3)', borderRadius: 12, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", fontSize: 11, display: 'flex', justifyContent: 'center', gap: 8, alignItems: 'center', cursor: 'pointer', transition: 'all 0.2s', letterSpacing: '0.05em'
-        }} className="hover-lift">
-          <Shield size={14} /> SECURITY PROTOCOLS
-        </button>
-      </div>
+
     </div>
   );
 }

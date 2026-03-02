@@ -134,7 +134,7 @@ export default function RazorpayDemo({ onStatsUpdate }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24, height: '100%' }}>
             {/* HEADER */}
             <div>
-                <div style={{ display: 'inline-block', background: 'var(--special)', color: '#fff', fontSize: 10, padding: '2px 8px', borderRadius: 4, fontWeight: 'bold', marginBottom: 8, letterSpacing: '0.05em' }}>
+                <div style={{ display: 'inline-block', background: 'rgba(0, 255, 65, 0.1)', border: '1px solid rgba(0, 255, 65, 0.3)', color: 'var(--accent)', fontSize: 10, padding: '2px 8px', borderRadius: 4, fontWeight: 'bold', marginBottom: 8, letterSpacing: '0.05em' }}>
                     RAZORPAY TEST MODE
                 </div>
                 <h2 style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 24, margin: 0, color: 'var(--text-main)', letterSpacing: '0.05em' }}>

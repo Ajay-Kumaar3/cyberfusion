@@ -66,18 +66,18 @@ export default function AlertFeed() {
                             exit={{ opacity: 0, scale: 0.9 }}
                             transition={{ type: "spring", stiffness: 100, damping: 15 }}
                         >
-                            <GlassCard style={{ padding: '16px', borderLeft: `4px solid ${color}` }}>
+                            <GlassCard style={{ padding: '16px', background: 'rgba(0, 255, 65, 0.05)', border: '1px solid rgba(0, 255, 65, 0.2)', borderLeft: `4px solid ${color}` }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                                     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                                        <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 4, backgroundColor: `${color}22`, color, border: `1px solid ${color}44` }}>
+                                        <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 4, backgroundColor: `rgba(0, 255, 65, 0.1)`, color: color, border: `1px solid rgba(0, 255, 65, 0.3)` }}>
                                             {type}
                                         </span>
                                         <span style={{ fontSize: 10, color: 'var(--text-muted)', fontFamily: "'JetBrains Mono', monospace" }}>
                                             {alert.timeLabel}
                                         </span>
                                     </div>
-                                    <button style={{ background: 'transparent', border: `1px solid ${color}88`, color, borderRadius: 4, padding: '4px 10px', fontSize: 10, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}>
-                                        Investigate
+                                    <button className="hover-lift" style={{ background: 'rgba(0, 255, 65, 0.05)', border: `1px solid rgba(0, 255, 65, 0.3)`, color: 'var(--accent)', borderRadius: 4, padding: '4px 10px', fontSize: 10, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s', letterSpacing: '0.05em' }}>
+                                        INVESTIGATE
                                     </button>
                                 </div>
                                 <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-main)', marginBottom: 4, fontFamily: "'JetBrains Mono', monospace" }}>

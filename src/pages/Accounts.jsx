@@ -80,7 +80,13 @@ export default function Accounts() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12, overflowY: 'auto', maxHeight: 700, paddingRight: 8 }}>
                     {accounts.map(acc => (
                         <GlassCard key={acc.account_id} hover={true}
-                            style={{ padding: 16, cursor: 'pointer', border: selectedAcc?.account_id === acc.account_id ? `1px solid ${riskColor(acc.risk_level)}` : '1px solid rgba(0,255,65,0.15)', background: selectedAcc?.account_id === acc.account_id ? 'rgba(0,255,65,0.05)' : '' }}
+                            style={{
+                                padding: 16,
+                                cursor: 'pointer',
+                                flexShrink: 0,
+                                border: selectedAcc?.account_id === acc.account_id ? `1px solid var(--accent)` : '1px solid rgba(0, 255, 65, 0.3)',
+                                background: selectedAcc?.account_id === acc.account_id ? 'rgba(0, 255, 65, 0.1)' : 'rgba(255, 255, 255, 0.02)'
+                            }}
                             onClick={() => { setSelectedAcc(acc); setTriggerAI(0); setLastTx(null); }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                                 <div>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Clock, Cpu } from "lucide-react";
+import { Clock, Cpu, ChevronDown } from "lucide-react";
 
 export default function Navbar() {
   const [time, setTime] = useState(new Date());
+  const [profileOpen, setProfileOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -60,10 +61,79 @@ export default function Navbar() {
           ACTIVE PROTOCOLS
         </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '4px', background: 'rgba(0, 255, 65, 0.1)', borderRadius: '50%', border: '1px solid rgba(0, 255, 65, 0.2)' }}>
-          <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 13, boxShadow: '0 0 15px rgba(0, 255, 65, 0.3)' }}>
-            AK
+        <div style={{ position: 'relative' }}>
+          <div
+            onClick={() => setProfileOpen(!profileOpen)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              cursor: 'pointer',
+              padding: '6px 12px 6px 6px',
+              background: 'rgba(0, 255, 65, 0.05)',
+              borderRadius: 30,
+              border: '1px solid rgba(0, 255, 65, 0.2)',
+              transition: 'all 0.2s'
+            }}
+            className="hover-lift"
+          >
+            <div style={{
+              width: 32,
+              height: 32,
+              borderRadius: '50%',
+              background: 'rgba(0, 255, 65, 0.1)',
+              color: 'var(--accent)',
+              border: '1px solid rgba(0, 255, 65, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 'bold',
+              fontSize: 12,
+              fontFamily: "'Inter', sans-serif"
+            }}>
+              V
+            </div>
+            <span style={{ color: 'var(--text-main)', fontSize: 13, fontWeight: 600, fontFamily: "'Inter', sans-serif", letterSpacing: '0.05em' }}>VEDANTH</span>
+            <ChevronDown size={14} color="var(--accent)" style={{ transform: profileOpen ? 'rotate(180deg)' : 'none', transition: '0.3s' }} />
           </div>
+
+          {profileOpen && (
+            <div style={{
+              position: 'absolute',
+              top: '120%',
+              right: 0,
+              width: 200,
+              background: 'rgba(5, 8, 5, 0.95)',
+              border: '1px solid rgba(0, 255, 65, 0.2)',
+              borderRadius: 8,
+              padding: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 4,
+              boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+              backdropFilter: 'blur(10px)',
+              zIndex: 100
+            }}>
+              <div style={{ padding: '8px 12px', color: 'var(--text-main)', fontSize: 13, borderBottom: '1px solid rgba(255,255,255,0.05)', marginBottom: 4, fontFamily: "'Inter', sans-serif" }}>
+                <div style={{ fontWeight: 'bold' }}>Vedanth</div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Security Admin</div>
+              </div>
+              <div
+                style={{ color: 'var(--text-main)', padding: '8px 12px', fontSize: 12, cursor: 'pointer', borderRadius: 4, transition: '0.2s', fontFamily: "'Inter', sans-serif" }}
+                onMouseOver={e => e.currentTarget.style.background = 'rgba(0,255,65,0.1)'}
+                onMouseOut={e => e.currentTarget.style.background = 'transparent'}
+              >
+                Profile Settings
+              </div>
+              <div
+                style={{ color: '#ff4444', padding: '8px 12px', fontSize: 12, cursor: 'pointer', borderRadius: 4, transition: '0.2s', fontFamily: "'Inter', sans-serif" }}
+                onMouseOver={e => e.currentTarget.style.background = 'rgba(255,68,68,0.1)'}
+                onMouseOut={e => e.currentTarget.style.background = 'transparent'}
+              >
+                Logout
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

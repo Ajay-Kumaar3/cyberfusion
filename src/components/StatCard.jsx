@@ -27,14 +27,9 @@ export default function StatCard({ title, targetValue, color, suffix = "", prefi
     const displayVal = val > 1000 ? (val / 1000).toFixed(1) + 'k' : val.toLocaleString(undefined, { maximumFractionDigits: val % 1 !== 0 ? 1 : 0 });
 
     return (
-        <GlassCard style={{ padding: 20 }}>
-            {/* Glow */}
-            <div style={{
-                position: 'absolute', top: -20, right: -20, width: 60, height: 60,
-                background: color, filter: 'blur(30px)', opacity: 0.15, pointerEvents: 'none'
-            }} />
-            <div style={{ fontSize: 12, color: '#7A8E7A', fontWeight: 600, marginBottom: 8 }}>{title}</div>
-            <div style={{ fontSize: 32, fontWeight: 800, color, fontFamily: "'JetBrains Mono', monospace" }}>
+        <GlassCard style={{ padding: 20, background: 'rgba(0, 255, 65, 0.05)', border: '1px solid rgba(0, 255, 65, 0.2)' }}>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600, marginBottom: 8, letterSpacing: '0.05em' }}>{title}</div>
+            <div style={{ fontSize: 32, fontWeight: 800, color: color, fontFamily: "'JetBrains Mono', monospace" }}>
                 {prefix}{displayVal}{suffix}
             </div>
         </GlassCard>
