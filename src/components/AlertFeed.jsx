@@ -19,34 +19,25 @@ const sevLabel = (sev) => {
 
 export default function AlertFeed() {
     const [alerts, setAlerts] = useState([]);
-    const [poolIndex, setPoolIndex] = useState(0);
     const [pool, setPool] = useState([]);
+    const [poolIndex, setPoolIndex] = useState(2); // eslint-disable-line no-unused-vars
 
-    // Fetch real alerts once on mount
     useEffect(() => {
         fetchAlerts({ limit: 50 })
             .then(data => {
                 setPool(data);
-                // Seed initial 2 alerts instantly
                 if (data.length >= 2) {
                     setAlerts([
                         { ...data[0], instanceId: Date.now() + 1, timeLabel: "Just now" },
                         { ...data[1], instanceId: Date.now() + 2, timeLabel: "2m ago" },
                     ]);
-                    setPoolIndex(2);
                 }
             })
             .catch(() => {
-                // Fallback if API down
-                setAlerts([{
-                    alert_id: 0, severity: "HIGH", account_id: "ACC-???",
-                    description: "Backend offline — restart uvicorn",
-                    instanceId: Date.now(), timeLabel: "Now"
-                }]);
+                setAlerts([{ alert_id: 0, severity: "HIGH", account_id: "API-OFFLINE", description: "Backend offline — restart uvicorn server", instanceId: Date.now(), timeLabel: "Now" }]);
             });
     }, []);
 
-    // Rotate through real alerts every 8s
     useEffect(() => {
         if (pool.length === 0) return;
         const interval = setInterval(() => {
@@ -80,20 +71,12 @@ export default function AlertFeed() {
                                         <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 4, backgroundColor: `${color}22`, color, border: `1px solid ${color}44` }}>
                                             {type}
                                         </span>
-                                        <span style={{ fontSize: 10, color: '#008800', fontFamily: "'JetBrains Mono', monospace" }}>
-                                            {alert.timeLabel}
-                                        </span>
+                                        <span style={{ fontSize: 10, color: '#008800', fontFamily: "'JetBrains Mono', monospace" }}>{alert.timeLabel}</span>
                                     </div>
-                                    <button style={{ background: 'transparent', border: `1px solid ${color}88`, color, borderRadius: 4, padding: '4px 10px', fontSize: 10, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}>
-                                        Investigate
-                                    </button>
+                                    <button style={{ background: 'transparent', border: `1px solid ${color}88`, color, borderRadius: 4, padding: '4px 10px', fontSize: 10, fontWeight: 600, cursor: 'pointer' }}>Investigate</button>
                                 </div>
-                                <div style={{ fontSize: 13, fontWeight: 700, color: '#ffffff', marginBottom: 4 }}>
-                                    {alert.account_id}
-                                </div>
-                                <div style={{ fontSize: 12, color: '#00aa00' }}>
-                                    {alert.description?.slice(0, 80)}{alert.description?.length > 80 ? '…' : ''}
-                                </div>
+                                <div style={{ fontSize: 13, fontWeight: 700, color: '#ffffff', marginBottom: 4 }}>{alert.account_id}</div>
+                                <div style={{ fontSize: 12, color: '#00aa00' }}>{alert.description?.slice(0, 80)}{alert.description?.length > 80 ? '…' : ''}</div>
                             </GlassCard>
                         </motion.div>
                     );
