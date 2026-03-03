@@ -8,7 +8,6 @@ export default function StatCard({ title, targetValue, color, suffix = "", prefi
         let start = 0;
         const duration = 1500;
         const step = Math.max(1, targetValue / (duration / 16));
-        const isFloat = !Number.isInteger(targetValue);
 
         if (targetValue === 0) return;
 

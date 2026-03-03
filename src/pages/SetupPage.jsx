@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GlassCard from "../components/GlassCard";
 import { useBlockchain } from "../context/BlockchainContext";
-import { DEMO_CONFIG, truncateAddress } from "../config/demo.config";
+import { DEMO_CONFIG } from "../config/demo.config";
 import { getContract, unfreezeAccountOnChain } from "../utils/blockchain";
 import { CheckCircle2, XCircle, Info, RefreshCw, Trash2, Wallet } from "lucide-react";
 import { ethers } from "ethers";
@@ -77,7 +77,7 @@ export default function SetupPage() {
 
     useEffect(() => {
         if (walletConnected) runChecks();
-    }, [walletConnected]);
+    }, [walletConnected]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleResetDemo = async () => {
         if (!window.confirm("This will unflag all demo wallets and clear history. Proceed?")) return;

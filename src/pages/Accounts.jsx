@@ -6,7 +6,7 @@ import { fetchAccounts } from "../api/api";
 import { useBlockchain } from "../context/BlockchainContext";
 import { freezeAccountOnChain } from "../utils/blockchain";
 import { DEMO_CONFIG, truncateAddress } from "../config/demo.config";
-import { ExternalLink, ShieldAlert, Lock } from "lucide-react";
+import { ExternalLink, Lock } from "lucide-react";
 
 const riskColor = (level) => ({ Critical: "#00FF41", High: "#A8EF00", Medium: "#A8EF00" }[level] || "#00CC33");
 const statusColor = (s) => ({ Compromised: "#00FF41", Flagged: "#A8EF00", Frozen: "#889488" }[s] || "#00CC33");

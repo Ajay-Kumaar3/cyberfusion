@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { ethers } from "ethers";
 import { useMetaMask } from "../../hooks/useMetaMask";
 import { useTransaction } from "../../hooks/useTransaction";
 import { Shield, Wallet, Send, X, ExternalLink, AlertTriangle, CheckCircle } from "lucide-react";

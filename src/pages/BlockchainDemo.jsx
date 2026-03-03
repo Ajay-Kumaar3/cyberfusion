@@ -4,7 +4,7 @@ import BlockchainDemo from "../components/BlockchainDemo";
 import { useBlockchain } from "../context/BlockchainContext";
 import { DEMO_CONFIG, truncateAddress } from "../config/demo.config";
 import { getContract } from "../utils/blockchain";
-import { Info, Shield, Layers, ArrowDown, ExternalLink, Activity } from "lucide-react";
+import { Info, Layers, ArrowDown, ExternalLink, Activity } from "lucide-react";
 
 export default function BlockchainDemoPage() {
     const { blockedCount, address, provider } = useBlockchain();

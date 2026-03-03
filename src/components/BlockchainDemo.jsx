@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import GlassCard from "./GlassCard";
 import { useBlockchain } from "../context/BlockchainContext";
-import { freezeAccountOnChain, attemptTransfer, getOnChainStatus } from "../utils/blockchain";
+import { freezeAccountOnChain, attemptTransfer } from "../utils/blockchain";
 import { DEMO_CONFIG, truncateAddress } from "../config/demo.config";
-import { Check, ShieldAlert, Wallet, ExternalLink, ArrowRight, Lock, RotateCcw, AlertTriangle } from "lucide-react";
+import { Check, ShieldAlert, Wallet, ExternalLink, Lock, RotateCcw, AlertTriangle } from "lucide-react";
 
 export default function BlockchainDemo() {
-    const { walletConnected, address, signer, connect, provider } = useBlockchain();
+    const { walletConnected, address, signer, connect } = useBlockchain();
     const [targetWallet, setTargetWallet] = useState('');
     const [freezeReason, setFreezeReason] = useState('Confirmed money mule - linked to phishing ring');
     const [isFreezing, setIsFreezing] = useState(false);
@@ -15,7 +15,7 @@ export default function BlockchainDemo() {
     const [blockResult, setBlockResult] = useState(null);     // { blocked, reason } or { blocked:false, txHash }
     const [currentStep, setCurrentStep] = useState(0); // demo step tracker 0-4
     const [error, setError] = useState(null);
-    const [liveBlockedEvents, setLiveBlockedEvents] = useState([]);
+    const [liveBlockedEvents] = useState([]);
 
     // Sync step with connection
     useEffect(() => {
