@@ -1,4 +1,5 @@
-const BASE = "/api";
+const API_BASE = process.env.REACT_APP_API_URL || "";
+const BASE = `${API_BASE}/api`;
 
 // Helper
 const get = (url) => fetch(BASE + url).then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); });
