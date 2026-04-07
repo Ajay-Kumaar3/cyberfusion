@@ -57,7 +57,7 @@ Cybercrime and financial crime are the same crime — but the systems fighting t
 ║  Sees: Account takeover      ║◄──────►║  Sees: Unusual velocity      ║
 ║  Sees: Session hijack        ║        ║  Sees: Mule-like pattern     ║
 ║                              ║        ║                              ║
-║  ❌ No AML context           ║        ║  ❌ No cyber context         ║
+║  ❌ No AML context           ║        ║  ❌ No cyber context        ║
 ╚══════════════════════════════╝        ╚══════════════════════════════╝
                     ▼                                   ▼
            Raises a ticket                    Flags for review
