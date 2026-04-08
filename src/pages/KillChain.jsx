@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as d3 from 'd3';
-import { KILL_CHAIN_DATA } from '../data/killChainData';
 import GlassCard from '../components/GlassCard';
 import GeminiPanel from '../components/GeminiPanel';
+import { useAlerts } from '../context/AlertContext';
+import { startAttackSimulation, getKillChain } from '../utils/api';
 
 const ICONS = {
     ATTACK_ORIGIN: "💀",
@@ -15,17 +16,37 @@ const ICONS = {
 
 const COLORS = {
     ATTACK_ORIGIN: "#00FF41",
-    PHISHING: "#A8EF00",
-    COMPROMISED_ACCOUNT: "#00FF41",
-    MULE_ACCOUNT: "#A8EF00",
+    PHISHING: "#FFAA00", // Amber for phishing/simulation
+    COMPROMISED_ACCOUNT: "#FF3366",
+    MULE_ACCOUNT: "#FFAA00",
     TRANSACTION: "#00FF41",
-    EXIT_POINT: "#A8EF00"
+    EXIT_POINT: "#FFAA00"
 };
 
 export default function KillChain() {
     const d3Container = useRef(null);
+    const [graphData, setGraphData] = useState(null);
     const [selectedNode, setSelectedNode] = useState(null);
-    const [triggerAI, setTriggerAI] = useState(0); // Used to re-trigger AI analysis
+    const [triggerAI, setTriggerAI] = useState(0);
+
+    const { refreshGraphTrigger } = useAlerts();
+    const [simRunning, setSimRunning] = useState(false);
+    const [simStep, setSimStep] = useState(0); // 0-5
+    const [simLog, setSimLog] = useState([]);
+    const [elapsed, setElapsed] = useState(0);
+
+    const loadGraph = useCallback(async () => {
+        try {
+            const data = await getKillChain();
+            setGraphData(data);
+        } catch (err) {
+            console.error("Failed to load kill chain:", err);
+        }
+    }, []);
+
+    useEffect(() => {
+        loadGraph();
+    }, [loadGraph, refreshGraphTrigger]);
 
     useEffect(() => {
         if (!d3Container.current) return;
@@ -51,8 +72,9 @@ export default function KillChain() {
         feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
         // Clone data so d3 mutations don't affect original
-        const nodes = KILL_CHAIN_DATA.nodes.map(d => Object.create(d));
-        const edges = KILL_CHAIN_DATA.edges.map(d => Object.create(d));
+        if (!graphData || !graphData.nodes || !graphData.edges) return;
+        const nodes = graphData.nodes.map(d => Object.create(d));
+        const edges = graphData.edges.map(d => Object.create(d));
 
         const simulation = d3.forceSimulation(nodes)
             .force("link", d3.forceLink(edges).id(d => d.id).distance(100))
@@ -190,18 +212,164 @@ export default function KillChain() {
                 .on("drag", dragged)
                 .on("end", dragended);
         }
-    }, []);
+    }, [graphData]);
+
+    const handleSim = async () => {
+        setSimRunning(true);
+        setSimStep(0);
+        setSimLog([]);
+        setElapsed(0);
+        
+        try {
+            await startAttackSimulation();
+            
+            const steps = [
+                { t: 0,  step: 1, msg: "T+0s  → Phishing event detected" },
+                { t: 15, step: 2, msg: "T+15s → Login anomaly from foreign IP" },
+                { t: 30, step: 3, msg: "T+30s → Account marked COMPROMISED" },
+                { t: 60, step: 4, msg: "T+60s → Suspicious transaction flagged" },
+                { t: 90, step: 5, msg: "T+90s → Kill chain graph updated" },
+            ];
+
+            // Local progress timer
+            let tick = 0;
+            const timer = setInterval(() => {
+                tick++;
+                setElapsed(tick);
+                if (tick >= 90) clearInterval(timer);
+            }, 1000);
+
+            steps.forEach(({ t, step, msg }) => {
+                setTimeout(() => {
+                    setSimStep(step);
+                    setSimLog(prev => [...prev, msg]);
+                    if (step === 5) {
+                        setSimRunning(false);
+                        loadGraph();
+                    }
+                }, t * 1000);
+            });
+        } catch (err) {
+            alert("Simulation failed: " + err.message);
+            setSimRunning(false);
+        }
+    };
 
     return (
         <div style={{ display: 'flex', height: 'calc(100vh - 120px)', gap: 24 }}>
             {/* Graph Area */}
-            <GlassCard style={{ flex: 1, padding: 0, overflow: 'hidden', position: 'relative' }}>
-                <div style={{ position: 'absolute', top: 20, left: 20, zIndex: 1, background: 'rgba(0,0,0,0.5)', padding: '12px 16px', borderRadius: 8, backdropFilter: 'blur(10px)', border: '1px solid rgba(0, 255, 65, 0.15)' }}>
-                    <h3 style={{ margin: 0, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, color: '#ffffff' }}>
-                        <span style={{ fontSize: 16 }}>🕸️</span> LIVE KILL CHAIN DIAGRAM
-                    </h3>
-                    <div style={{ fontSize: 11, color: '#7A8E7A', marginTop: 4 }}>Graph updates automatically when connections are discovered</div>
+            <GlassCard style={{ flex: 1, padding: 0, overflow: 'hidden', position: 'relative', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ position: 'absolute', top: 20, left: 20, zIndex: 1, background: 'rgba(0,0,0,0.6)', padding: '16px', borderRadius: 12, backdropFilter: 'blur(10px)', border: '1px solid rgba(0, 255, 65, 0.2)', display: 'flex', alignItems: 'center', gap: 20 }}>
+                    <div>
+                        <h3 style={{ margin: 0, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, color: '#ffffff' }}>
+                            <span style={{ fontSize: 16 }}>🕸️</span> LIVE KILL CHAIN DIAGRAM
+                            <div style={{ 
+                                width: 6, height: 6, borderRadius: '50%', 
+                                background: '#00FF41', 
+                                boxShadow: '0 0 8px #00FF41',
+                                marginLeft: 4
+                            }} title="WebSocket Active" />
+                        </h3>
+                        <div style={{ fontSize: 11, color: '#7A8E7A', marginTop: 4 }}>Graph updates automatically via WebSockets</div>
+                    </div>
+
+                    <div style={{ width: 1, height: 30, background: 'rgba(255,255,255,0.1)' }} />
+
+                    <div style={{ display: 'flex', gap: 10 }}>
+                        <button 
+                            className="hover-lift"
+                            onClick={handleSim}
+                            disabled={simRunning}
+                            style={{
+                                padding: '8px 16px',
+                                background: 'rgba(255, 170, 0, 0.05)',
+                                color: '#FFAA00',
+                                border: '1px solid rgba(255, 170, 0, 0.3)',
+                                borderRadius: 8,
+                                fontSize: 11,
+                                fontWeight: 'bold',
+                                cursor: simRunning ? 'not-allowed' : 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 8,
+                                letterSpacing: '0.05em',
+                                boxShadow: simRunning ? '0 0 20px rgba(255, 170, 0, 0.3)' : 'none',
+                                animation: simRunning ? 'pulse-amber 2s infinite' : 'none'
+                            }}
+                        >
+                            {simRunning ? `SIMULATING... ${90 - elapsed}s` : '⚡ SIMULATE NEW ATTACK'}
+                        </button>
+                    </div>
                 </div>
+
+                <div ref={d3Container} style={{ width: '100%', flex: 1 }}></div>
+
+                {/* Simulation Progress Panel */}
+                {(simRunning || simLog.length > 0) && (
+                    <div style={{ 
+                        position: 'absolute', bottom: 20, left: 20, right: 20, zIndex: 10,
+                        background: 'rgba(10, 15, 26, 0.9)', 
+                        border: '1px solid rgba(255, 170, 0, 0.3)', 
+                        borderRadius: 12, padding: 20,
+                        backdropFilter: 'blur(10px)',
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.5)'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#FFAA00', animation: 'pulse-glow 1.5s infinite' }} />
+                                <span style={{ fontSize: 12, fontWeight: 'bold', color: '#FFAA00', letterSpacing: '0.1em' }}>LIVE ATTACK SIMULATION</span>
+                            </div>
+                            {simStep === 5 && (
+                                <div style={{ fontSize: 11, color: '#00FF41', fontWeight: 'bold' }}>SIMULATION COMPLETE — REFRESHING GRAPH...</div>
+                            )}
+                        </div>
+
+                        {/* Progress Bar Steps */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, position: 'relative', padding: '0 40px' }}>
+                            <div style={{ position: 'absolute', top: '50%', left: 40, right: 40, height: 2, background: 'rgba(255,255,255,0.1)', zIndex: 0 }} />
+                            {[
+                                { label: 'Phishing', step: 1 },
+                                { label: 'Anomaly', step: 2 },
+                                { label: 'Compromised', step: 3 },
+                                { label: 'Transaction', step: 4 },
+                                { label: 'Graph Update', step: 5 }
+                            ].map((s, i) => {
+                                const active = simStep >= s.step;
+                                const current = simStep === s.step;
+                                return (
+                                    <div key={i} style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                                        <div style={{
+                                            width: 24, height: 24, borderRadius: '50%',
+                                            background: active ? '#00FF41' : current ? '#FFAA00' : '#1e2d47',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            border: `2px solid ${active ? '#00FF41' : current ? '#FFAA00' : '#1e2d47'}`,
+                                            boxShadow: current ? '0 0 15px #FFAA00' : 'none',
+                                            transition: 'all 0.5s'
+                                        }}>
+                                            {active ? '✓' : ''}
+                                        </div>
+                                        <span style={{ fontSize: 10, color: active ? '#ffffff' : '#7A8E7A', fontWeight: active ? 'bold' : 'normal' }}>{s.label}</span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Terminal Log */}
+                        <div style={{ 
+                            background: 'rgba(0,0,0,0.4)', borderRadius: 8, padding: 12, 
+                            fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#00FF41',
+                            height: 100, overflowY: 'auto'
+                        }}>
+                            {simLog.map((log, i) => (
+                                <div key={i} className="typewriter" style={{ marginBottom: 4 }}>
+                                    {`> ${log}`}
+                                </div>
+                            ))}
+                            {simRunning && <div style={{ animation: 'blink 1s infinite' }}>_</div>}
+                        </div>
+                    </div>
+                )}
+
                 <div style={{ position: 'absolute', bottom: 20, left: 20, zIndex: 1, display: 'flex', gap: 12, flexWrap: 'wrap', width: 400 }}>
                     {Object.entries(COLORS).map(([key, col]) => (
                         <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: '#ffffff' }}>

@@ -10,6 +10,7 @@ import Reports from "./pages/Reports";
 import MetaMaskPanel from "./components/web3/MetaMaskPanel";
 
 import { BlockchainProvider } from "./context/BlockchainContext";
+import { AlertProvider } from "./context/AlertContext";
 import BlockchainDemoPage from "./pages/BlockchainDemo";
 import SetupPage from "./pages/SetupPage";
 import PaymentDemoPage from "./pages/PaymentDemo";
@@ -17,9 +18,10 @@ import PaymentDemoPage from "./pages/PaymentDemo";
 function App() {
   return (
     <BlockchainProvider>
-      <Router>
-        <Layout>
-          <Routes>
+      <AlertProvider>
+        <Router>
+          <Layout>
+            <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/killchain" element={<KillChain />} />
             <Route path="/accounts" element={<Accounts />} />
@@ -33,6 +35,7 @@ function App() {
         </Layout>
         <MetaMaskPanel onFraudAlert={(alert) => console.log("[CyberFusion] Fraud alert:", alert)} />
       </Router>
+      </AlertProvider>
     </BlockchainProvider>
   );
 }

@@ -4,6 +4,8 @@ import GlassCard from "./GlassCard";
 import { useApi } from "../hooks/useApi";
 import { getAlerts } from "../utils/api";
 
+import { useAlerts } from "../context/AlertContext";
+
 const sevColor = (sev) => {
     if (sev === "CRITICAL") return "#FF3366";
     if (sev === "HIGH") return "#FFAA00";
@@ -19,7 +21,7 @@ const sevLabel = (sev) => {
 };
 
 const formatTime = (dateStr) => {
-    if (!dateStr) return "";
+    if (!dateStr || dateStr === "Just now") return "Just now";
     const date = new Date(dateStr);
     const now = new Date();
     const diff = Math.floor((now - date) / 1000);
@@ -29,12 +31,27 @@ const formatTime = (dateStr) => {
 };
 
 export default function AlertFeed() {
-    const { data: alerts, loading, error } = useApi(getAlerts, []);
+    const { data: dbAlerts, loading, error } = useApi(getAlerts, []);
+    const { alerts: wsAlerts } = useAlerts();
 
-    if (loading) return <div className="skeleton-pulse" style={{ height: 100, borderRadius: 12, background: 'rgba(255,255,255,0.05)' }} />;
+    if (loading && (!wsAlerts || wsAlerts.length === 0)) return <div className="skeleton-pulse" style={{ height: 100, borderRadius: 12, background: 'rgba(255,255,255,0.05)' }} />;
     if (error) return <div style={{ color: '#ff3366', fontSize: 12 }}>{error}</div>;
 
-    const displayAlerts = (alerts || []).slice(0, 8);
+    // Merge and sort alerts
+    const allAlerts = [
+        ...(wsAlerts || []).map(a => ({
+            id: a.id,
+            alert_id: a.id,
+            severity: a.severity,
+            account_id: a.account,
+            description: a.msg,
+            created_at: a.time === 'Just now' ? new Date().toISOString() : a.time,
+            simulation: a.simulation
+        })),
+        ...(dbAlerts || []).map(a => ({ ...a, simulation: false }))
+    ].sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+
+    const displayAlerts = allAlerts.slice(0, 8);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, overflow: 'hidden' }}>
@@ -53,6 +70,15 @@ export default function AlertFeed() {
                             <GlassCard style={{ padding: '16px', background: 'rgba(0, 255, 65, 0.05)', border: '1px solid rgba(0, 255, 65, 0.2)', borderLeft: `4px solid ${color}` }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                                     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                                        {alert.simulation && (
+                                            <span style={{ 
+                                                fontSize: 9, fontWeight: 900, padding: '2px 6px', borderRadius: 4, 
+                                                backgroundColor: 'rgba(255, 170, 0, 0.15)', color: '#FFAA00', 
+                                                border: '1px solid rgba(255, 170, 0, 0.4)', letterSpacing: '0.05em' 
+                                            }}>
+                                                SIM
+                                            </span>
+                                        )}
                                         <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 4, backgroundColor: `rgba(0, 255, 65, 0.1)`, color: color, border: `1px solid rgba(0, 255, 65, 0.3)` }}>
                                             {type}
                                         </span>

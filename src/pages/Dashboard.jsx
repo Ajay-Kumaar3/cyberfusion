@@ -7,6 +7,7 @@ import { getDashboardStats } from "../utils/api";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
 import { askGemini } from "../utils/gemini";
 import { useBlockchain } from "../context/BlockchainContext";
+import { useAlerts } from "../context/AlertContext";
 import { indiaPaths, indiaViewBox } from "../utils/indiaMapPath";
 
 const radarData = [
@@ -21,17 +22,28 @@ const radarData = [
 export default function Dashboard() {
   const { blockedCount } = useBlockchain();
   const { data: stats, loading: statsLoading, error: statsError } = useApi(getDashboardStats);
+  const { alerts, simulationActive, lastSimulationSummary } = useAlerts();
+  
   const [timeLeft, setTimeLeft] = useState(0);
   const [briefing, setBriefing] = useState("Analyzing threat landscape...");
   const [briefingDisplay, setBriefingDisplay] = useState("");
 
+  const activeThreats = (stats?.active_threats || 0) + (alerts?.filter(a => a.simulation).length || 0);
+  const muleFlagged = (stats?.mule_accounts_flagged || 0) + (alerts?.filter(a => a.type === 'ACCOUNT_TAKEOVER').length || 0);
+
   const fetchBriefing = async (forceRefresh = false) => {
     setBriefing("Analyzing threat landscape...");
     setBriefingDisplay("");
-    const prompt = `You are a SOC analyst AI. Given these active threats: ${stats?.active_threats || 0} active threats, ${stats?.mule_accounts_flagged || 0} mule accounts flagged, ₹${stats?.txns_under_review_amount || 0} under review, recovery window at ${Math.floor(timeLeft / 60)} minutes. Write a 1-sentence threat briefing for the security team. Be specific and urgent.`;
+    const prompt = `You are a SOC analyst AI. Given these active threats: ${activeThreats} active threats, ${muleFlagged} mule accounts flagged, ₹${stats?.txns_under_review_amount || 0} under review, recovery window at ${Math.floor(timeLeft / 60)} minutes. Write a 1-sentence threat briefing for the security team. Be specific and urgent.`;
     const response = await askGemini(prompt, forceRefresh);
     setBriefing(response);
   };
+
+  useEffect(() => {
+    if (lastSimulationSummary) {
+      fetchBriefing(true);
+    }
+  }, [lastSimulationSummary]);
 
   useEffect(() => {
     if (stats) {
@@ -83,8 +95,8 @@ export default function Dashboard() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, zIndex: 1, position: 'relative' }}>
       {statsError && <div style={{ color: '#ff3366', fontSize: 13, marginBottom: -12 }}>Error loading metrics: {statsError}</div>}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16 }}>
-        <StatCard title="HIGH RISK" targetValue={stats?.mule_accounts_flagged ?? 0} color="var(--accent)" loading={statsLoading} />
-        <StatCard title="ALERTS" targetValue={stats?.active_threats ?? 0} color="var(--accent)" loading={statsLoading} />
+        <StatCard title="HIGH RISK" targetValue={muleFlagged} color={simulationActive ? "#FFAA00" : "var(--accent)"} loading={statsLoading} />
+        <StatCard title="ALERTS" targetValue={activeThreats} color={simulationActive ? "#FFAA00" : "var(--accent)"} loading={statsLoading} />
         <StatCard title="TXNS REVIEW" targetValue={stats?.txns_under_review_amount ?? 0} isCurrency={true} color="var(--accent)" loading={statsLoading} />
         <StatCard title="ON-CHAIN BLOCKED" targetValue={blockedCount} color="var(--text-main)" />
         <GlassCard style={{ padding: 20, background: 'rgba(0, 255, 65, 0.05)', border: '1px solid rgba(0, 255, 65, 0.2)' }}>

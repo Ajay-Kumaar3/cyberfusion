@@ -1,8 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import os
+import asyncio
+from typing import List
 from config import settings
 from database import engine
 import models
@@ -10,7 +12,9 @@ import models
 # Create all tables on startup
 models.Base.metadata.create_all(bind=engine)
 
-from routes import accounts, login_events, transactions, alerts, dashboard
+from ws_manager import manager
+
+from routes import accounts, login_events, transactions, alerts, dashboard, simulate, killchain
 
 app = FastAPI(
     title="CyberFusion API",
@@ -33,6 +37,20 @@ app.include_router(login_events.router, prefix="/api")
 app.include_router(transactions.router, prefix="/api")
 app.include_router(alerts.router, prefix="/api")
 app.include_router(dashboard.router, prefix="/api")
+app.include_router(simulate.router, prefix="/api")
+app.include_router(killchain.router, prefix="/api")
+
+@app.websocket("/ws/alerts")
+async def websocket_alerts(websocket: WebSocket):
+    await manager.connect(websocket)
+    try:
+        while True:
+            # We can receive ping/pong or control messages here if needed
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
+    except Exception:
+        manager.disconnect(websocket)
 
 
 @app.get("/api")

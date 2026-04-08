@@ -58,3 +58,7 @@ export const getKillChain = () => request('/api/killchain/compute');
 // ML scoring
 export const getMLScore = (accountId) => 
   request(`/api/ml/score/${accountId}`);
+
+// Simulation
+export const startAttackSimulation = () =>
+  request('/api/simulate/attack', { method: 'POST' });
