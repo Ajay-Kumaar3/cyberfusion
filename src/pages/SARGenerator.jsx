@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import GlassCard from "../components/GlassCard";
-import { FileText, Download, Target, AlertTriangle, Link as LinkIcon, Copy } from "lucide-react";
+import { FileText, Download, Link as LinkIcon, Copy } from "lucide-react";
 import { fetchAccounts, generateSAR } from "../api/api";
 import { freezeAccountOnChain, connectWallet } from "../utils/blockchain";
 
@@ -49,7 +49,7 @@ export default function SARGenerator() {
 
     const [s2Display, s2Done] = useTypingEffect(sarData?.section2_narrative, 15, startS2);
     const [s3Display, s3Done] = useTypingEffect(sarData?.section3?.narrative, 15, startS3);
-    const [s5Display, s5Done] = useTypingEffect(sarData?.section5_recommendation, 15, startS5);
+    const [s5Display] = useTypingEffect(sarData?.section5_recommendation, 15, startS5);
 
     useEffect(() => {
         fetchAccounts().then(allAccs => {

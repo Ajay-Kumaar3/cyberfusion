@@ -3,7 +3,7 @@ import GlassCard from "../components/GlassCard";
 import RiskGauge from "../components/RiskGauge";
 import GeminiPanel from "../components/GeminiPanel";
 import { useApi } from "../hooks/useApi";
-import { getAccounts, getAccountById, updateAccountStatus } from "../utils/api";
+import { fetchAccounts, fetchAccount, updateAccountStatus } from "../api/api";
 import { useBlockchain } from "../context/BlockchainContext";
 import { freezeAccountOnChain } from "../utils/blockchain";
 import { DEMO_CONFIG, truncateAddress } from "../config/demo.config";
@@ -21,9 +21,9 @@ const redactName = (name) => {
 
 export default function Accounts() {
     const { signer, walletConnected, connect } = useBlockchain();
-    const { data: accountsRaw, loading: listLoading, error: listError, refetch: refetchAccounts } = useApi(getAccounts);
+    const { data: accountsRaw, loading: listLoading, error: listError, refetch: refetchAccounts } = useApi(fetchAccounts);
     const [selectedAccId, setSelectedAccId] = useState(null);
-    const { data: selectedAcc, loading: detailLoading, error: detailError } = useApi(() => selectedAccId ? getAccountById(selectedAccId) : null, [selectedAccId]);
+    const { data: selectedAcc, loading: detailLoading, error: detailError } = useApi(() => selectedAccId ? fetchAccount(selectedAccId) : null, [selectedAccId]);
     
     const [triggerAI, setTriggerAI] = useState(0);
     const [isFreezing, setIsFreezing] = useState(false);

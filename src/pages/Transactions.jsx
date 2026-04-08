@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GlassCard from "../components/GlassCard";
 import { useApi } from "../hooks/useApi";
-import { getTransactions } from "../utils/api";
+import { fetchTransactions } from "../api/api";
 import { AlertTriangle, Clock } from "lucide-react";
 
 const statusDisplay = {
@@ -27,7 +27,7 @@ const formatWindow = (createdAt) => {
 };
 
 export default function Transactions() {
-    const { data: transactionsRaw, loading, error } = useApi(getTransactions);
+    const { data: transactionsRaw, loading, error } = useApi(fetchTransactions);
     const [expanded, setExpanded] = useState(null);
     const [filter, setFilter] = useState("ALL");
 

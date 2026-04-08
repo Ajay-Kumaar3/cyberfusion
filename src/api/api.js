@@ -25,6 +25,7 @@ export const fetchAccounts = (params = {}) => {
     return get(`/accounts/${q ? "?" + q : ""}`);
 };
 export const fetchAccount = (id) => get(`/accounts/${id}`);
+export const updateAccountStatus = (id, status) => patch(`/accounts/${id}`, { status });
 
 // ── Login Events ─────────────────────────────────────────────────────────────
 export const fetchLogins = (params = {}) => {

@@ -2,7 +2,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import GlassCard from "./GlassCard";
 import { useApi } from "../hooks/useApi";
-import { getAlerts } from "../utils/api";
+import { fetchAlerts } from "../api/api";
 
 import { useAlerts } from "../context/AlertContext";
 
@@ -31,7 +31,7 @@ const formatTime = (dateStr) => {
 };
 
 export default function AlertFeed() {
-    const { data: dbAlerts, loading, error } = useApi(getAlerts, []);
+    const { data: dbAlerts, loading, error } = useApi(fetchAlerts, []);
     const { alerts: wsAlerts } = useAlerts();
 
     if (loading && (!wsAlerts || wsAlerts.length === 0)) return <div className="skeleton-pulse" style={{ height: 100, borderRadius: 12, background: 'rgba(255,255,255,0.05)' }} />;
