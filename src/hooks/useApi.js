@@ -1,0 +1,29 @@
+import { useState, useEffect, useCallback } from 'react';
+
+export function useApi(apiFn, deps = [], options = {}) {
+  const { immediate = true, fallback = null } = options;
+  const [data, setData] = useState(fallback);
+  const [loading, setLoading] = useState(immediate);
+  const [error, setError] = useState(null);
+
+  const execute = useCallback(async (...args) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await apiFn(...args);
+      setData(result);
+      return result;
+    } catch (err) {
+      setError(err.message);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, deps);
+
+  useEffect(() => {
+    if (immediate) execute();
+  }, [execute]);
+
+  return { data, loading, error, refetch: execute };
+}

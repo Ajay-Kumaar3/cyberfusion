@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import GlassCard from "./GlassCard";
-import { fetchAlerts } from "../api/api";
+import { useApi } from "../hooks/useApi";
+import { getAlerts } from "../utils/api";
 
 const sevColor = (sev) => {
-    // Purified neon green cyberpunk theme
-    if (sev === "CRITICAL") return "#00FF41";
-    if (sev === "HIGH") return "#00cc00";
-    if (sev === "MEDIUM") return "#7A8E7A";
+    if (sev === "CRITICAL") return "#FF3366";
+    if (sev === "HIGH") return "#FFAA00";
+    if (sev === "MEDIUM") return "#FFDD00";
     return "#00FF41";
 };
 
@@ -18,49 +18,33 @@ const sevLabel = (sev) => {
     return "[+] MONITOR";
 };
 
+const formatTime = (dateStr) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000);
+    if (diff < 60) return "Just now";
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
+
 export default function AlertFeed() {
-    const [alerts, setAlerts] = useState([]);
-    const [pool, setPool] = useState([]);
-    const [poolIndex, setPoolIndex] = useState(2); // eslint-disable-line no-unused-vars
+    const { data: alerts, loading, error } = useApi(getAlerts, []);
 
-    useEffect(() => {
-        fetchAlerts({ limit: 50 })
-            .then(data => {
-                setPool(data);
-                if (data.length >= 2) {
-                    setAlerts([
-                        { ...data[0], instanceId: Date.now() + 1, timeLabel: "Just now" },
-                        { ...data[1], instanceId: Date.now() + 2, timeLabel: "2m ago" },
-                    ]);
-                }
-            })
-            .catch(() => {
-                setAlerts([{ alert_id: 0, severity: "HIGH", account_id: "API-OFFLINE", description: "Backend offline — restart uvicorn server", instanceId: Date.now(), timeLabel: "Now" }]);
-            });
-    }, []);
+    if (loading) return <div className="skeleton-pulse" style={{ height: 100, borderRadius: 12, background: 'rgba(255,255,255,0.05)' }} />;
+    if (error) return <div style={{ color: '#ff3366', fontSize: 12 }}>{error}</div>;
 
-    useEffect(() => {
-        if (pool.length === 0) return;
-        const interval = setInterval(() => {
-            setPoolIndex(prev => {
-                const idx = prev % pool.length;
-                const next = { ...pool[idx], instanceId: Date.now(), timeLabel: "Just now" };
-                setAlerts(curr => [next, ...curr].slice(0, 8));
-                return idx + 1;
-            });
-        }, 8000);
-        return () => clearInterval(interval);
-    }, [pool]);
+    const displayAlerts = (alerts || []).slice(0, 8);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, overflow: 'hidden' }}>
             <AnimatePresence>
-                {alerts.map((alert) => {
+                {displayAlerts.map((alert) => {
                     const color = sevColor(alert.severity);
                     const type = sevLabel(alert.severity);
                     return (
                         <motion.div
-                            key={alert.instanceId}
+                            key={alert.alert_id}
                             initial={{ x: 50, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
@@ -73,7 +57,7 @@ export default function AlertFeed() {
                                             {type}
                                         </span>
                                         <span style={{ fontSize: 10, color: 'var(--text-muted)', fontFamily: "'JetBrains Mono', monospace" }}>
-                                            {alert.timeLabel}
+                                            {formatTime(alert.created_at)}
                                         </span>
                                     </div>
                                     <button className="hover-lift" style={{ background: 'rgba(0, 255, 65, 0.05)', border: `1px solid rgba(0, 255, 65, 0.3)`, color: 'var(--accent)', borderRadius: 4, padding: '4px 10px', fontSize: 10, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s', letterSpacing: '0.05em' }}>

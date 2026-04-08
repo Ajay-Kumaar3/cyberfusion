@@ -1,28 +1,37 @@
 import React, { useState, useEffect } from "react";
 import GlassCard from "../components/GlassCard";
-import { fetchTransactions } from "../api/api";
-import { AlertTriangle } from "lucide-react";
+import { useApi } from "../hooks/useApi";
+import { getTransactions } from "../utils/api";
+import { AlertTriangle, Clock } from "lucide-react";
 
 const statusDisplay = {
-    ON_HOLD: { label: "BLOCKED", color: "#00FF41" },
-    REVIEW: { label: "FLAGGED", color: "#A8EF00" },
+    ON_HOLD: { label: "BLOCKED", color: "#FF3366" },
+    REVIEW: { label: "FLAGGED", color: "#FFAA00" },
     APPROVED: { label: "CLEARED", color: "#00CC33" },
-    BLOCKED: { label: "BLOCKED", color: "#00FF41" },
-    PENDING: { label: "PENDING", color: "#889488" },
+    BLOCKED: { label: "BLOCKED", color: "#FF3366" },
+    PENDING: { label: "PENDING", color: "#FFDD00" },
+};
+
+const formatWindow = (createdAt) => {
+    const start = new Date(createdAt);
+    const now = new Date();
+    const fortyEightHours = 48 * 60 * 60 * 1000;
+    const elapsed = now - start;
+    const remaining = fortyEightHours - elapsed;
+    
+    if (remaining <= 0) return "WINDOW CLOSED";
+    
+    const h = Math.floor(remaining / 3600000);
+    const m = Math.floor((remaining % 3600000) / 60000);
+    return `${h}h ${m}m REMAINING`;
 };
 
 export default function Transactions() {
-    const [transactions, setTransactions] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { data: transactionsRaw, loading, error } = useApi(getTransactions);
     const [expanded, setExpanded] = useState(null);
     const [filter, setFilter] = useState("ALL");
 
-    useEffect(() => {
-        fetchTransactions({ limit: 100 })
-            .then(setTransactions)
-            .catch(err => console.error("Transactions API:", err))
-            .finally(() => setLoading(false));
-    }, []);
+    const transactions = transactionsRaw || [];
 
     const filtered = transactions.filter(t => {
         if (filter === "ALL") return true;
@@ -37,8 +46,8 @@ export default function Transactions() {
     const fmtTime = ts => ts ? new Date(ts).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : "—";
     const parseFlags = f => { try { return JSON.parse(f || "[]"); } catch { return []; } };
 
-    if (loading) return (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 400, color: '#7A8E7A', fontSize: 18, fontFamily: "'JetBrains Mono',monospace" }}>
+    if (loading && !transactions.length) return (
+        <div className="skeleton-pulse" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 400, color: '#7A8E7A', fontSize: 18, fontFamily: "'JetBrains Mono',monospace" }}>
             Loading transactions from Neon DB...
         </div>
     );
@@ -119,18 +128,18 @@ export default function Transactions() {
                                         <tr><td colSpan="8" style={{ padding: 0 }}>
                                             <div style={{ background: 'rgba(0,0,0,0.3)', padding: 24, borderBottom: '1px solid rgba(0,255,65,0.2)', display: 'flex', gap: 32 }}>
                                                 <div style={{ flex: 1 }}>
-                                                    <h4 style={{ margin: '0 0 12px', fontSize: 12, color: '#00FF41', display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} /> RISK FLAGS</h4>
+                                                    <h4 style={{ margin: '0 0 12px', fontSize: 12, color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} /> RISK FLAGS</h4>
                                                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
                                                         {flags.length > 0 ? flags.map(f => (
-                                                            <span key={f} style={{ padding: '4px 10px', background: '#00FF4122', border: '1px solid #00FF4166', borderRadius: 12, fontSize: 11, color: '#00FF41', fontWeight: 'bold' }}>{f}</span>
-                                                        )) : <span style={{ color: '#7A8E7A', fontSize: 12 }}>No flags</span>}
+                                                            <span key={f} style={{ padding: '4px 10px', background: 'rgba(0, 255, 65, 0.1)', border: '1px solid rgba(0, 255, 65, 0.3)', borderRadius: 12, fontSize: 11, color: 'var(--accent)', fontWeight: 'bold' }}>{f}</span>
+                                                        )) : <span style={{ color: '#7A8E7A', fontSize: 12 }}>No flags detected</span>}
                                                     </div>
                                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                                                         {[
                                                             { label: 'Category', value: t.category },
                                                             { label: 'Cyber Score', value: `${t.cyber_score}/100` },
-                                                            { label: 'New Receiver', value: t.new_receiver ? 'YES [!]' : 'No', color: t.new_receiver ? '#00FF41' : '#00CC33' },
-                                                            { label: 'Unusual Hour', value: t.time_flag ? 'YES [!]' : 'No', color: t.time_flag ? '#00FF41' : '#00CC33' },
+                                                            { label: 'Risk Score', value: `${t.final_score}/100`, color: t.final_score > 70 ? '#FF3366' : '#FFAA00' },
+                                                            { label: 'Merchant', value: t.receiver_name || 'N/A' },
                                                         ].map(({ label, value, color }) => (
                                                             <div key={label} style={{ background: 'rgba(255,255,255,0.02)', padding: 12, borderRadius: 8 }}>
                                                                 <div style={{ fontSize: 10, color: '#7A8E7A', marginBottom: 4 }}>{label}</div>
@@ -141,16 +150,18 @@ export default function Transactions() {
                                                 </div>
                                                 <div style={{ flex: 1, borderLeft: '1px solid rgba(0, 255, 65, 0.15)', paddingLeft: 32 }}>
                                                     {t.status === "ON_HOLD" || t.status === "BLOCKED" ? (
-                                                        <div style={{ background: '#00FF4111', border: '1px solid #00FF4144', padding: 16, borderRadius: 8, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                                                            <div style={{ fontSize: 11, color: '#00FF41', fontWeight: 'bold', marginBottom: 8 }}>TRANSACTION ON HOLD</div>
-                                                            <div style={{ fontSize: 13, color: '#ffffff', marginBottom: 16 }}>Blocked by risk engine. Score: {t.final_score}/100. Funds protected.</div>
-                                                            <button style={{ background: 'transparent', border: '1px solid #00FF41', color: '#00FF41', padding: '8px 16px', borderRadius: 6, fontWeight: 'bold', cursor: 'pointer', fontSize: 11 }}>VIEW AUDIT LOG</button>
+                                                        <div style={{ background: 'rgba(255, 51, 102, 0.05)', border: '1px solid rgba(255, 51, 102, 0.2)', padding: 16, borderRadius: 8, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                                            <div style={{ fontSize: 11, color: '#FF3366', fontWeight: 'bold', marginBottom: 8 }}>TRANSACTION FROZEN</div>
+                                                            <div style={{ fontSize: 13, color: '#ffffff', marginBottom: 16 }}>This transaction has been automatically blocked. Funds have not left the account.</div>
+                                                            <button style={{ background: 'transparent', border: '1px solid #FF3366', color: '#FF3366', padding: '8px 16px', borderRadius: 6, fontWeight: 'bold', cursor: 'pointer', fontSize: 11 }}>VIEW BLOCK EVIDENCE</button>
                                                         </div>
                                                     ) : (
-                                                        <div style={{ background: '#00FF4111', border: '1px solid #00FF4144', padding: 16, borderRadius: 8, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                                                            <div style={{ fontSize: 11, color: '#00FF41', fontWeight: 'bold', marginBottom: 8 }}>RECOVERABLE — REVERSAL WINDOW OPEN</div>
-                                                            <div style={{ fontSize: 13, color: '#ffffff', marginBottom: 16 }}>Transaction within 48h reversal window under Reg E.</div>
-                                                            <button style={{ background: '#00FF41', border: 'none', color: '#000', padding: '8px 16px', borderRadius: 6, fontWeight: 'bold', cursor: 'pointer', fontSize: 11 }}>REVERSE TRANSACTION NOW</button>
+                                                        <div style={{ background: 'rgba(0, 255, 65, 0.05)', border: '1px solid rgba(0, 255, 65, 0.2)', padding: 16, borderRadius: 8, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                                            <div style={{ fontSize: 11, color: 'var(--accent)', fontWeight: 'bold', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+                                                                <Clock size={14} /> {formatWindow(t.created_at)}
+                                                            </div>
+                                                            <div style={{ fontSize: 13, color: '#ffffff', marginBottom: 16 }}>This transaction is within the Regulation E reversal window. You can still claw back these funds.</div>
+                                                            <button className="hover-lift" style={{ background: 'var(--accent)', border: 'none', color: '#000', padding: '10px 16px', borderRadius: 6, fontWeight: 'bold', cursor: 'pointer', fontSize: 11 }}>INITIATE REVERSAL</button>
                                                         </div>
                                                     )}
                                                 </div>
@@ -160,6 +171,7 @@ export default function Transactions() {
                                 </React.Fragment>
                             );
                         })}
+                        {error && <tr><td colSpan="8" style={{ padding: 20, color: '#FF3366', textAlign: 'center' }}>{error}</td></tr>}
                     </tbody>
                 </table>
             </GlassCard>
