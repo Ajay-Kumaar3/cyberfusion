@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import GlassCard from "../components/GlassCard";
 import GeminiPanel from "../components/GeminiPanel";
 import { ShieldAlert, Globe } from "lucide-react";
-import { fetchLogins } from "../api/api";
+import { useApi } from "../hooks/useApi";
+import { getLoginEvents, getAccounts } from "../utils/api";
 
 const getSeverity = s => s >= 75 ? "CRIT" : s >= 45 ? "HIGH" : "MED";
-const sevColor = s => s === "CRIT" ? "#00FF41" : s === "HIGH" ? "#A8EF00" : "#00FF41";
+const sevColor = s => s === "CRIT" ? "#FF3366" : s === "HIGH" ? "#FFAA00" : "#FFDD00";
 
 const deriveEvent = ev => {
     if (ev.password_changed) return "Password Changed After Anomalous Login";
@@ -20,16 +21,13 @@ const deriveEvent = ev => {
 };
 
 export default function CyberRisk() {
-    const [events, setEvents] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { data: rawEvents, loading: loginsLoading } = useApi(getLoginEvents);
+    const { data: allAccounts, loading: accountsLoading } = useApi(getAccounts);
     const [reportTrigger, setReportTrigger] = useState(0);
 
-    useEffect(() => {
-        fetchLogins({ limit: 50 })
-            .then(setEvents)
-            .catch(err => console.error("Logins API:", err))
-            .finally(() => setLoading(false));
-    }, []);
+    const loading = loginsLoading || accountsLoading;
+    const events = rawEvents || [];
+    const accounts = allAccounts || [];
 
     const cyberEvents = events.map(ev => ({
         time: ev.timestamp ? new Date(ev.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : "—",
@@ -38,7 +36,7 @@ export default function CyberRisk() {
         event: deriveEvent(ev),
         user: ev.account_id,
         location: ev.location,
-        amlMatch: ev.cyber_risk_score >= 50,
+        amlMatch: accounts.some(acc => acc.account_id === ev.account_id),
         score: ev.cyber_risk_score,
     }));
 

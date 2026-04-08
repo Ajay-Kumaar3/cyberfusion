@@ -50,3 +50,6 @@ export const explainAlert = (id) => post(`/alerts/${id}/explain`, {});
 
 // ── SAR Generator ─────────────────────────────────────────────────────────────
 export const generateSAR = (accountId) => post("/sar/generate", { account_id: accountId });
+
+// ── Kill Chain ────────────────────────────────────────────────────────────────
+export const getKillChain = () => get("/killchain/compute");

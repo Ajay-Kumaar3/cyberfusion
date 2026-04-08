@@ -130,3 +130,9 @@ class DashboardSummary(BaseModel):
     transactions_flagged: int
     transactions_blocked: int
     avg_risk_score: float
+
+class DashboardStats(BaseModel):
+    active_threats: int
+    mule_accounts_flagged: int
+    txns_under_review_amount: float
+    recovery_window_seconds: int

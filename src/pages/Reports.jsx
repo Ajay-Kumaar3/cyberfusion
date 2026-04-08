@@ -1,24 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import GlassCard from "../components/GlassCard";
 import GeminiPanel from "../components/GeminiPanel";
 import { FileText, Download, Target, AlertTriangle } from "lucide-react";
-import { fetchAlerts, fetchDashboardSummary } from "../api/api";
+import { useApi } from "../hooks/useApi";
+import { getAlerts, getDashboardStats } from "../utils/api";
 
-const sevColor = s => ({ CRITICAL: "#00FF41", HIGH: "#A8EF00", MEDIUM: "#00FF41" }[s] || "#889488");
+const sevColor = s => ({ CRITICAL: "#FF3366", HIGH: "#FFAA00", MEDIUM: "#FFDD00" }[s] || "#889488");
 
 export default function Reports() {
     const [triggerReport, setTriggerReport] = useState(0);
     const [reportType, setReportType] = useState('Mule Ring Analysis');
-    const [pastAlerts, setPastAlerts] = useState([]);
-    const [summary, setSummary] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { data: pastAlertsRaw, loading: alertsLoading } = useApi(getAlerts);
+    const { data: stats, loading: statsLoading } = useApi(getDashboardStats);
 
-    useEffect(() => {
-        Promise.all([fetchAlerts({ limit: 8 }), fetchDashboardSummary()])
-            .then(([alerts, dash]) => { setPastAlerts(alerts); setSummary(dash); })
-            .catch(err => console.error("Reports API:", err))
-            .finally(() => setLoading(false));
-    }, []);
+    const pastAlerts = pastAlertsRaw || [];
+    const loading = alertsLoading || statsLoading;
 
     const alertContext = pastAlerts.slice(0, 6).map(a =>
         `[${a.severity}] Account ${a.account_id}: ${a.description} (Risk: ${a.final_score})`
@@ -33,7 +29,7 @@ export default function Reports() {
                     <h1 style={{ fontSize: 24, margin: 0, color: '#ffffff' }}>AI INTELLIGENCE REPORTS</h1>
                     <div style={{ color: '#7A8E7A', fontSize: 13, marginTop: 4 }}>
                         Automated analysis & regulatory filing generation
-                        {summary && <span style={{ marginLeft: 16, color: '#00FF41' }}>{summary.active_alerts} active alerts · {summary.high_risk_accounts} high-risk accounts</span>}
+                        {!loading && stats && <span style={{ marginLeft: 16, color: '#00FF41' }}>{stats.active_threats} active threats · {stats.mule_accounts_flagged} mule accounts flagged</span>}
                     </div>
                 </div>
             </div>

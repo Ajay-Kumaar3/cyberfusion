@@ -2,47 +2,60 @@ import React, { useState, useEffect } from "react";
 import GlassCard from "../components/GlassCard";
 import RiskGauge from "../components/RiskGauge";
 import GeminiPanel from "../components/GeminiPanel";
-import { fetchAccounts } from "../api/api";
+import { useApi } from "../hooks/useApi";
+import { getAccounts, getAccountById, updateAccountStatus } from "../utils/api";
 import { useBlockchain } from "../context/BlockchainContext";
 import { freezeAccountOnChain } from "../utils/blockchain";
 import { DEMO_CONFIG, truncateAddress } from "../config/demo.config";
 import { ExternalLink, Lock } from "lucide-react";
 
-const riskColor = (level) => ({ Critical: "#00FF41", High: "#A8EF00", Medium: "#A8EF00" }[level] || "#00CC33");
-const statusColor = (s) => ({ Compromised: "#00FF41", Flagged: "#A8EF00", Frozen: "#889488" }[s] || "#00CC33");
+const riskColor = (level) => ({ Critical: "#FF3366", High: "#FFAA00", Medium: "#FFDD00" }[level] || "#00CC33");
+const statusColor = (s) => ({ Compromised: "#FF3366", Flagged: "#FFAA00", Frozen: "#889488" }[s] || "#00CC33");
+
+const redactName = (name) => {
+    if (!name) return "—";
+    const parts = name.split(" ");
+    if (parts.length < 2) return name;
+    return `${parts[0]} ${parts[parts.length - 1][0]}.`;
+};
 
 export default function Accounts() {
     const { signer, walletConnected, connect } = useBlockchain();
-    const [accounts, setAccounts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [selectedAcc, setSelectedAcc] = useState(null);
+    const { data: accountsRaw, loading: listLoading, error: listError, refetch: refetchAccounts } = useApi(getAccounts);
+    const [selectedAccId, setSelectedAccId] = useState(null);
+    const { data: selectedAcc, loading: detailLoading, error: detailError } = useApi(() => selectedAccId ? getAccountById(selectedAccId) : null, [selectedAccId]);
+    
     const [triggerAI, setTriggerAI] = useState(0);
     const [isFreezing, setIsFreezing] = useState(false);
     const [lastTx, setLastTx] = useState(null);
 
+    const accounts = accountsRaw || [];
+
+    useEffect(() => {
+        if (accounts.length > 0 && !selectedAccId) {
+            setSelectedAccId(accounts[0].account_id);
+        }
+    }, [accounts, selectedAccId]);
+
     // Get demo wallet if this is a demo account
     const demoWallet = selectedAcc ? DEMO_CONFIG.MULE_WALLET_MAP[selectedAcc.account_id] : null;
 
-    const handleOnChainFreeze = async () => {
-        if (!walletConnected) {
-            try {
-                await connect();
-            } catch (e) {
-                alert("Connect failed: " + e.message);
-                return;
-            }
-        }
-        if (!demoWallet) return;
-
+    const handleFreeze = async () => {
+        if (!selectedAcc) return;
         setIsFreezing(true);
         try {
-            const result = await freezeAccountOnChain(
-                demoWallet,
-                `Automated freeze by CyberFusion Pro: Risk Score ${selectedAcc.final_score}`,
-                signer
-            );
-            setLastTx(result);
-            alert("SUCCESS: Account frozen on-chain via Sepolia contract.");
+            await updateAccountStatus(selectedAcc.account_id, 'Frozen');
+            await refetchAccounts();
+            
+            if (walletConnected && demoWallet) {
+                const result = await freezeAccountOnChain(
+                    demoWallet,
+                    `Automated freeze by CyberFusion Pro: Risk Score ${selectedAcc.final_score}`,
+                    signer
+                );
+                setLastTx(result);
+            }
+            alert("SUCCESS: Account frozen in database" + (lastTx ? " and on-chain." : "."));
         } catch (e) {
             alert("Freeze failed: " + e.message);
         } finally {
@@ -50,21 +63,15 @@ export default function Accounts() {
         }
     };
 
-    useEffect(() => {
-        fetchAccounts({ limit: 50 })
-            .then(data => { setAccounts(data); if (data.length) setSelectedAcc(data[0]); })
-            .catch(err => console.error("Accounts API:", err))
-            .finally(() => setLoading(false));
-    }, []);
-
-    if (loading) return (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 400, color: '#7A8E7A', fontSize: 18, fontFamily: "'JetBrains Mono',monospace" }}>
+    if (listLoading && !accounts.length) return (
+        <div className="skeleton-pulse" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 400, color: '#7A8E7A', fontSize: 18, fontFamily: "'JetBrains Mono',monospace" }}>
             Loading accounts from Neon DB...
         </div>
     );
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            {listError && <div style={{ color: '#ff3366', fontWeight: 'bold' }}>Error: {listError}</div>}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: '1px solid rgba(0,255,65,0.2)', paddingBottom: 16 }}>
                 <div>
                     <h1 style={{ fontSize: 24, margin: 0, color: '#ffffff' }}>MULE RING DETECTION</h1>
@@ -84,14 +91,14 @@ export default function Accounts() {
                                 padding: 16,
                                 cursor: 'pointer',
                                 flexShrink: 0,
-                                border: selectedAcc?.account_id === acc.account_id ? `1px solid var(--accent)` : '1px solid rgba(0, 255, 65, 0.3)',
-                                background: selectedAcc?.account_id === acc.account_id ? 'rgba(0, 255, 65, 0.1)' : 'rgba(255, 255, 255, 0.02)'
+                                border: selectedAccId === acc.account_id ? `1px solid var(--accent)` : '1px solid rgba(0, 255, 65, 0.3)',
+                                background: selectedAccId === acc.account_id ? 'rgba(0, 255, 65, 0.1)' : 'rgba(255, 255, 255, 0.02)'
                             }}
-                            onClick={() => { setSelectedAcc(acc); setTriggerAI(0); setLastTx(null); }}>
+                            onClick={() => { setSelectedAccId(acc.account_id); setTriggerAI(0); setLastTx(null); }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                                 <div>
                                     <div style={{ fontSize: 16, fontWeight: 'bold', color: '#ffffff', fontFamily: "'JetBrains Mono',monospace" }}>{acc.account_id}</div>
-                                    <div style={{ fontSize: 12, color: '#7A8E7A' }}>Name: <span style={{ filter: 'blur(3px)' }}>{acc.name}</span></div>
+                                    <div style={{ fontSize: 12, color: '#7A8E7A' }}>Name: <span>{redactName(acc.name)}</span></div>
                                 </div>
                                 <div style={{ background: `${statusColor(acc.status)}22`, color: statusColor(acc.status), padding: '4px 10px', borderRadius: 20, fontSize: 10, fontWeight: 'bold', border: `1px solid ${statusColor(acc.status)}44` }}>
                                     {acc.status?.toUpperCase()}
@@ -117,9 +124,12 @@ export default function Accounts() {
                     ))}
                 </div>
 
-                {selectedAcc && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    {detailLoading ? (
+                        <div className="skeleton-pulse" style={{ height: 400, borderRadius: 12, background: 'rgba(255,255,255,0.05)' }} />
+                    ) : selectedAcc ? (
                         <GlassCard style={{ padding: 24 }}>
+                            {detailError && <div style={{ color: '#ff3366', fontSize: 12 }}>{detailError}</div>}
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                                 <div>
                                     <h2 style={{ fontSize: 24, margin: 0, fontFamily: "'JetBrains Mono',monospace", color: '#ffffff' }}>{selectedAcc.account_id}</h2>
@@ -166,20 +176,16 @@ export default function Accounts() {
                             />
 
                             <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
-                                {demoWallet ? (
-                                    <button
-                                        onClick={handleOnChainFreeze}
-                                        disabled={isFreezing}
-                                        className="hover-lift"
-                                        style={{ flex: 2, padding: '12px', background: 'rgba(0, 255, 65, 0.1)', color: '#00FF41', border: '1px solid rgba(0, 255, 65, 0.3)', borderRadius: 12, fontWeight: '800', cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, letterSpacing: '0.05em' }}
-                                    >
-                                        {isFreezing ? (
-                                            <div style={{ width: 16, height: 16, border: '2px solid #00FF41', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-                                        ) : <><Lock size={14} /> FREEZE ON-CHAIN</>}
-                                    </button>
-                                ) : (
-                                    <button className="hover-lift" style={{ flex: 1, padding: '12px', background: 'rgba(0, 255, 65, 0.05)', color: '#00FF41', border: '1px solid rgba(0, 255, 65, 0.15)', borderRadius: 12, fontWeight: '800', cursor: 'pointer', fontSize: 11, letterSpacing: '0.05em' }}>FREEZE</button>
-                                )}
+                                <button
+                                    onClick={handleFreeze}
+                                    disabled={isFreezing}
+                                    className="hover-lift"
+                                    style={{ flex: 2, padding: '12px', background: 'rgba(0, 255, 65, 0.1)', color: '#00FF41', border: '1px solid rgba(0, 255, 65, 0.3)', borderRadius: 12, fontWeight: '800', cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, letterSpacing: '0.05em' }}
+                                >
+                                    {isFreezing ? (
+                                        <div style={{ width: 16, height: 16, border: '2px solid #00FF41', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+                                    ) : <><Lock size={14} /> {demoWallet ? "FREEZE ON-CHAIN" : "FREEZE"}</>}
+                                </button>
                                 <button className="hover-lift" style={{ flex: 1, padding: '12px', background: 'rgba(255, 255, 255, 0.02)', color: 'var(--text-muted)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 12, fontWeight: '800', cursor: 'pointer', fontSize: 11, letterSpacing: '0.05em' }}>FLAG SAR</button>
                                 <button className="hover-lift" style={{ flex: 1, padding: '12px', background: 'rgba(0, 255, 65, 0.05)', color: '#00FF41', border: '1px solid rgba(0, 255, 65, 0.15)', borderRadius: 12, fontWeight: '800', cursor: 'pointer', fontSize: 11, letterSpacing: '0.05em' }}>MONITOR</button>
                             </div>
@@ -192,8 +198,10 @@ export default function Accounts() {
                                 </div>
                             )}
                         </GlassCard>
-                    </div>
-                )}
+                    ) : (
+                        <div style={{ color: 'var(--text-muted)', padding: 40, textAlign: 'center' }}>No account selected</div>
+                    )}
+                </div>
             </div>
             <style>{`
                 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }

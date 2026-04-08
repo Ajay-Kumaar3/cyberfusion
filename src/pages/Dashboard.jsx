@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import StatCard from "../components/StatCard";
 import AlertFeed from "../components/AlertFeed";
 import GlassCard from "../components/GlassCard";
-import { fetchDashboardSummary } from "../api/api";
+import { useApi } from "../hooks/useApi";
+import { getDashboardStats } from "../utils/api";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
 import { askGemini } from "../utils/gemini";
 import { useBlockchain } from "../context/BlockchainContext";
@@ -19,26 +20,31 @@ const radarData = [
 
 export default function Dashboard() {
   const { blockedCount } = useBlockchain();
-  const [timeLeft, setTimeLeft] = useState(47 * 60 + 23); // 47:23
+  const { data: stats, loading: statsLoading, error: statsError } = useApi(getDashboardStats);
+  const [timeLeft, setTimeLeft] = useState(0);
   const [briefing, setBriefing] = useState("Analyzing threat landscape...");
   const [briefingDisplay, setBriefingDisplay] = useState("");
-  const [summary, setSummary] = useState(null);
 
   const fetchBriefing = async (forceRefresh = false) => {
     setBriefing("Analyzing threat landscape...");
     setBriefingDisplay("");
-    const prompt = "You are a SOC analyst AI. Given these active threats: 14 active threats, 37 mule accounts flagged, $2.4M under review, recovery window at 47 minutes. Write a 1-sentence threat briefing for the security team. Be specific and urgent.";
+    const prompt = `You are a SOC analyst AI. Given these active threats: ${stats?.active_threats || 0} active threats, ${stats?.mule_accounts_flagged || 0} mule accounts flagged, ₹${stats?.txns_under_review_amount || 0} under review, recovery window at ${Math.floor(timeLeft / 60)} minutes. Write a 1-sentence threat briefing for the security team. Be specific and urgent.`;
     const response = await askGemini(prompt, forceRefresh);
     setBriefing(response);
   };
 
   useEffect(() => {
-    fetchBriefing();
+    if (stats) {
+      fetchBriefing();
+    }
+  }, [stats]);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       fetchBriefing();
     }, 300000); // 5 min
     return () => clearInterval(interval);
-  }, []);
+  }, [stats]);
 
   useEffect(() => {
     if (briefing === "Analyzing threat landscape...") {
@@ -56,14 +62,14 @@ export default function Dashboard() {
   }, [briefing]);
 
   useEffect(() => {
-    const t = setInterval(() => setTimeLeft(p => p > 0 ? p - 1 : 0), 1000);
-    return () => clearInterval(t);
-  }, []);
+    if (stats) {
+      setTimeLeft(stats.recovery_window_seconds);
+    }
+  }, [stats]);
 
   useEffect(() => {
-    fetchDashboardSummary()
-      .then(setSummary)
-      .catch(err => console.error("Dashboard API:", err));
+    const t = setInterval(() => setTimeLeft(p => p > 0 ? p - 1 : 0), 1000);
+    return () => clearInterval(t);
   }, []);
 
   const fmt = s => {
@@ -75,17 +81,18 @@ export default function Dashboard() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, zIndex: 1, position: 'relative' }}>
+      {statsError && <div style={{ color: '#ff3366', fontSize: 13, marginBottom: -12 }}>Error loading metrics: {statsError}</div>}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16 }}>
-        <StatCard title="HIGH RISK" targetValue={summary?.high_risk_accounts ?? 0} color="var(--accent)" />
-        <StatCard title="ALERTS" targetValue={summary?.active_alerts ?? 0} color="var(--accent)" />
-        <StatCard title="TXNS REVIEW" targetValue={summary?.transactions_flagged ?? 0} color="var(--accent)" />
+        <StatCard title="HIGH RISK" targetValue={stats?.mule_accounts_flagged ?? 0} color="var(--accent)" loading={statsLoading} />
+        <StatCard title="ALERTS" targetValue={stats?.active_threats ?? 0} color="var(--accent)" loading={statsLoading} />
+        <StatCard title="TXNS REVIEW" targetValue={stats?.txns_under_review_amount ?? 0} isCurrency={true} color="var(--accent)" loading={statsLoading} />
         <StatCard title="ON-CHAIN BLOCKED" targetValue={blockedCount} color="var(--text-main)" />
         <GlassCard style={{ padding: 20, background: 'rgba(0, 255, 65, 0.05)', border: '1px solid rgba(0, 255, 65, 0.2)' }}>
           <div style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600, letterSpacing: '0.05em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', animation: 'blink 1s infinite' }} /> RECOVERY WINDOW
           </div>
           <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--accent)', fontFamily: "'JetBrains Mono', monospace" }}>
-            {fmt(timeLeft)}
+            {statsLoading ? "00:00:00" : fmt(timeLeft)}
           </div>
         </GlassCard>
       </div>
@@ -164,7 +171,7 @@ export default function Dashboard() {
                 { label: 'SOC Integration', color: 'var(--accent)', text: 'ACTIVE' },
                 { label: 'AML Engine', color: 'var(--accent)', text: 'ACTIVE' },
                 { label: 'Gemini AI', color: 'var(--special)', text: 'CONNECTED' },
-                { label: 'Accounts Monitored', color: 'var(--info)', text: summary ? `${summary.total_accounts}` : '…' },
+                { label: 'Accounts Monitored', color: 'var(--info)', text: stats ? `${stats.mule_accounts_flagged}` : '…' },
               ].map(({ label, color, text }) => (
                 <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '10px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.05)' }}>
                   <span style={{ fontSize: 13, color: 'var(--text-main)' }}>{label}</span>

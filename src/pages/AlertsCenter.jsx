@@ -1,24 +1,28 @@
 import React, { useState } from "react";
-
-const alertsData = [
-  { id: 1, user: "Ajay K.", accountId: "ACC-4821", cyber: 87, transaction: 91, action: "New device login from Mumbai + ₹85,000 transfer to unknown account", time: "2 min ago", status: "Open", severity: "CRITICAL" },
-  { id: 2, user: "Priya S.", accountId: "ACC-3317", cyber: 74, transaction: 82, action: "Password changed + login from new city (Delhi) + large transfer", time: "8 min ago", status: "Open", severity: "HIGH" },
-  { id: 3, user: "Ravi M.", accountId: "ACC-9042", cyber: 61, transaction: 58, action: "Multiple failed logins + transaction at 3AM outside normal hours", time: "20 min ago", status: "Under Review", severity: "MEDIUM" },
-  { id: 4, user: "Sneha R.", accountId: "ACC-1155", cyber: 90, transaction: 88, action: "VPN login from foreign IP + rapid 3 transfers in under 2 minutes", time: "35 min ago", status: "Open", severity: "CRITICAL" },
-  { id: 5, user: "Karan T.", accountId: "ACC-7723", cyber: 45, transaction: 60, action: "Unusual receiver account + amount 4x higher than monthly average", time: "1 hr ago", status: "Resolved", severity: "MEDIUM" },
-  { id: 6, user: "Meena V.", accountId: "ACC-6610", cyber: 78, transaction: 72, action: "New browser fingerprint + login from unrecognized device", time: "2 hr ago", status: "Under Review", severity: "HIGH" },
-];
+import { useApi } from "../hooks/useApi";
+import { getAlerts, updateAlertStatus } from "../utils/api";
 
 const SEV = {
-  CRITICAL: { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", label: "CRITICAL", ring: "#ffffff44" },
-  HIGH:     { color: "#A8EF00", bg: "#A8EF0014", glow: "#A8EF0033", label: "HIGH",     ring: "#A8EF0044" },
-  MEDIUM:   { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", label: "MEDIUM",   ring: "#ffffff44" },
-  LOW:      { color: "#00FF41", bg: "#00FF4114", glow: "#00FF4133", label: "LOW",       ring: "#00FF4144" },
+  CRITICAL: { color: "#FF3366", bg: "rgba(255, 51, 102, 0.08)", glow: "rgba(255, 51, 102, 0.2)", label: "CRITICAL", ring: "rgba(255, 51, 102, 0.3)" },
+  HIGH:     { color: "#FFAA00", bg: "rgba(255, 170, 0, 0.08)", glow: "rgba(255, 170, 0, 0.2)", label: "HIGH",     ring: "rgba(255, 170, 0, 0.3)" },
+  MEDIUM:   { color: "#FFDD00", bg: "rgba(255, 221, 0, 0.08)", glow: "rgba(255, 221, 0, 0.2)", label: "MEDIUM",   ring: "rgba(255, 221, 0, 0.3)" },
+  LOW:      { color: "#00FF41", bg: "rgba(0, 255, 65, 0.08)", glow: "rgba(0, 255, 65, 0.2)", label: "LOW",       ring: "rgba(0, 255, 65, 0.3)" },
 };
 const STAT = {
-  Open:          { color: "#ffffff", bg: "#ffffff14" },
-  "Under Review":{ color: "#ffffff", bg: "#ffffff14" },
-  Resolved:      { color: "#00FF41", bg: "#00FF4114" },
+  Open:          { color: "#ffffff", bg: "rgba(255, 255, 255, 0.08)" },
+  "Under Review":{ color: "#FFAA00", bg: "rgba(255, 170, 0, 0.08)" },
+  Resolved:      { color: "#00FF41", bg: "rgba(0, 255, 65, 0.08)" },
+};
+
+const formatTime = (dateStr) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000);
+    if (diff < 60) return "Just now";
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+    return date.toLocaleDateString();
 };
 
 function ScoreBar({ value, color }) {
@@ -39,14 +43,22 @@ function ScoreBar({ value, color }) {
 }
 
 export default function AlertsCenter() {
-  const [alerts, setAlerts] = useState(alertsData);
+  const { data: alertsRaw, loading, error, refetch } = useApi(getAlerts);
   const [filter, setFilter] = useState("All");
   const [hovered, setHovered] = useState(null);
   const filters = ["All", "Open", "Under Review", "Resolved"];
 
+  const alerts = alertsRaw || [];
   const filtered = filter === "All" ? alerts : alerts.filter(a => a.status === filter);
 
-  const update = (id, status) => setAlerts(prev => prev.map(a => a.id === id ? { ...a, status } : a));
+  const handleUpdate = async (id, status) => {
+      try {
+          await updateAlertStatus(id, status);
+          refetch();
+      } catch (err) {
+          alert("Update failed: " + err.message);
+      }
+  };
 
   const counts = {
     open: alerts.filter(a => a.status === "Open").length,
@@ -106,15 +118,17 @@ export default function AlertsCenter() {
 
       {/* Alert Cards */}
       <div style={styles.list}>
-        {filtered.map((alert, i) => {
-          const sev = SEV[alert.severity];
-          const sta = STAT[alert.status];
-          const isHov = hovered === alert.id;
+        {loading && <div className="skeleton-pulse" style={{ height: 400, borderRadius: 12, background: 'rgba(255,255,255,0.05)' }} />}
+        {error && <div style={{ color: '#ff3366', padding: 20, textAlign: 'center' }}>{error}</div>}
+        {!loading && filtered.map((alert, i) => {
+          const sev = SEV[alert.severity] || SEV.MEDIUM;
+          const sta = STAT[alert.status] || STAT.Open;
+          const isHov = hovered === alert.alert_id;
           return (
             <div
-              key={alert.id}
+              key={alert.alert_id}
               className="hover-card"
-              onMouseEnter={() => setHovered(alert.id)}
+              onMouseEnter={() => setHovered(alert.alert_id)}
               onMouseLeave={() => setHovered(null)}
               style={{
                 ...styles.card,
@@ -130,12 +144,12 @@ export default function AlertsCenter() {
                 {/* Top row */}
                 <div style={styles.cardTop}>
                   <div style={styles.cardLeft}>
-                    <div style={{ ...styles.avatar, boxShadow: `0 0 12px ${sev.color}44`, borderColor: sev.color + "44" }}>
-                      <span style={{ color: "#0a0f1a", fontWeight: 800 }}>{alert.user.charAt(0)}</span>
+                    <div style={{ ...styles.avatar, boxShadow: `0 0 12px ${sev.color}44`, borderColor: sev.color + "44", background: `linear-gradient(135deg, ${sev.color}, #ffffff)` }}>
+                      <span style={{ color: "#0a0f1a", fontWeight: 800 }}>{alert.account_id.charAt(0)}</span>
                     </div>
                     <div>
-                      <div style={styles.userName}>{alert.user}</div>
-                      <div style={{ ...styles.accountId, fontFamily: "'JetBrains Mono', monospace" }}>{alert.accountId}</div>
+                      <div style={styles.userName}>{alert.account_id}</div>
+                      <div style={{ ...styles.accountId, fontFamily: "'JetBrains Mono', monospace" }}>SYSTEM_ALERT_{alert.alert_id.slice(0, 8)}</div>
                     </div>
                   </div>
                   <div style={styles.badges}>
@@ -151,34 +165,34 @@ export default function AlertsCenter() {
                 {/* Scores */}
                 <div style={styles.scoresGrid}>
                   <div>
-                    <div style={styles.scoreTitle}>Cyber Risk</div>
-                    <ScoreBar value={alert.cyber} color="#00FF41" />
+                    <div style={styles.scoreTitle}>Cyber Signal</div>
+                    <ScoreBar value={alert.severity === 'CRITICAL' ? 95 : alert.severity === 'HIGH' ? 75 : 55} color={sev.color} />
                   </div>
                   <div>
-                    <div style={styles.scoreTitle}>Txn Risk</div>
-                    <ScoreBar value={alert.transaction} color="#ffffff" />
+                    <div style={styles.scoreTitle}>Account Score</div>
+                    <ScoreBar value={80} color="#ffffff" />
                   </div>
                 </div>
 
                 {/* Action text */}
                 <div style={styles.actionBox}>
                   <span style={{ color: sev.color, marginRight: 6 }}>[!]</span>
-                  <span style={{ color: "#8499b8", fontSize: 12 }}>{alert.action}</span>
+                  <span style={{ color: "#8499b8", fontSize: 12 }}>{alert.description}</span>
                 </div>
 
                 {/* Footer */}
                 <div style={styles.cardFooter}>
                   <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "#3a5070" }}>
-                    🕐 {alert.time}
+                    🕐 {formatTime(alert.created_at)}
                   </span>
                   <div style={{ display: "flex", gap: 8 }}>
-                    {alert.status !== "Under Review" && (
-                      <button onClick={() => update(alert.id, "Under Review")} style={{ ...styles.btn, color: "#ffffff", borderColor: "#ffffff44", background: "#ffffff0a" }}>
+                    {alert.status !== "Under Review" && alert.status !== "Resolved" && (
+                      <button onClick={() => handleUpdate(alert.alert_id, "Under Review")} style={{ ...styles.btn, color: "#ffffff", borderColor: "#ffffff44", background: "#ffffff0a" }}>
                         Review
                       </button>
                     )}
                     {alert.status !== "Resolved" && (
-                      <button onClick={() => update(alert.id, "Resolved")} style={{ ...styles.btn, color: "#00FF41", borderColor: "#00FF4144", background: "#00FF410a" }}>
+                      <button onClick={() => handleUpdate(alert.alert_id, "Resolved")} style={{ ...styles.btn, color: "#00FF41", borderColor: "#00FF4144", background: "#00FF410a" }}>
                         Resolve
                       </button>
                     )}
@@ -188,7 +202,7 @@ export default function AlertsCenter() {
             </div>
           );
         })}
-        {filtered.length === 0 && (
+        {!loading && filtered.length === 0 && (
           <div style={styles.empty}>
             <div style={{ fontSize: 40, marginBottom: 12 }}>✅</div>
             <div style={{ color: "#00FF41", fontWeight: 700 }}>All clear</div>
