@@ -13,6 +13,7 @@ import { BlockchainProvider } from "./context/BlockchainContext";
 import BlockchainDemoPage from "./pages/BlockchainDemo";
 import SetupPage from "./pages/SetupPage";
 import PaymentDemoPage from "./pages/PaymentDemo";
+import SARGenerator from "./pages/SARGenerator";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/blockchain" element={<BlockchainDemoPage />} />
             <Route path="/setup" element={<SetupPage />} />
             <Route path="/payments" element={<PaymentDemoPage />} />
+            <Route path="/sar" element={<SARGenerator />} />
           </Routes>
         </Layout>
         <MetaMaskPanel onFraudAlert={(alert) => console.log("[CyberFusion] Fraud alert:", alert)} />

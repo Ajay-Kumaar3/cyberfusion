@@ -47,3 +47,6 @@ export const fetchAlerts = (params = {}) => {
 };
 export const updateAlertStatus = (id, status) => patch(`/alerts/${id}`, { status });
 export const explainAlert = (id) => post(`/alerts/${id}/explain`, {});
+
+// ── SAR Generator ─────────────────────────────────────────────────────────────
+export const generateSAR = (accountId) => post("/sar/generate", { account_id: accountId });
