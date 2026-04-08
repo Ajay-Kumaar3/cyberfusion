@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as d3 from 'd3';
-import { KILL_CHAIN_DATA } from '../data/killChainData';
+import { KILL_CHAIN_DATA as KILL_CHAIN_FALLBACK_DATA } from '../data/killChainData';
 import GlassCard from '../components/GlassCard';
 import GeminiPanel from '../components/GeminiPanel';
+import { getKillChain } from '../api/api';
 
 const ICONS = {
     ATTACK_ORIGIN: "💀",
@@ -10,7 +11,8 @@ const ICONS = {
     COMPROMISED_ACCOUNT: "🔓",
     MULE_ACCOUNT: "💰",
     TRANSACTION: "↔️",
-    EXIT_POINT: "🏦"
+    EXIT_POINT: "🏦",
+    LOGIN_ANOMALY: "📍"
 };
 
 const COLORS = {
@@ -19,16 +21,41 @@ const COLORS = {
     COMPROMISED_ACCOUNT: "#00FF41",
     MULE_ACCOUNT: "#A8EF00",
     TRANSACTION: "#00FF41",
-    EXIT_POINT: "#A8EF00"
+    EXIT_POINT: "#A8EF00",
+    LOGIN_ANOMALY: "#00d4ff"
 };
 
 export default function KillChain() {
     const d3Container = useRef(null);
     const [selectedNode, setSelectedNode] = useState(null);
     const [triggerAI, setTriggerAI] = useState(0); // Used to re-trigger AI analysis
+    const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
+    const [graphStats, setGraphStats] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const loadGraph = useCallback(async () => {
+        setLoading(true);
+        try {
+            const data = await getKillChain();
+            setGraphData({ nodes: data.nodes, edges: data.edges });
+            setGraphStats(data.stats);
+        } catch (err) {
+            console.warn('Kill chain backend unavailable, using fallback data');
+            setGraphData(KILL_CHAIN_FALLBACK_DATA);
+            setGraphStats(null);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
-        if (!d3Container.current) return;
+        loadGraph();
+        const interval = setInterval(loadGraph, 30000);
+        return () => clearInterval(interval);
+    }, [loadGraph]);
+
+    useEffect(() => {
+        if (!d3Container.current || loading) return;
 
         // Clear previous if any
         d3.select(d3Container.current).selectAll("*").remove();
@@ -51,8 +78,8 @@ export default function KillChain() {
         feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
         // Clone data so d3 mutations don't affect original
-        const nodes = KILL_CHAIN_DATA.nodes.map(d => Object.create(d));
-        const edges = KILL_CHAIN_DATA.edges.map(d => Object.create(d));
+        const nodes = graphData.nodes.map(d => Object.create(d));
+        const edges = graphData.edges.map(d => Object.create(d));
 
         const simulation = d3.forceSimulation(nodes)
             .force("link", d3.forceLink(edges).id(d => d.id).distance(100))
@@ -190,19 +217,43 @@ export default function KillChain() {
                 .on("drag", dragged)
                 .on("end", dragended);
         }
-    }, []);
+    }, [graphData, loading]);
 
     return (
         <div style={{ display: 'flex', height: 'calc(100vh - 120px)', gap: 24 }}>
+            <style>{`
+                @keyframes pulse {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.5; }
+                }
+            `}</style>
             {/* Graph Area */}
             <GlassCard style={{ flex: 1, padding: 0, overflow: 'hidden', position: 'relative' }}>
-                <div style={{ position: 'absolute', top: 20, left: 20, zIndex: 1, background: 'rgba(0,0,0,0.5)', padding: '12px 16px', borderRadius: 8, backdropFilter: 'blur(10px)', border: '1px solid rgba(0, 255, 65, 0.15)' }}>
+                <div style={{ position: 'absolute', top: 20, left: 20, zIndex: 2, background: 'rgba(0,0,0,0.5)', padding: '12px 16px', borderRadius: 8, backdropFilter: 'blur(10px)', border: '1px solid rgba(0, 255, 65, 0.15)' }}>
                     <h3 style={{ margin: 0, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, color: '#ffffff' }}>
                         <span style={{ fontSize: 16 }}>🕸️</span> LIVE KILL CHAIN DIAGRAM
                     </h3>
                     <div style={{ fontSize: 11, color: '#7A8E7A', marginTop: 4 }}>Graph updates automatically when connections are discovered</div>
                 </div>
-                <div style={{ position: 'absolute', bottom: 20, left: 20, zIndex: 1, display: 'flex', gap: 12, flexWrap: 'wrap', width: 400 }}>
+                
+                {graphStats && !loading && (
+                    <div style={{ position: 'absolute', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 2, textAlign: 'center', fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(0, 255, 136, 0.6)', letterSpacing: '0.05em' }}>
+                        {graphStats.total_nodes} NODES  ·  {graphStats.total_edges} EDGES  ·  {graphStats.mule_accounts} MULES  ·  ₹{parseInt(graphStats.total_exposure).toLocaleString()} EXPOSURE
+                    </div>
+                )}
+                
+                <div style={{ position: 'absolute', top: 20, right: 20, zIndex: 2, display: 'flex', gap: 10 }}>
+                    <button className="hover-lift" onClick={loadGraph} style={{
+                        padding: '8px 16px', background: 'rgba(0, 255, 65, 0.05)', color: '#00FF41',
+                        border: '1px solid rgba(0, 255, 65, 0.3)', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer',
+                        fontFamily: "Space Grotesk, sans-serif", fontSize: 12, boxShadow: '0 4px 12px rgba(0, 255, 65, 0.1)', letterSpacing: '0.05em'
+                    }}>
+                        ↻ REFRESH GRAPH
+                    </button>
+                    {/* Placeholder for REPLAY ATTACK if it existed here */}
+                </div>
+
+                <div style={{ position: 'absolute', bottom: 20, left: 20, zIndex: 2, display: 'flex', gap: 12, flexWrap: 'wrap', width: 400 }}>
                     {Object.entries(COLORS).map(([key, col]) => (
                         <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: '#ffffff' }}>
                             <div style={{ width: 10, height: 10, borderRadius: '50%', background: col }}></div>
@@ -210,7 +261,24 @@ export default function KillChain() {
                         </div>
                     ))}
                 </div>
-                <div ref={d3Container} style={{ width: '100%', height: '100%' }}></div>
+
+                {loading && (
+                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10, background: 'rgba(0,0,0,0.6)' }}>
+                        <div style={{ fontFamily: "'JetBrains Mono', monospace", color: '#00ff88', fontSize: 14, letterSpacing: '0.1em', animation: 'pulse 1.5s infinite' }}>
+                            COMPUTING KILL CHAIN...
+                        </div>
+                    </div>
+                )}
+
+                {!loading && graphData.nodes.length === 0 && (
+                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
+                        <div style={{ fontFamily: "'JetBrains Mono', monospace", color: '#7A8E7A', fontSize: 14, letterSpacing: '0.1em' }}>
+                            No threat data available — run seed.py
+                        </div>
+                    </div>
+                )}
+
+                <div ref={d3Container} style={{ width: '100%', height: '100%', opacity: loading ? 0 : 1 }}></div>
             </GlassCard>
 
             {/* Right Panel */}

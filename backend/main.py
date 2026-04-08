@@ -10,7 +10,7 @@ import models
 # Create all tables on startup
 models.Base.metadata.create_all(bind=engine)
 
-from routes import accounts, login_events, transactions, alerts, dashboard
+from routes import accounts, login_events, transactions, alerts, dashboard, killchain
 
 app = FastAPI(
     title="CyberFusion API",
@@ -33,6 +33,7 @@ app.include_router(login_events.router, prefix="/api")
 app.include_router(transactions.router, prefix="/api")
 app.include_router(alerts.router, prefix="/api")
 app.include_router(dashboard.router, prefix="/api")
+app.include_router(killchain.router, prefix="/api")
 
 
 @app.get("/api")
