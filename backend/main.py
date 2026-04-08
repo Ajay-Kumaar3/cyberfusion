@@ -13,8 +13,7 @@ import models
 models.Base.metadata.create_all(bind=engine)
 
 from ws_manager import manager
-
-from routes import accounts, login_events, transactions, alerts, dashboard, simulate, killchain
+from routes import accounts, login_events, transactions, alerts, dashboard, simulate, killchain, sar
 
 app = FastAPI(
     title="CyberFusion API",
@@ -38,6 +37,7 @@ app.include_router(transactions.router, prefix="/api")
 app.include_router(alerts.router, prefix="/api")
 app.include_router(dashboard.router, prefix="/api")
 app.include_router(simulate.router, prefix="/api")
+app.include_router(sar.router, prefix="/api")
 app.include_router(killchain.router, prefix="/api")
 
 @app.websocket("/ws/alerts")
@@ -81,4 +81,5 @@ if os.path.isdir(build_dir):
         index_path = os.path.join(build_dir, "index.html")
         if os.path.isfile(index_path):
             return FileResponse(index_path)
-        return {"error": "React build not found. Run npm run build."}
+        index_path_root = os.path.join(build_dir, "index.html")
+        return FileResponse(index_path_root)

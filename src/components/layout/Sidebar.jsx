@@ -32,6 +32,7 @@ export default function Sidebar() {
     { label: "Payment Demo", path: "/payments", icon: <Activity size={18} />, highlight: true },
     { label: "Cyber Risk SOC", path: "/cyber-risk", icon: <ShieldAlert size={18} /> },
     { label: "AI Reports", path: "/reports", icon: <FileText size={18} /> },
+    { label: "SAR Generator", path: "/sar", icon: <FileText size={18} />, special: true },
     { label: "Live Demo", path: "/blockchain", icon: <LinkIcon size={18} />, special: true }
   ];
 

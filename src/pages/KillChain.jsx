@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as d3 from 'd3';
+import { KILL_CHAIN_DATA as KILL_CHAIN_FALLBACK_DATA } from '../data/killChainData';
 import GlassCard from '../components/GlassCard';
 import GeminiPanel from '../components/GeminiPanel';
+import { getKillChain, startAttackSimulation } from '../api/api';
 import { useAlerts } from '../context/AlertContext';
-import { startAttackSimulation, getKillChain } from '../utils/api';
 
 const ICONS = {
     ATTACK_ORIGIN: "💀",
@@ -11,7 +12,8 @@ const ICONS = {
     COMPROMISED_ACCOUNT: "🔓",
     MULE_ACCOUNT: "💰",
     TRANSACTION: "↔️",
-    EXIT_POINT: "🏦"
+    EXIT_POINT: "🏦",
+    LOGIN_ANOMALY: "📍"
 };
 
 const COLORS = {
@@ -20,14 +22,17 @@ const COLORS = {
     COMPROMISED_ACCOUNT: "#FF3366",
     MULE_ACCOUNT: "#FFAA00",
     TRANSACTION: "#00FF41",
-    EXIT_POINT: "#FFAA00"
+    EXIT_POINT: "#A8EF00",
+    LOGIN_ANOMALY: "#00d4ff"
 };
 
 export default function KillChain() {
     const d3Container = useRef(null);
-    const [graphData, setGraphData] = useState(null);
     const [selectedNode, setSelectedNode] = useState(null);
-    const [triggerAI, setTriggerAI] = useState(0);
+    const [triggerAI, setTriggerAI] = useState(0); // Used to re-trigger AI analysis
+    const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
+    const [graphStats, setGraphStats] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const { refreshGraphTrigger } = useAlerts();
     const [simRunning, setSimRunning] = useState(false);
@@ -36,20 +41,28 @@ export default function KillChain() {
     const [elapsed, setElapsed] = useState(0);
 
     const loadGraph = useCallback(async () => {
+        setLoading(true);
         try {
             const data = await getKillChain();
-            setGraphData(data);
+            setGraphData({ nodes: data.nodes, edges: data.edges });
+            setGraphStats(data.stats);
         } catch (err) {
-            console.error("Failed to load kill chain:", err);
+            console.warn('Kill chain backend unavailable, using fallback data');
+            setGraphData(KILL_CHAIN_FALLBACK_DATA);
+            setGraphStats(null);
+        } finally {
+            setLoading(false);
         }
     }, []);
 
     useEffect(() => {
         loadGraph();
+        const interval = setInterval(loadGraph, 30000);
+        return () => clearInterval(interval);
     }, [loadGraph, refreshGraphTrigger]);
 
     useEffect(() => {
-        if (!d3Container.current) return;
+        if (!d3Container.current || loading) return;
 
         // Clear previous if any
         d3.select(d3Container.current).selectAll("*").remove();
@@ -72,7 +85,6 @@ export default function KillChain() {
         feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
         // Clone data so d3 mutations don't affect original
-        if (!graphData || !graphData.nodes || !graphData.edges) return;
         const nodes = graphData.nodes.map(d => Object.create(d));
         const edges = graphData.edges.map(d => Object.create(d));
 
@@ -169,7 +181,6 @@ export default function KillChain() {
             });
         });
 
-        // Replay animation (SVG strokes drawing)
         const animateDelay = 1000;
         linkPaths.transition()
             .delay((d, i) => i * (animateDelay / 4))
@@ -185,7 +196,6 @@ export default function KillChain() {
                     .style("animation", "dash 30s linear infinite");
             });
 
-        // Dash animation for CSS
         svg.append('style').text(`
       @keyframes dash {
         to { stroke-dashoffset: -1000; }
@@ -212,7 +222,7 @@ export default function KillChain() {
                 .on("drag", dragged)
                 .on("end", dragended);
         }
-    }, [graphData]);
+    }, [graphData, loading]);
 
     const handleSim = async () => {
         setSimRunning(true);
@@ -231,7 +241,6 @@ export default function KillChain() {
                 { t: 90, step: 5, msg: "T+90s → Kill chain graph updated" },
             ];
 
-            // Local progress timer
             let tick = 0;
             const timer = setInterval(() => {
                 tick++;
@@ -257,9 +266,25 @@ export default function KillChain() {
 
     return (
         <div style={{ display: 'flex', height: 'calc(100vh - 120px)', gap: 24 }}>
+            <style>{`
+                @keyframes pulse {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.5; }
+                }
+                @keyframes pulse-amber {
+                    0%, 100% { box-shadow: 0 0 10px rgba(255, 170, 0, 0.2); }
+                    50% { box-shadow: 0 0 25px rgba(255, 170, 0, 0.5); }
+                }
+                @keyframes pulse-glow {
+                    0%, 100% { opacity: 1; transform: scale(1); }
+                    50% { opacity: 0.5; transform: scale(1.2); }
+                }
+            `}</style>
+            
             {/* Graph Area */}
             <GlassCard style={{ flex: 1, padding: 0, overflow: 'hidden', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-                <div style={{ position: 'absolute', top: 20, left: 20, zIndex: 1, background: 'rgba(0,0,0,0.6)', padding: '16px', borderRadius: 12, backdropFilter: 'blur(10px)', border: '1px solid rgba(0, 255, 65, 0.2)', display: 'flex', alignItems: 'center', gap: 20 }}>
+                {/* Header Overlay */}
+                <div style={{ position: 'absolute', top: 20, left: 20, zIndex: 10, background: 'rgba(0,0,0,0.6)', padding: '16px', borderRadius: 12, backdropFilter: 'blur(10px)', border: '1px solid rgba(0, 255, 65, 0.2)', display: 'flex', alignItems: 'center', gap: 20 }}>
                     <div>
                         <h3 style={{ margin: 0, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, color: '#ffffff' }}>
                             <span style={{ fontSize: 16 }}>🕸️</span> LIVE KILL CHAIN DIAGRAM
@@ -270,12 +295,19 @@ export default function KillChain() {
                                 marginLeft: 4
                             }} title="WebSocket Active" />
                         </h3>
-                        <div style={{ fontSize: 11, color: '#7A8E7A', marginTop: 4 }}>Graph updates automatically via WebSockets</div>
+                        <div style={{ fontSize: 11, color: '#7A8E7A', marginTop: 4 }}>Graph updates automatically when connections are discovered</div>
                     </div>
 
                     <div style={{ width: 1, height: 30, background: 'rgba(255,255,255,0.1)' }} />
 
                     <div style={{ display: 'flex', gap: 10 }}>
+                        <button className="hover-lift" onClick={loadGraph} style={{
+                            padding: '8px 16px', background: 'rgba(0, 255, 65, 0.05)', color: '#00FF41',
+                            border: '1px solid rgba(0, 255, 65, 0.3)', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer',
+                            fontSize: 11, letterSpacing: '0.05em'
+                        }}>
+                            ↻ REFRESH
+                        </button>
                         <button 
                             className="hover-lift"
                             onClick={handleSim}
@@ -297,22 +329,37 @@ export default function KillChain() {
                                 animation: simRunning ? 'pulse-amber 2s infinite' : 'none'
                             }}
                         >
-                            {simRunning ? `SIMULATING... ${90 - elapsed}s` : '⚡ SIMULATE NEW ATTACK'}
+                            {simRunning ? `SIMULATING... ${90 - elapsed}s` : '⚡ ATTACK SIMULATION'}
                         </button>
                     </div>
                 </div>
 
-                <div ref={d3Container} style={{ width: '100%', flex: 1 }}></div>
+                {/* Top Stats Overlay */}
+                {graphStats && !loading && (
+                    <div style={{ position: 'absolute', top: 20, left: '55%', transform: 'translateX(-50%)', zIndex: 5, textAlign: 'center', fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(0, 255, 136, 0.6)', letterSpacing: '0.05em', background: 'rgba(0,0,0,0.3)', padding: '8px 16px', borderRadius: 20 }}>
+                        {graphStats.total_nodes} NODES  ·  {graphStats.total_edges} EDGES  ·  {graphStats.mule_accounts} MULES  ·  ₹{parseInt(graphStats.total_exposure).toLocaleString()} EXPOSURE
+                    </div>
+                )}
+
+                <div ref={d3Container} style={{ width: '100%', flex: 1, opacity: loading ? 0 : 1 }}></div>
+
+                {loading && (
+                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, background: 'rgba(0,0,0,0.6)' }}>
+                        <div style={{ fontFamily: "'JetBrains Mono', monospace", color: '#00ff88', fontSize: 14, letterSpacing: '0.1em', animation: 'pulse 1.5s infinite' }}>
+                            COMPUTING KILL CHAIN...
+                        </div>
+                    </div>
+                )}
 
                 {/* Simulation Progress Panel */}
                 {(simRunning || simLog.length > 0) && (
                     <div style={{ 
-                        position: 'absolute', bottom: 20, left: 20, right: 20, zIndex: 10,
-                        background: 'rgba(10, 15, 26, 0.9)', 
+                        position: 'absolute', bottom: 20, left: 20, right: 20, zIndex: 100,
+                        background: 'rgba(10, 15, 26, 0.95)', 
                         border: '1px solid rgba(255, 170, 0, 0.3)', 
                         borderRadius: 12, padding: 20,
                         backdropFilter: 'blur(10px)',
-                        boxShadow: '0 8px 32px rgba(0,0,0,0.5)'
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.8)'
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -324,7 +371,6 @@ export default function KillChain() {
                             )}
                         </div>
 
-                        {/* Progress Bar Steps */}
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, position: 'relative', padding: '0 40px' }}>
                             <div style={{ position: 'absolute', top: '50%', left: 40, right: 40, height: 2, background: 'rgba(255,255,255,0.1)', zIndex: 0 }} />
                             {[
@@ -354,23 +400,23 @@ export default function KillChain() {
                             })}
                         </div>
 
-                        {/* Terminal Log */}
                         <div style={{ 
                             background: 'rgba(0,0,0,0.4)', borderRadius: 8, padding: 12, 
                             fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#00FF41',
-                            height: 100, overflowY: 'auto'
+                            height: 80, overflowY: 'auto'
                         }}>
                             {simLog.map((log, i) => (
-                                <div key={i} className="typewriter" style={{ marginBottom: 4 }}>
+                                <div key={i} style={{ marginBottom: 4 }}>
                                     {`> ${log}`}
                                 </div>
                             ))}
-                            {simRunning && <div style={{ animation: 'blink 1s infinite' }}>_</div>}
+                            {simRunning && <div style={{ animation: 'blink 1s infinite', display: 'inline-block' }}>_</div>}
                         </div>
                     </div>
                 )}
 
-                <div style={{ position: 'absolute', bottom: 20, left: 20, zIndex: 1, display: 'flex', gap: 12, flexWrap: 'wrap', width: 400 }}>
+                {/* Legend Overlay */}
+                <div style={{ position: 'absolute', bottom: 20, left: 20, zIndex: 5, display: 'flex', gap: 12, flexWrap: 'wrap', width: 400 }}>
                     {Object.entries(COLORS).map(([key, col]) => (
                         <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: '#ffffff' }}>
                             <div style={{ width: 10, height: 10, borderRadius: '50%', background: col }}></div>
@@ -378,7 +424,6 @@ export default function KillChain() {
                         </div>
                     ))}
                 </div>
-                <div ref={d3Container} style={{ width: '100%', height: '100%' }}></div>
             </GlassCard>
 
             {/* Right Panel */}
