@@ -17,7 +17,7 @@ const patch = (url, body) =>
     }).then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); });
 
 // ── Dashboard ────────────────────────────────────────────────────────────────
-export const fetchDashboardSummary = () => get("/dashboard/summary");
+export const fetchDashboardSummary = () => get("/dashboard/stats");
 
 // ── Accounts ─────────────────────────────────────────────────────────────────
 export const fetchAccounts = (params = {}) => {

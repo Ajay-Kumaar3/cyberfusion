@@ -82,4 +82,7 @@ if os.path.isdir(build_dir):
         if os.path.isfile(index_path):
             return FileResponse(index_path)
         index_path_root = os.path.join(build_dir, "index.html")
-        return FileResponse(index_path_root)
+import uvicorn
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
