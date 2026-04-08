@@ -1,14 +1,7 @@
 import React, { useState } from "react";
+import { useApi } from "../hooks/useApi";
+import { fetchLogins } from "../api/api";
 
-const loginData = [
-  { id: 1, user: "Ajay K.", accountId: "ACC-4821", device: "Unknown Android", ip: "103.45.67.89", location: "Mumbai, MH", time: "12:03 PM", flags: ["New Device", "New City", "New IP"], cyberScore: 87, status: "Suspicious" },
-  { id: 2, user: "Priya S.", accountId: "ACC-3317", device: "iPhone 14", ip: "49.32.11.204", location: "Delhi, DL", time: "02:30 PM", flags: ["New City", "Failed OTPs"], cyberScore: 74, status: "Suspicious" },
-  { id: 3, user: "Sneha R.", accountId: "ACC-1155", device: "VPN — Unknown", ip: "185.220.101.5", location: "Foreign IP (NL)", time: "01:15 PM", flags: ["VPN Detected", "New Device", "Foreign IP"], cyberScore: 90, status: "Critical" },
-  { id: 4, user: "Ravi M.", accountId: "ACC-9042", device: "Chrome on Windows", ip: "122.45.67.10", location: "Hyderabad, TS", time: "11:30 AM", flags: ["5 Failed Logins"], cyberScore: 61, status: "Warning" },
-  { id: 5, user: "Karan T.", accountId: "ACC-7723", device: "MacBook Safari", ip: "59.88.23.45", location: "Chennai, TN", time: "09:00 AM", flags: ["Password Changed"], cyberScore: 45, status: "Warning" },
-  { id: 6, user: "Meena V.", accountId: "ACC-6610", device: "Samsung Galaxy", ip: "103.21.55.77", location: "Pune, MH", time: "08:45 AM", flags: ["New Browser", "New Device"], cyberScore: 78, status: "Suspicious" },
-  { id: 7, user: "Divya N.", accountId: "ACC-2201", device: "Trusted iPhone", ip: "59.12.33.88", location: "Bangalore, KA", time: "08:00 AM", flags: [], cyberScore: 12, status: "Safe" },
-];
 
 const STATUS_CFG = {
   Critical:   { color: "#ffffff", bg: "#ffffff14", glow: "#ffffff33", icon: "[x]" },
@@ -42,13 +35,36 @@ function ScoreRing({ score, status }) {
 }
 
 export default function CyberRiskMonitor() {
+  const { data: rawLogins, loading } = useApi(fetchLogins);
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
   const filters = ["All", "Critical", "Suspicious", "Warning", "Safe"];
 
+  const loginData = (rawLogins || []).map(l => {
+    let status = "Safe";
+    if (l.cyber_risk_score >= 85) status = "Critical";
+    else if (l.cyber_risk_score >= 65) status = "Suspicious";
+    else if (l.cyber_risk_score >= 40) status = "Warning";
+
+    const flags = [];
+    if (l.new_device) flags.push("New Device");
+    if (l.new_city) flags.push("New City");
+    if (l.vpn_detected) flags.push("VPN Detected");
+    if (l.failed_logins > 0) flags.push(`${l.failed_logins} Failed Logins`);
+    if (l.password_changed) flags.push("Password Changed");
+
+    return {
+      ...l,
+      status,
+      flags,
+      time: l.timestamp ? new Date(l.timestamp).toLocaleTimeString() : "—",
+      user: l.account_id // Backend doesn't have names in LoginEvent, using ID
+    };
+  });
+
   const filtered = loginData.filter(item => {
     const matchF = filter === "All" || item.status === filter;
-    const matchS = item.user.toLowerCase().includes(search.toLowerCase()) || item.accountId.toLowerCase().includes(search.toLowerCase());
+    const matchS = item.account_id.toLowerCase().includes(search.toLowerCase());
     return matchF && matchS;
   });
 

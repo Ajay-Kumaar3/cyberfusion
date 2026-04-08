@@ -38,19 +38,19 @@ export default function Accounts() {
     }, [accounts, selectedAccId]);
 
     // Get demo wallet if this is a demo account
-    const demoWallet = selectedAcc ? DEMO_CONFIG.MULE_WALLET_MAP[selectedAcc.account_id] : null;
+    const demoWallet = selectedAcc?.account ? DEMO_CONFIG.MULE_WALLET_MAP[selectedAcc.account.account_id] : null;
 
     const handleFreeze = async () => {
-        if (!selectedAcc) return;
+        if (!selectedAcc?.account) return;
         setIsFreezing(true);
         try {
-            await updateAccountStatus(selectedAcc.account_id, 'Frozen');
+            await updateAccountStatus(selectedAcc.account.account_id, 'Frozen');
             await refetchAccounts();
             
             if (walletConnected && demoWallet) {
                 const result = await freezeAccountOnChain(
                     demoWallet,
-                    `Automated freeze by CyberFusion Pro: Risk Score ${selectedAcc.final_score}`,
+                    `Automated freeze by CyberFusion Pro: Risk Score ${selectedAcc.account.final_score}`,
                     signer
                 );
                 setLastTx(result);
@@ -132,20 +132,20 @@ export default function Accounts() {
                             {detailError && <div style={{ color: '#ff3366', fontSize: 12 }}>{detailError}</div>}
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                                 <div>
-                                    <h2 style={{ fontSize: 24, margin: 0, fontFamily: "'JetBrains Mono',monospace", color: '#ffffff' }}>{selectedAcc.account_id}</h2>
+                                    <h2 style={{ fontSize: 24, margin: 0, fontFamily: "'JetBrains Mono',monospace", color: '#ffffff' }}>{selectedAcc.account.account_id}</h2>
                                     <div style={{ color: '#7A8E7A', fontSize: 13, marginTop: 4 }}>Account Profile Detail</div>
                                 </div>
-                                <RiskGauge score={selectedAcc.final_score} size={80} />
+                                <RiskGauge score={selectedAcc.account.final_score} size={80} />
                             </div>
 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
                                 {[
-                                    { label: 'Cyber Risk Score', value: `${selectedAcc.cyber_score}/100`, color: selectedAcc.cyber_score > 70 ? '#00FF41' : '#00CC33' },
-                                    { label: 'Transaction Risk', value: `${selectedAcc.txn_score}/100`, color: selectedAcc.txn_score > 70 ? '#00FF41' : '#00CC33' },
-                                    { label: 'Combined Score', value: `${selectedAcc.final_score}/100`, color: selectedAcc.final_score > 70 ? '#00FF41' : '#00CC33' },
-                                    { label: 'Avg Monthly TXN', value: `₹${(selectedAcc.avg_monthly_transaction || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`, color: '#cdffcd' },
-                                    { label: 'Location', value: selectedAcc.location || '—', color: '#ffffff' },
-                                    { label: 'Status', value: selectedAcc.status, color: statusColor(selectedAcc.status) },
+                                    { label: 'Cyber Risk Score', value: `${selectedAcc.account.cyber_score}/100`, color: selectedAcc.account.cyber_score > 70 ? '#00FF41' : '#00CC33' },
+                                    { label: 'Transaction Risk', value: `${selectedAcc.account.txn_score}/100`, color: selectedAcc.account.txn_score > 70 ? '#00FF41' : '#00CC33' },
+                                    { label: 'Combined Score', value: `${selectedAcc.account.final_score}/100`, color: selectedAcc.account.final_score > 70 ? '#00FF41' : '#00CC33' },
+                                    { label: 'Avg Monthly TXN', value: `₹${(selectedAcc.account.avg_monthly_transaction || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`, color: '#cdffcd' },
+                                    { label: 'Location', value: selectedAcc.account.location || '—', color: '#ffffff' },
+                                    { label: 'Status', value: selectedAcc.account.status, color: statusColor(selectedAcc.account.status) },
                                 ].map(({ label, value, color }) => (
                                     <div key={label} style={{ background: 'rgba(0,0,0,0.3)', padding: 12, borderRadius: 8, border: '1px solid rgba(255,255,255,0.05)' }}>
                                         <div style={{ fontSize: 10, color: '#7A8E7A', marginBottom: 4 }}>{label}</div>
@@ -170,9 +170,9 @@ export default function Accounts() {
                             </button>
 
                             <GeminiPanel
-                                prompt={`Analyze this banking account for money mule risk. Account ID: ${selectedAcc.account_id}, Risk Level: ${selectedAcc.risk_level}, Cyber Score: ${selectedAcc.cyber_score}/100, Transaction Risk: ${selectedAcc.txn_score}/100, Combined Score: ${selectedAcc.final_score}/100, Status: ${selectedAcc.status}, Location: ${selectedAcc.location}. Give a 3-sentence investigator summary with recommended action.`}
+                                prompt={`Analyze this banking account for money mule risk. Account ID: ${selectedAcc.account.account_id}, Risk Level: ${selectedAcc.account.risk_level}, Cyber Score: ${selectedAcc.account.cyber_score}/100, Transaction Risk: ${selectedAcc.account.txn_score}/100, Combined Score: ${selectedAcc.account.final_score}/100, Status: ${selectedAcc.account.status}, Location: ${selectedAcc.account.location}. Give a 3-sentence investigator summary with recommended action.`}
                                 trigger={triggerAI}
-                                dataContext={selectedAcc}
+                                dataContext={selectedAcc.account}
                             />
 
                             <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
