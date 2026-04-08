@@ -3,7 +3,7 @@ import GlassCard from "../components/GlassCard";
 import GeminiPanel from "../components/GeminiPanel";
 import { ShieldAlert, Globe } from "lucide-react";
 import { useApi } from "../hooks/useApi";
-import { getLoginEvents, getAccounts } from "../utils/api";
+import { fetchLogins, fetchAccounts } from "../api/api";
 
 const getSeverity = s => s >= 75 ? "CRIT" : s >= 45 ? "HIGH" : "MED";
 const sevColor = s => s === "CRIT" ? "#FF3366" : s === "HIGH" ? "#FFAA00" : "#FFDD00";
@@ -21,8 +21,8 @@ const deriveEvent = ev => {
 };
 
 export default function CyberRisk() {
-    const { data: rawEvents, loading: loginsLoading } = useApi(getLoginEvents);
-    const { data: allAccounts, loading: accountsLoading } = useApi(getAccounts);
+    const { data: rawEvents, loading: loginsLoading } = useApi(fetchLogins);
+    const { data: allAccounts, loading: accountsLoading } = useApi(fetchAccounts);
     const [reportTrigger, setReportTrigger] = useState(0);
 
     const loading = loginsLoading || accountsLoading;

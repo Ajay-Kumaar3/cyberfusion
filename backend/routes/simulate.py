@@ -103,7 +103,7 @@ async def run_attack_simulation():
             "status": "Compromised",
             "risk_level": "Critical",
             "cyber_score": 91,
-            "final_score": 78
+            "final_score": 88
         })
         db.commit()
 
@@ -133,7 +133,7 @@ async def run_attack_simulation():
                 "Unknown Wallet 0x8f2a",
                 "Offshore Account Ltd"
             ]),
-            status="FLAGGED",
+            status="BLOCKED",
             created_at=datetime.utcnow()
         )
         db.add(txn)

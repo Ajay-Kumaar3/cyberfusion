@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import GlassCard from "../components/GlassCard";
-import { FileText, Download, Target, AlertTriangle, Link as LinkIcon, Copy } from "lucide-react";
+import { FileText, Download, Link as LinkIcon, Copy } from "lucide-react";
 import { fetchAccounts, generateSAR } from "../api/api";
 import { freezeAccountOnChain, connectWallet } from "../utils/blockchain";
 
@@ -41,6 +41,8 @@ export default function SARGenerator() {
     const [sarData, setSarData] = useState(null);
     const [logs, setLogs] = useState([]);
     const [copied, setCopied] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
 
     // Typing hooks for sections
     const [startS2, setStartS2] = useState(false);
@@ -49,11 +51,21 @@ export default function SARGenerator() {
 
     const [s2Display, s2Done] = useTypingEffect(sarData?.section2_narrative, 15, startS2);
     const [s3Display, s3Done] = useTypingEffect(sarData?.section3?.narrative, 15, startS3);
-    const [s5Display, s5Done] = useTypingEffect(sarData?.section5_recommendation, 15, startS5);
+    const [s5Display] = useTypingEffect(sarData?.section5_recommendation, 15, startS5);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     useEffect(() => {
         fetchAccounts().then(allAccs => {
-            const flagged = allAccs.filter(a => ['FLAGGED', 'COMPROMISED', 'FROZEN'].includes(a.status));
+            const flagged = allAccs.filter(a => ['FLAGGED', 'COMPROMISED', 'FROZEN'].includes(a.status?.toUpperCase()));
             setAccounts(flagged);
         });
     }, []);
@@ -194,24 +206,82 @@ ${sarData.section5_recommendation}`;
             <div style={{ display: "grid", gridTemplateColumns: "60% 35%", gap: "5%" }}>
                 {/* LEFT COLUMN: GENERATOR PANEL */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-                    <GlassCard style={{ padding: 24 }}>
+                    <GlassCard style={{ padding: 24, overflow: 'visible', minHeight: 430, display: 'flex', flexDirection: 'column' }}>
                         <div style={{ fontSize: 11, color: "#7A8E7A", fontWeight: 600, marginBottom: 8 }}>SELECT SUBJECT ACCOUNT</div>
-                        <select 
-                            value={selectedAccount} 
-                            onChange={e => setSelectedAccount(e.target.value)}
-                            style={{ 
-                                width: "100%", padding: "12px", background: "rgba(0,0,0,0.3)", 
-                                border: "1px solid rgba(0, 255, 65, 0.15)", color: "#00ff88", 
-                                borderRadius: 8, fontSize: 14, outline: "none", fontFamily: "'JetBrains Mono', monospace"
-                            }}
-                        >
-                            <option value="">-- Select an account --</option>
-                            {accounts.map(a => (
-                                <option key={a.account_id} value={a.account_id}>
-                                    {a.account_id} — {a.name} — Risk: {a.final_score} — {a.status}
-                                </option>
-                            ))}
-                        </select>
+                        <div ref={dropdownRef} style={{ position: "relative" }}>
+                            <div 
+                                onClick={() => !generating && setIsDropdownOpen(!isDropdownOpen)}
+                                style={{ 
+                                    width: "100%", padding: "14px", background: "rgba(0,0,0,0.4)", 
+                                    border: `1px solid ${isDropdownOpen ? 'var(--accent)' : 'rgba(0, 255, 65, 0.2)'}`, 
+                                    color: selectedAccount ? "#ffffff" : "#7A8E7A", 
+                                    borderRadius: 10, fontSize: 13, cursor: generating ? "not-allowed" : "pointer", 
+                                    fontFamily: "'JetBrains Mono', monospace",
+                                    display: "flex", justifyContent: "space-between", alignItems: "center",
+                                    transition: "all 0.3s ease",
+                                    boxShadow: isDropdownOpen ? '0 0 15px rgba(0, 255, 65, 0.1)' : 'none'
+                                }}
+                            >
+                                <span>
+                                    {selectedAccount 
+                                        ? accounts.find(a => a.account_id === selectedAccount)?.account_id + " — " + accounts.find(a => a.account_id === selectedAccount)?.name
+                                        : "-- SELECT SUBJECT ACCOUNT --"}
+                                </span>
+                                <span style={{ 
+                                    transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', 
+                                    transition: 'transform 0.3s ease',
+                                    fontSize: 10,
+                                    color: 'var(--accent)'
+                                }}>▼</span>
+                            </div>
+
+                            {isDropdownOpen && (
+                                <div style={{ 
+                                    position: "absolute", top: "110%", left: 0, right: 0, 
+                                    background: "rgba(10, 15, 26, 0.98)", 
+                                    border: "1px solid var(--accent)", 
+                                    borderRadius: 12, zIndex: 1000, 
+                                    maxHeight: 300, overflowY: "auto",
+                                    boxShadow: "0 10px 40px rgba(0,0,0,0.8)",
+                                    backdropFilter: "blur(20px)",
+                                    padding: "8px"
+                                }}>
+                                    {accounts.map(a => (
+                                        <div 
+                                            key={a.account_id}
+                                            onClick={() => {
+                                                setSelectedAccount(a.account_id);
+                                                setIsDropdownOpen(false);
+                                            }}
+                                            className="hover-lift"
+                                            style={{ 
+                                                padding: "12px 16px", borderRadius: 8, cursor: "pointer",
+                                                color: selectedAccount === a.account_id ? "var(--accent)" : "#fff",
+                                                background: selectedAccount === a.account_id ? "rgba(0, 255, 65, 0.05)" : "transparent",
+                                                fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
+                                                border: selectedAccount === a.account_id ? "1px solid rgba(0, 255, 65, 0.2)" : "1px solid transparent",
+                                                marginBottom: 4,
+                                                display: "flex", justifyContent: "space-between", alignItems: "center"
+                                            }}
+                                        >
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                                                <span style={{ fontWeight: 700 }}>{a.account_id}</span>
+                                                <span style={{ fontSize: 10, opacity: 0.7 }}>{a.name}</span>
+                                            </div>
+                                            <div style={{ textAlign: 'right' }}>
+                                                <div style={{ fontSize: 10, color: '#00ff88', fontWeight: 'bold' }}>Risk: {a.final_score}</div>
+                                                <div style={{ fontSize: 9, opacity: 0.5 }}>{a.status?.toUpperCase()}</div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {accounts.length === 0 && (
+                                        <div style={{ padding: 20, textAlign: 'center', color: '#7A8E7A', fontSize: 12 }}>
+                                            No accounts pending SAR filing
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
 
                         {selAccDetails && (
                             <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
@@ -223,6 +293,8 @@ ${sarData.section5_recommendation}`;
                                 </div>
                             </div>
                         )}
+
+                        <div style={{ flex: 1 }} />
 
                         <button
                             onClick={handleGenerate}

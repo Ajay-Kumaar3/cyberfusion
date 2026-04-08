@@ -3,15 +3,15 @@ import GlassCard from "../components/GlassCard";
 import GeminiPanel from "../components/GeminiPanel";
 import { FileText, Download, Target, AlertTriangle } from "lucide-react";
 import { useApi } from "../hooks/useApi";
-import { getAlerts, getDashboardStats } from "../utils/api";
+import { fetchAlerts, fetchDashboardSummary } from "../api/api";
 
 const sevColor = s => ({ CRITICAL: "#FF3366", HIGH: "#FFAA00", MEDIUM: "#FFDD00" }[s] || "#889488");
 
 export default function Reports() {
     const [triggerReport, setTriggerReport] = useState(0);
     const [reportType, setReportType] = useState('Mule Ring Analysis');
-    const { data: pastAlertsRaw, loading: alertsLoading } = useApi(getAlerts);
-    const { data: stats, loading: statsLoading } = useApi(getDashboardStats);
+    const { data: pastAlertsRaw, loading: alertsLoading } = useApi(fetchAlerts);
+    const { data: stats, loading: statsLoading } = useApi(fetchDashboardSummary);
 
     const pastAlerts = pastAlertsRaw || [];
     const loading = alertsLoading || statsLoading;

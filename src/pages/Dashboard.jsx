@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import StatCard from "../components/StatCard";
 import AlertFeed from "../components/AlertFeed";
 import GlassCard from "../components/GlassCard";
 import { useApi } from "../hooks/useApi";
-import { getDashboardStats } from "../utils/api";
+import { fetchDashboardSummary } from "../api/api";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
 import { askGemini } from "../utils/gemini";
 import { useBlockchain } from "../context/BlockchainContext";
@@ -21,7 +21,7 @@ const radarData = [
 
 export default function Dashboard() {
   const { blockedCount } = useBlockchain();
-  const { data: stats, loading: statsLoading, error: statsError } = useApi(getDashboardStats);
+  const { data: stats, loading: statsLoading, error: statsError } = useApi(fetchDashboardSummary);
   const { alerts, simulationActive, lastSimulationSummary } = useAlerts();
   
   const [timeLeft, setTimeLeft] = useState(0);
@@ -31,32 +31,32 @@ export default function Dashboard() {
   const activeThreats = (stats?.active_threats || 0) + (alerts?.filter(a => a.simulation).length || 0);
   const muleFlagged = (stats?.mule_accounts_flagged || 0) + (alerts?.filter(a => a.type === 'ACCOUNT_TAKEOVER').length || 0);
 
-  const fetchBriefing = async (forceRefresh = false) => {
+  const fetchBriefing = useCallback(async (forceRefresh = false) => {
     setBriefing("Analyzing threat landscape...");
     setBriefingDisplay("");
     const prompt = `You are a SOC analyst AI. Given these active threats: ${activeThreats} active threats, ${muleFlagged} mule accounts flagged, ₹${stats?.txns_under_review_amount || 0} under review, recovery window at ${Math.floor(timeLeft / 60)} minutes. Write a 1-sentence threat briefing for the security team. Be specific and urgent.`;
     const response = await askGemini(prompt, forceRefresh);
     setBriefing(response);
-  };
+  }, [activeThreats, muleFlagged, stats, timeLeft]);
 
   useEffect(() => {
     if (lastSimulationSummary) {
       fetchBriefing(true);
     }
-  }, [lastSimulationSummary]);
+  }, [lastSimulationSummary, fetchBriefing]);
 
   useEffect(() => {
     if (stats) {
       fetchBriefing();
     }
-  }, [stats]);
+  }, [stats, fetchBriefing]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       fetchBriefing();
     }, 300000); // 5 min
     return () => clearInterval(interval);
-  }, [stats]);
+  }, [fetchBriefing]);
 
   useEffect(() => {
     if (briefing === "Analyzing threat landscape...") {

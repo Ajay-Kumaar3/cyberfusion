@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useApi } from "../hooks/useApi";
-import { getAlerts, updateAlertStatus } from "../utils/api";
+import { fetchAlerts, updateAlertStatus } from "../api/api";
 
 const SEV = {
   CRITICAL: { color: "#FF3366", bg: "rgba(255, 51, 102, 0.08)", glow: "rgba(255, 51, 102, 0.2)", label: "CRITICAL", ring: "rgba(255, 51, 102, 0.3)" },
@@ -43,7 +43,7 @@ function ScoreBar({ value, color }) {
 }
 
 export default function AlertsCenter() {
-  const { data: alertsRaw, loading, error, refetch } = useApi(getAlerts);
+  const { data: alertsRaw, loading, error, refetch } = useApi(fetchAlerts);
   const [filter, setFilter] = useState("All");
   const [hovered, setHovered] = useState(null);
   const filters = ["All", "Open", "Under Review", "Resolved"];

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GlassCard from "../components/GlassCard";
 import { useApi } from "../hooks/useApi";
-import { getTransactions } from "../utils/api";
+import { fetchTransactions } from "../api/api";
 import { AlertTriangle, Clock } from "lucide-react";
 
 const statusDisplay = {
@@ -27,7 +27,7 @@ const formatWindow = (createdAt) => {
 };
 
 export default function Transactions() {
-    const { data: transactionsRaw, loading, error } = useApi(getTransactions);
+    const { data: transactionsRaw, loading, error } = useApi(fetchTransactions);
     const [expanded, setExpanded] = useState(null);
     const [filter, setFilter] = useState("ALL");
 
@@ -76,14 +76,25 @@ export default function Transactions() {
                     </div>
                     {[
                         { title: "Sources", items: transactions.slice(0, 2).map(t => t.from_account), color: "#00FF41" },
-                        { title: "Aggregator (Mules)", items: transactions.filter(t => t.final_score >= 70).slice(0, 2).map(t => t.txn_id?.slice(0, 10)), color: "#cdffcd" },
-                        { title: "Exit Points", items: ["Crypto Exch", "Wire Transfer"], color: "#ffffff" },
+                        { 
+                            title: "Aggregator (Mules)", 
+                            items: transactions.filter(t => t.final_score >= 55).slice(0, 2).map(t => t.txn_id?.slice(0, 10)), 
+                            color: "#cdffcd",
+                            fallback: "STANDBY: MONITORING"
+                        },
+                        { 
+                            title: "Exit Points", 
+                            items: transactions.filter(t => t.category === "Transfer").length > 0 ? ["Wire Transfer", "Crypto Exch"] : ["Crypto Exch", "Wire Transfer"], 
+                            color: "#ffffff" 
+                        },
                     ].map((col, idx) => (
-                        <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: 10, zIndex: 1, alignItems: 'center' }}>
+                        <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: 10, zIndex: 1, alignItems: 'center', minWidth: 120 }}>
                             <div style={{ fontSize: 11, color: '#7A8E7A', fontWeight: 600, letterSpacing: '0.05em', marginBottom: 8 }}>{col.title.toUpperCase()}</div>
-                            {col.items.map((item, i) => (
-                                <div key={i} style={{ background: 'rgba(0,12,0,0.9)', border: `1px solid ${col.color}44`, padding: '12px 24px', borderRadius: 8, fontSize: 13, fontWeight: 'bold', color: '#ffffff' }}>{item || "—"}</div>
-                            ))}
+                            {col.items.length > 0 ? col.items.map((item, i) => (
+                                <div key={i} style={{ background: 'rgba(0,12,0,0.9)', border: `1px solid ${col.color}44`, padding: '12px 24px', borderRadius: 8, fontSize: 13, fontWeight: 'bold', color: '#ffffff', textAlign: 'center', width: '100%' }}>{item || "—"}</div>
+                            )) : (
+                                <div style={{ fontSize: 10, color: 'var(--accent)', opacity: 0.5, fontStyle: 'italic', marginTop: 10 }}>{col.fallback || "—"}</div>
+                            )}
                         </div>
                     ))}
                 </div>
