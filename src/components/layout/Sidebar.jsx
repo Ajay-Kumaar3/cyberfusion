@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Activity, Share2, Users, DollarSign, ShieldAlert, FileText, Link as LinkIcon } from 'lucide-react';
+import { Activity, Share2, Users, DollarSign, ShieldAlert, FileText, Link as LinkIcon, Globe } from 'lucide-react';
 
 const CyberShield = ({ size = 24, color = "currentColor", strokeWidth = 2 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -27,6 +27,7 @@ export default function Sidebar() {
   const navItems = [
     { label: "Dashboard", path: "/", icon: <Activity size={18} /> },
     { label: "Kill Chain Graph", path: "/killchain", icon: <Share2 size={18} />, highlight: true },
+    { label: "Bank Network", path: "/network", icon: <Globe size={18} />, highlight: true },
     { label: "Mule Accounts", path: "/accounts", icon: <Users size={18} /> },
     { label: "Transactions", path: "/transactions", icon: <DollarSign size={18} /> },
     { label: "Payment Demo", path: "/payments", icon: <Activity size={18} />, highlight: true },

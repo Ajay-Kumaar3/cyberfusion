@@ -15,6 +15,7 @@ import BlockchainDemoPage from "./pages/BlockchainDemo";
 import SetupPage from "./pages/SetupPage";
 import PaymentDemoPage from "./pages/PaymentDemo";
 import SARGenerator from "./pages/SARGenerator";
+import NetworkIntelligence from "./pages/NetworkIntelligence";
 
 function App() {
   return (
@@ -23,18 +24,19 @@ function App() {
         <Router>
           <Layout>
             <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/killchain" element={<KillChain />} />
-            <Route path="/accounts" element={<Accounts />} />
-            <Route path="/transactions" element={<Transactions />} />
-            <Route path="/cyber-risk" element={<CyberRisk />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/blockchain" element={<BlockchainDemoPage />} />
-            <Route path="/setup" element={<SetupPage />} />
-            <Route path="/payments" element={<PaymentDemoPage />} />
-            <Route path="/sar" element={<SARGenerator />} />
-          </Routes>
-        </Layout>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/killchain" element={<KillChain />} />
+              <Route path="/accounts" element={<Accounts />} />
+              <Route path="/transactions" element={<Transactions />} />
+              <Route path="/cyber-risk" element={<CyberRisk />} />
+              <Route path="/reports" element={<Reports />} />
+              <Route path="/blockchain" element={<BlockchainDemoPage />} />
+              <Route path="/setup" element={<SetupPage />} />
+              <Route path="/payments" element={<PaymentDemoPage />} />
+              <Route path="/network" element={<NetworkIntelligence />} />
+              <Route path="/sar" element={<SARGenerator />} />
+            </Routes>
+          </Layout>
         <MetaMaskPanel onFraudAlert={(alert) => console.log("[CyberFusion] Fraud alert:", alert)} />
       </Router>
       </AlertProvider>
